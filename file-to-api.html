@@ -179,6 +179,47 @@
         border-top: 1px solid var(--line);
       }
 
+      .explainer-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+        gap: 16px;
+      }
+
+      .explainer-panel {
+        padding: 18px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.52);
+      }
+
+      .note-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .note-item {
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+      }
+
+      .note-item:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+
+      .note-title {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .note-copy {
+        margin-top: 6px;
+        line-height: 1.6;
+        color: var(--ink);
+      }
+
       .priority-item {
         display: grid;
         gap: 4px;
@@ -554,7 +595,8 @@
         .masthead-grid,
         .section-grid,
         .shortlist-grid,
-        .priority-strip {
+        .priority-strip,
+        .explainer-grid {
           grid-template-columns: 1fr;
         }
 
@@ -602,6 +644,58 @@
         </div>
         <div class="metric-grid" id="hero-metrics"></div>
         <div class="priority-strip" id="priority-strip"></div>
+      </section>
+
+      <section class="section explainer-grid">
+        <div class="explainer-panel" data-reveal>
+          <div class="panel-head">
+            <div>
+              <h2>What this page is</h2>
+              <p class="section-copy" id="explainer-copy"></p>
+            </div>
+          </div>
+          <div class="note-list">
+            <div class="note-item">
+              <div class="note-title">Review queue</div>
+              <div class="note-copy">This page does not say every file should become an API. It highlights file datasets that may deserve earlier human review.</div>
+            </div>
+            <div class="note-item">
+              <div class="note-title">High-demand first</div>
+              <div class="note-copy">The slice is biased toward rows that already show meaningful use, so the question is where easier access could matter most.</div>
+            </div>
+            <div class="note-item">
+              <div class="note-title">Lightweight public view</div>
+              <div class="note-copy">The browser reads a compact summary asset, not the full internal master dataset, so the page stays fast and readable.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="explainer-panel" data-reveal>
+          <div class="panel-head">
+            <div>
+              <h2>How to read it</h2>
+              <p class="section-copy">The shortlist lanes are meant to separate easy wins from rows that still need judgment.</p>
+            </div>
+          </div>
+          <div class="note-list">
+            <div class="note-item">
+              <div class="note-title">Metadata-ready</div>
+              <div class="note-copy">Good demand plus visible response structure. These are the easiest records to spec first.</div>
+            </div>
+            <div class="note-item">
+              <div class="note-title">Demand leader</div>
+              <div class="note-copy">Usage is already strong, even if the metadata contract still looks thin.</div>
+            </div>
+            <div class="note-item">
+              <div class="note-title">Cross-channel demand</div>
+              <div class="note-copy">File demand is high and API-style demand is already visible, which can signal pressure for a cleaner delivery format.</div>
+            </div>
+            <div class="note-item">
+              <div class="note-title">Usage gap check</div>
+              <div class="note-copy">Demand looks large, but the join is not fully attached yet. These need verification before conversion planning.</div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="section">

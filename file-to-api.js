@@ -189,8 +189,8 @@
     const overview = data.overview;
     const providerRollup = data.provider_rollup;
     byId("hero-lede").textContent =
-      `${number(overview.candidate_count)} file rows clear the current file-to-API heuristic. ` +
-      `This is now mostly a prioritization problem, not a raw join problem, because ${number(overview.joined_count)} already attach universe, metadata, and usage.`;
+      `${number(overview.candidate_count)} file datasets currently look worth reviewing as possible API-conversion candidates. ` +
+      `Most already attach enough metadata and usage history to support human review, so the immediate question is what to inspect first.`;
     byId("asset-note").textContent =
       `${number(data.source_assets.summary_js_bytes)} bytes from ${data.source_assets.summary_js_path} instead of ${number(data.source_assets.master_bytes)} bytes from ${data.source_assets.master_path}`;
 
@@ -219,6 +219,9 @@
       .map(metricCard)
       .join("");
 
+    byId("explainer-copy").textContent =
+      `Many public datasets are still delivered mainly as downloadable files. This page helps surface the ones that may deserve earlier API review because demand is already visible.`;
+
     byId("priority-strip").innerHTML = [
       {
         label: "Inspect-first shortlist",
@@ -228,7 +231,7 @@
       {
         label: "Immediate conversion surface",
         value: `${number(overview.response_field_count)} rows`,
-        note: "These already expose response fields, so the contract is less speculative.",
+        note: "These already expose response fields, so the data shape is easier to reason about.",
       },
       {
         label: "Cross-channel demand",
@@ -302,7 +305,7 @@
     const metadataReady = data.shortlist.items.filter((item) => item.inspect_lane === 'Metadata-ready').length;
     const usageGap = data.shortlist.items.filter((item) => item.inspect_lane === 'Usage gap check').length;
     byId("shortlist-copy").textContent =
-      `${data.shortlist.ranking_note} ${number(metadataReady)} rows are already metadata-ready, while ${number(usageGap)} rows are in the shortlist mainly because the join still needs a human check.`;
+      `${data.shortlist.ranking_note} ${number(metadataReady)} rows already look easier to review because the metadata is clearer, while ${number(usageGap)} still need a human check before conversion planning.`;
     byId("shortlist-grid").innerHTML = data.shortlist.items.map(shortlistCard).join("");
   }
 
