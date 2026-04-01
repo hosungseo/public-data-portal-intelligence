@@ -2,6 +2,8 @@
 
 **Live page:** <https://hosungseo.github.io/public-data-portal-intelligence/>
 
+![File-to-API reader preview](assets/file-to-api-reader.png)
+
 A small static reader for one practical question:
 
 > Which high-demand file datasets look like strong API-conversion candidates?
