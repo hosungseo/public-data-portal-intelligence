@@ -189,8 +189,8 @@
     const overview = data.overview;
     const providerRollup = data.provider_rollup;
     byId("hero-lede").textContent =
-      `${number(overview.candidate_count)} file datasets currently look worth reviewing as possible API-conversion candidates. ` +
-      `Most already attach enough metadata and usage history to support human review, so the immediate question is what to inspect first.`;
+      `${number(overview.candidate_count)} file datasets currently sit in the API-conversion review queue. ` +
+      `Most already attach enough metadata and usage history to support human inspection, so the immediate question is what to review first for API conversion.`;
     byId("asset-note").textContent =
       `${number(data.source_assets.summary_js_bytes)} bytes from ${data.source_assets.summary_js_path} instead of ${number(data.source_assets.master_bytes)} bytes from ${data.source_assets.master_path}`;
 
@@ -220,11 +220,11 @@
       .join("");
 
     byId("explainer-copy").textContent =
-      `Many public datasets are still delivered mainly as downloadable files. This page helps surface the ones that may deserve earlier API review because demand is already visible.`;
+      `Many public datasets are still delivered mainly as downloadable files. This page surfaces which file datasets should be reviewed earlier as possible API-conversion candidates because demand is already visible.`;
 
     byId("priority-strip").innerHTML = [
       {
-        label: "Inspect-first shortlist",
+        label: "Inspect-first review shortlist",
         value: `${number(data.shortlist.items.length)} rows`,
         note: "Balanced across metadata-ready, demand leader, cross-channel demand, and usage-gap checks.",
       },
@@ -297,7 +297,7 @@
   function renderProviders() {
     const providerRollup = data.provider_rollup;
     byId("provider-copy").textContent =
-      `The top 10 providers account for ${percent(providerRollup.top_10_share)} of all file-to-API candidates. Start there if the goal is queue reduction, not tail coverage.`;
+          `The top 10 providers account for ${percent(providerRollup.top_10_share)} of all file-to-API candidates. Start there if the goal is to reduce the API-conversion review queue, not to cover the long tail first.`;
     byId("provider-list").innerHTML = providerRollup.providers.map(providerRow).join("");
   }
 
@@ -305,7 +305,7 @@
     const metadataReady = data.shortlist.items.filter((item) => item.inspect_lane === 'Metadata-ready').length;
     const usageGap = data.shortlist.items.filter((item) => item.inspect_lane === 'Usage gap check').length;
     byId("shortlist-copy").textContent =
-      `${data.shortlist.ranking_note} ${number(metadataReady)} rows already look easier to review because the metadata is clearer, while ${number(usageGap)} still need a human check before conversion planning.`;
+      `${data.shortlist.ranking_note} ${number(metadataReady)} rows already look easier to review for API conversion because the metadata is clearer, while ${number(usageGap)} still need a human check before conversion planning.`;
     byId("shortlist-grid").innerHTML = data.shortlist.items.map(shortlistCard).join("");
   }
 
@@ -313,7 +313,7 @@
     const strongest = data.strongest_candidates.items;
     const shown = strongest.slice(0, visibleStrongCount);
     byId("strongest-copy").textContent =
-      `${data.strongest_candidates.ranking_note} Showing ${number(shown.length)} of ${number(strongest.length)} rows in the light asset.`;
+      `${data.strongest_candidates.ranking_note} Showing ${number(shown.length)} of ${number(strongest.length)} rows in the current API-conversion review asset.`;
     byId("strongest-list").innerHTML = shown.map(strongestCard).join("");
 
     const button = byId("show-more");
