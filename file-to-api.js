@@ -181,56 +181,6 @@
     `;
   }
 
-  function providerRow(item, rankInList) {
-    const shareText = percent(item.share_of_candidates || 0);
-    const actionText = item.shortlist_count > 0
-      ? `이 기관은 전체 후보의 ${shareText}를 차지하며, 바로 우선 검토로 넘겨볼 수 있는 후보가 ${number(item.shortlist_count)}건 있습니다.`
-      : `이 기관은 후보가 많이 몰려 있어 큐를 줄이는 관점에서는 중요하지만, 바로 우선 검토로 분류된 후보는 아직 없습니다.`;
-    const openAttr = rankInList < 3 ? " open" : "";
-    return `
-      <details class="provider-row"${openAttr}>
-        <summary>
-          <div>
-            <div class="provider-name">${escapeHtml(item.provider_name)}</div>
-            <div class="muted">${escapeHtml(number(item.candidate_count))}건 후보 · 전체의 ${escapeHtml(shareText)} · 우선 ${escapeHtml(number(item.shortlist_count))}</div>
-          </div>
-          <span class="provider-row-toggle"></span>
-        </summary>
-        <div class="provider-row-body">
-          <div class="provider-action">
-            <strong>어디부터 줄일까?</strong>
-            <div class="provider-submetric">${escapeHtml(actionText)}</div>
-          </div>
-          <div class="provider-meta">
-            <div>
-              <div class="mini-label">응답 필드</div>
-              <div class="mini-value">${escapeHtml(number(item.response_field_count))}</div>
-            </div>
-            <div>
-              <div class="mini-label">3종 결합</div>
-              <div class="mini-value">${escapeHtml(number(item.joined_count))}</div>
-            </div>
-            <div>
-              <div class="mini-label">우선 검토</div>
-              <div class="mini-value">${escapeHtml(number(item.shortlist_count))}</div>
-            </div>
-          </div>
-          <div class="provider-examples">
-            ${item.top_examples
-              .map(
-                (example) => `
-                  <span class="example-pill">
-                    ${escapeHtml(example.title)} · ${escapeHtml(number(example.signal_downloads))}
-                  </span>
-                `,
-              )
-              .join("")}
-          </div>
-        </div>
-      </details>
-    `;
-  }
-
   function renderOverview() {
     const overview = data.overview;
     const topRow = data.shortlist.items[0];
@@ -267,55 +217,40 @@
   }
 
   function renderShape() {
-    const overview = data.overview;
-
-    byId("readiness-metrics").innerHTML = [
-      {
-        label: "3종 결합",
-        value: percent(overview.joined_share),
-        note: `지원센터목록·메타·이용 이력이 함께 붙은 ${number(overview.joined_count)}건`,
-      },
-      {
-        label: "이용 이력 부착",
-        value: percent(overview.usage_attached_share),
-        note: `이용 이력이 붙은 ${number(overview.usage_attached_count)}건`,
-      },
-      {
-        label: "응답 필드 노출",
-        value: percent(overview.response_field_share),
-        note: `응답 필드가 보이는 ${number(overview.response_field_count)}건`,
-      },
-      {
-        label: "API형 수요 관찰",
-        value: percent(overview.api_applies_present_share),
-        note: `API형 수요가 관찰되는 ${number(overview.api_applies_present_count)}건`,
-      },
-    ]
-      .map(metricCard)
+    byId("source-combo-bars").innerHTML = data.slice_shape.source_combos
+      .map((item, idx) => `
+        <div class="bar-row">
+          <div class="bar-meta">
+            <span class="bar-label">${escapeHtml(sourceComboLabel(item.label))} <span class="muted">${escapeHtml(item.code)}</span></span>
+            <span class="bar-value${idx === 0 ? ' accent' : ''}">${escapeHtml(percent(item.share))}</span>
+          </div>
+          <div class="bar-track${idx === 0 ? ' accent' : ''}"><span style="width:${Math.max(2, item.share * 100)}%"></span></div>
+        </div>
+      `)
       .join("");
-
-    byId("source-combo-bars").innerHTML = barRows(
-      data.slice_shape.source_combos.map((item) => ({
-        label: sourceComboLabel(item.label),
-        value: percent(item.share),
-        note: `${number(item.count)}건`,
-        share: item.share,
-      })),
-    );
 
     byId("format-chips").innerHTML = data.slice_shape.data_formats
-      .map((item) => chip(item.label, item.count, item.share))
+      .map((item) => `<span class="chip">${escapeHtml(item.label)} <span class="mini">${escapeHtml(number(item.count))} · ${escapeHtml(percent(item.share))}</span></span>`)
       .join("");
+
     byId("update-chips").innerHTML = data.slice_shape.update_cycles
-      .map((item) => chip(item.label, item.count, item.share))
+      .map((item) => `<span class="chip">${escapeHtml(item.label)} <span class="mini">${escapeHtml(number(item.count))} · ${escapeHtml(percent(item.share))}</span></span>`)
       .join("");
   }
 
   function renderProviders() {
     const providerRollup = data.provider_rollup;
     byId("provider-copy").textContent =
-      `상위 10개 기관이 전체 후보의 ${percent(providerRollup.top_10_share)}를 차지합니다. 어디부터 큐를 줄일지 보려면 후보가 집중된 기관과 우선 검토 후보가 함께 있는 기관을 먼저 보는 편이 효율적입니다.`;
-    byId("provider-list").innerHTML = providerRollup.providers.map((item, i) => providerRow(item, i)).join("");
+      `상위 10개 기관이 전체 후보의 ${percent(providerRollup.top_10_share)}를 차지합니다. 큐를 줄이려면 이 기관들부터 볼 가치가 있습니다.`;
+    byId("provider-list").innerHTML = providerRollup.providers
+      .slice(0, 5)
+      .map((item) => `
+        <div class="provider-row">
+          <div class="provider-name">${escapeHtml(item.provider_name)}</div>
+          <div class="provider-metric">${escapeHtml(number(item.candidate_count))} · ${escapeHtml(percent(item.share_of_candidates))}</div>
+        </div>
+      `)
+      .join("");
   }
 
   function renderShortlist() {

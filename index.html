@@ -291,10 +291,31 @@
       }
 
       .metric-grid,
-      .shape-grid,
       .provider-grid {
         display: grid;
         gap: 14px;
+      }
+
+      .shape-panel {
+        padding: 18px;
+      }
+
+      .shape-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: 32px;
+      }
+
+      .shape-column {
+        min-width: 0;
+      }
+
+      .shape-block-label {
+        font-size: 10px;
+        color: var(--muted-deep);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
       }
 
       .explainer-grid {
@@ -396,54 +417,77 @@
 
       .bar-row {
         display: grid;
-        gap: 8px;
+        gap: 4px;
+        margin-bottom: 12px;
       }
 
       .bar-row + .bar-row,
-      .provider-row + .provider-row,
       .strong-card + .strong-card {
         margin-top: 14px;
       }
 
-      .bar-meta,
-      .provider-topline,
-      .detail-topline {
+      .bar-meta {
         display: flex;
         align-items: baseline;
         justify-content: space-between;
         gap: 12px;
+        font-size: 12px;
       }
 
-      .bar-label,
-      .provider-name,
-      .token {
-        font-size: 0.9rem;
+      .bar-label {
+        color: var(--ink);
       }
 
-      .bar-value,
-      .provider-metric,
-      .token,
-      .mini {
+      .bar-label .muted {
+        color: var(--muted-deep);
+      }
+
+      .bar-value {
         font-family: var(--mono);
+        color: var(--muted);
+      }
+
+      .bar-value.accent {
+        color: var(--accent);
       }
 
       .bar-track {
-        height: 8px;
-        border-radius: 999px;
-        background: rgba(24, 35, 43, 0.08);
-        overflow: hidden;
+        height: 4px;
+        background: var(--line);
       }
 
-      .bar-track span {
+      .bar-track > span {
         display: block;
-        width: calc(var(--share, 0) * 100%);
         height: 100%;
-        border-radius: inherit;
-        background: linear-gradient(90deg, var(--accent), #73a79f);
-        transition: width 500ms ease;
+        background: var(--ink);
       }
 
-      .chip-row,
+      .bar-track.accent > span {
+        background: var(--accent);
+      }
+
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .chip {
+        display: inline-flex;
+        gap: 8px;
+        align-items: baseline;
+        padding: 4px 10px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        font-size: 11px;
+      }
+
+      .chip .mini {
+        font-family: var(--mono);
+        color: var(--muted);
+      }
+
       .meta-row,
       .reason-list,
       .provider-examples,
@@ -453,7 +497,6 @@
         gap: 8px;
       }
 
-      .chip,
       .tag {
         display: inline-flex;
         align-items: center;
@@ -664,62 +707,25 @@
       }
 
       .provider-row {
-        padding-top: 14px;
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        padding: 8px 0;
         border-top: 1px solid var(--line);
+        font-size: 12px;
       }
 
       .provider-row:first-child {
-        padding-top: 0;
-        border-top: 0;
+        border-top: none;
       }
 
-      .provider-meta {
-        margin-top: 10px;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .provider-action {
-        margin-top: 12px;
-        padding: 12px 14px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.5);
-      }
-
-      .provider-action strong {
-        display: block;
+      .provider-row .provider-name {
         color: var(--ink);
-        margin-bottom: 4px;
       }
 
-      .provider-submetric {
-        color: var(--muted);
-        font-size: 0.92rem;
-        line-height: 1.45;
-      }
-
-      .mini-label {
-        font-size: 10px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      .mini-value {
-        margin-top: 4px;
+      .provider-row .provider-metric {
         font-family: var(--mono);
-        font-size: 0.96rem;
-      }
-
-      .provider-examples {
-        margin-top: 10px;
-      }
-
-      .example-pill {
-        padding: 8px 10px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.58);
+        color: var(--muted);
       }
 
       .strong-card {
@@ -912,14 +918,12 @@
         scroll-margin-top: 20px;
       }
 
-      details.panel > summary,
-      details.provider-row > summary {
+      details.panel > summary {
         cursor: pointer;
         list-style: none;
       }
 
-      details.panel > summary::-webkit-details-marker,
-      details.provider-row > summary::-webkit-details-marker {
+      details.panel > summary::-webkit-details-marker {
         display: none;
       }
 
@@ -948,31 +952,6 @@
         margin-top: 14px;
       }
 
-
-      .provider-row > summary {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 12px;
-        align-items: baseline;
-        padding-bottom: 4px;
-      }
-
-      .provider-row-toggle {
-        font-size: 0.82rem;
-        color: var(--accent);
-      }
-
-      .provider-row[open] .provider-row-toggle::after {
-        content: " ▴";
-      }
-
-      .provider-row:not([open]) .provider-row-toggle::after {
-        content: " ▾";
-      }
-
-      .provider-row-body {
-        margin-top: 10px;
-      }
 
       .queue-controls {
         display: grid;
@@ -1428,34 +1407,31 @@
         </div>
       </section>
 
-      <section class="section section-grid" id="shape-section">
-        <div class="panel" data-reveal>
+      <section class="section" id="shape-section">
+        <div class="panel shape-panel" data-reveal>
           <div class="panel-head">
             <div>
-              <h2>검토 큐 현황</h2>
-              <p class="section-copy">이 화면은 전체 병합 카탈로그가 아니라, 현재의 파일→API 전환 검토 큐가 어떤 모습인지 보여줍니다.</p>
+              <h2>큐의 모습</h2>
+              <p class="section-copy">현재 10,045건이 어떤 모양으로 쌓여 있는지.</p>
             </div>
           </div>
-          <div class="metric-grid" id="readiness-metrics"></div>
-          <div class="section" id="source-combo-bars"></div>
-          <div class="section">
-            <h3>주요 포맷</h3>
-            <div class="chip-row" id="format-chips"></div>
-          </div>
-          <div class="section">
-            <h3>갱신 주기</h3>
-            <div class="chip-row" id="update-chips"></div>
-          </div>
-        </div>
+          <div class="shape-grid">
+            <div class="shape-column">
+              <div class="shape-block-label">결합 상태 분포</div>
+              <div id="source-combo-bars"></div>
 
-        <div class="panel" id="provider-section" data-reveal>
-          <div class="panel-head">
-            <div>
-              <h2>기관별 후보 분포</h2>
-              <p class="section-copy" id="provider-copy"></p>
+              <div class="shape-block-label" style="margin-top: 28px;">주요 포맷</div>
+              <div class="chip-row" id="format-chips"></div>
+
+              <div class="shape-block-label" style="margin-top: 22px;">갱신 주기</div>
+              <div class="chip-row" id="update-chips"></div>
+            </div>
+            <div class="shape-column" id="provider-section">
+              <div class="shape-block-label">기관 상위</div>
+              <div id="provider-list"></div>
+              <p class="section-copy" id="provider-copy" style="margin-top: 14px; font-size: 12px;"></p>
             </div>
           </div>
-          <div id="provider-list"></div>
         </div>
       </section>
 
