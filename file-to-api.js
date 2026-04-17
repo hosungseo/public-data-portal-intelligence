@@ -79,6 +79,16 @@
       .replace(/Universe \+ metadata \+ usage already attach, so this is ready for human review instead of more join work\./g, "우주·메타·이용이력이 이미 결합되어 있어 추가 결합 작업보다 사람 검토를 먼저 붙일 수 있습니다.");
   }
 
+  function portalSearchUrl(title) {
+    return `https://www.data.go.kr/tcs/dss/selectDataSetList.do?keyword=${encodeURIComponent(title || "")}`;
+  }
+
+  function yearSpanText(row) {
+    if (row.usage_year_min && row.usage_year_max) return `${row.usage_year_min}–${row.usage_year_max}`;
+    if (row.usage_year_min) return String(row.usage_year_min);
+    return "-";
+  }
+
   function metricCard(item) {
     return `
       <div class="metric-card">
@@ -156,6 +166,10 @@
         </div>
         <h3 class="title">${escapeHtml(row.title)}</h3>
         <div class="provider">${escapeHtml(row.provider_name)}</div>
+        <div class="action-note">
+          <div class="action-label">왜 먼저 검토?</div>
+          <div class="action-copy">${escapeHtml(translateRationale(row.inspect_rationale))}</div>
+        </div>
         <div class="tag-row">
           <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
           <span class="tag">메타정보 ${escapeHtml(row.metadata_richness_score)}</span>
@@ -163,11 +177,8 @@
           ${row.usage_openapi_apply_count_total ? `<span class="tag">API 신청 ${escapeHtml(number(row.usage_openapi_apply_count_total))}</span>` : ""}
         </div>
         <div class="meta-row">${metaItems(row)}</div>
-        <p class="section-copy">${escapeHtml(translateSummary(row.candidate_reason_summary))}</p>
-        <div class="action-note">
-          <div class="action-label">다음 검토</div>
-          <div class="action-copy">${escapeHtml(translateRationale(row.inspect_rationale))}</div>
-        </div>
+        <div class="summary-label">근거 요약</div>
+        <p class="summary-copy">${escapeHtml(translateSummary(row.candidate_reason_summary))}</p>
         ${reasonList(row.candidate_reasons)}
       </article>
     `;
@@ -186,6 +197,11 @@
             <div class="provider">${escapeHtml(row.provider_name)}</div>
           </div>
           <div class="meta-row">${metaItems(row)}</div>
+          <div class="action-note">
+            <div class="action-label">왜 먼저 검토?</div>
+            <div class="action-copy">${escapeHtml(translateRationale(row.inspect_rationale))}</div>
+          </div>
+          <div class="summary-label">근거 요약</div>
           <p class="summary-copy">${escapeHtml(translateSummary(row.candidate_reason_summary))}</p>
         </summary>
         <div class="detail-body">
@@ -196,6 +212,17 @@
             ${row.has_request_variables ? '<span class="tag">요청 변수 있음</span>' : ""}
             <span class="tag">${escapeHtml(basisLabel(row.signal_download_basis))}</span>
           </div>
+          <div class="detail-evidence">
+            <div class="meta-item"><div class="meta-label">갱신 주기</div><div class="meta-value">${escapeHtml(row.update_cycle || '-')}</div></div>
+            <div class="meta-item"><div class="meta-label">전체 행 수</div><div class="meta-value">${escapeHtml(number(row.total_rows))}</div></div>
+            <div class="meta-item"><div class="meta-label">이용 이력 행 수</div><div class="meta-value">${escapeHtml(number(row.usage_row_count))}</div></div>
+            <div class="meta-item"><div class="meta-label">이력 연도</div><div class="meta-value">${escapeHtml(yearSpanText(row))}</div></div>
+            <div class="meta-item"><div class="meta-label">포털 list_key</div><div class="meta-value">${escapeHtml(row.list_key || '-')}</div></div>
+            <div class="meta-item"><div class="meta-label">다운로드 기준</div><div class="meta-value">${escapeHtml(basisLabel(row.signal_download_basis))}</div></div>
+          </div>
+          <div class="detail-links">
+            <a class="detail-link" href="${escapeHtml(portalSearchUrl(row.title))}" target="_blank" rel="noreferrer noopener">포털에서 제목으로 검색 ↗</a>
+          </div>
           ${reasonList(row.candidate_reasons)}
         </div>
       </details>
@@ -203,14 +230,22 @@
   }
 
   function providerRow(item) {
+    const shareText = percent(item.share_of_candidates || 0);
+    const actionText = item.shortlist_count > 0
+      ? `이 기관은 전체 후보의 ${shareText}를 차지하며, 바로 우선 검토로 넘겨볼 수 있는 후보가 ${number(item.shortlist_count)}건 있습니다.`
+      : `이 기관은 후보가 많이 몰려 있어 큐를 줄이는 관점에서는 중요하지만, 바로 우선 검토로 분류된 후보는 아직 없습니다.`;
     return `
       <div class="provider-row">
         <div class="provider-topline">
           <div>
             <div class="provider-name">${escapeHtml(item.provider_name)}</div>
-            <div class="muted">${escapeHtml(number(item.candidate_count))}건 후보</div>
+            <div class="muted">${escapeHtml(number(item.candidate_count))}건 후보 · 전체의 ${escapeHtml(shareText)}</div>
           </div>
-          <div class="provider-metric">${escapeHtml(number(item.signal_total))}</div>
+          <div class="provider-metric">${escapeHtml(number(item.shortlist_count))}</div>
+        </div>
+        <div class="provider-action">
+          <strong>어디부터 줄일까?</strong>
+          <div class="provider-submetric">${escapeHtml(actionText)}</div>
         </div>
         <div class="provider-meta">
           <div>
@@ -347,7 +382,7 @@
   function renderProviders() {
     const providerRollup = data.provider_rollup;
     byId("provider-copy").textContent =
-      `상위 10개 기관이 전체 후보의 ${percent(providerRollup.top_10_share)}를 차지합니다. 롱테일보다는 검토 큐를 빨리 줄이는 것이 목표라면 여기부터 보는 편이 효율적입니다.`;
+      `상위 10개 기관이 전체 후보의 ${percent(providerRollup.top_10_share)}를 차지합니다. 어디부터 큐를 줄일지 보려면 후보가 집중된 기관과 우선 검토 후보가 함께 있는 기관을 먼저 보는 편이 효율적입니다.`;
     byId("provider-list").innerHTML = providerRollup.providers.map(providerRow).join("");
   }
 
