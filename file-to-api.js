@@ -226,37 +226,39 @@
 
   function renderOverview() {
     const overview = data.overview;
+    const topRow = data.shortlist.items[0];
+
     byId("hero-lede").textContent =
-      `현재 ${number(overview.candidate_count)}건의 파일데이터가 검토 큐에 있으며, 이 페이지는 무엇을 먼저 API 전환 검토 대상으로 볼지 우선순위를 보여줍니다.`;
+      `공공데이터포털 파일데이터 중 수요가 이미 높고 메타정보까지 갖춘 것부터 골라낸 리뷰 큐입니다. 모든 파일을 API로 바꾸자는 주장이 아니라, 무엇을 먼저 검토해야 하는지 드러내는 화면입니다.`;
+
     byId("asset-note").textContent =
       `현재 페이지는 ${data.source_assets.summary_js_path} (${number(data.source_assets.summary_js_bytes)} bytes) 기준으로 동작하며, 전체 마스터 자산 ${data.source_assets.master_path} (${number(data.source_assets.master_bytes)} bytes) 전체를 직접 노출하지 않습니다.`;
 
     byId("hero-metrics").innerHTML = [
-      {
-        label: "검토 후보",
-        value: number(overview.candidate_count),
-        note: `전체 병합 카탈로그의 ${percent(overview.share_of_merged)}`,
-      },
-      {
-        label: "우선 검토 묶음",
-        value: number(data.shortlist.items.length),
-        note: "즉시·수요·교차·재검증을 묶은 최우선 후보",
-      },
-      {
-        label: "즉시 검토 가능",
-        value: number(overview.response_field_count),
-        note: `응답 필드가 드러나 API 설계를 덜 추측적으로 시작할 수 있는 ${number(overview.response_field_count)}건`,
-      },
-      {
-        label: "교차수요 관찰",
-        value: number(overview.api_applies_present_count),
-        note: `파일 수요와 API형 수요가 함께 관찰되는 ${number(overview.api_applies_present_count)}건`,
-      },
+      { label: "검토 후보", value: number(overview.candidate_count), note: `병합 카탈로그의 ${percent(overview.share_of_merged)}`, accent: false },
+      { label: "우선 검토", value: number(data.shortlist.items.length), note: "즉시·수요·교차·재검증", accent: true },
+      { label: "즉시 검토 가능", value: number(overview.response_field_count), note: "응답 필드 노출", accent: false },
+      { label: "교차수요 관찰", value: number(overview.api_applies_present_count), note: "API형 신청 이미 발생", accent: false },
     ]
-      .map(metricCard)
+      .map((item) => `
+        <div class="card">
+          <div class="label">${escapeHtml(item.label)}</div>
+          <div class="value${item.accent ? ' accent' : ''}">${escapeHtml(item.value)}</div>
+          <div class="note">${escapeHtml(item.note)}</div>
+        </div>
+      `)
       .join("");
 
-    byId("explainer-copy").textContent =
+    if (topRow) {
+      byId("hero-top-preview").innerHTML =
+        `<span class="mono">01 →</span> <strong>${escapeHtml(topRow.title)}</strong><br>` +
+        `${escapeHtml(topRow.provider_name)} · 다운로드 ${escapeHtml(number(topRow.signal_downloads))} · 메타 ${escapeHtml(String(topRow.metadata_richness_score))}/5 · ${escapeHtml(laneLabel(topRow.inspect_lane))}`;
+    } else {
+      byId("hero-top-preview").textContent = "";
+    }
+
+    const ec = byId("explainer-copy");
+    if (ec) ec.textContent =
       `이 페이지는 공공데이터포털 파일데이터 가운데, 수요와 메타데이터 상태를 바탕으로 무엇을 먼저 API 전환 검토 대상으로 볼지 빠르게 가늠하기 위한 검토 큐입니다.`;
   }
 

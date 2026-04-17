@@ -51,7 +51,6 @@
         padding: 28px 0 72px;
       }
 
-      .masthead,
       .panel,
       .shortlist-card,
       .strong-card {
@@ -60,26 +59,199 @@
         box-shadow: none;
       }
 
-      .masthead {
-        padding: 24px 24px 20px;
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: var(--bg);
+        color: var(--ink);
+        padding: 0;
+        border: none;
       }
 
-      .eyebrow {
-        display: inline-flex;
+      .hero-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 8px;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted-deep);
+        border-bottom: 1px solid var(--surface);
+      }
+
+      .hero-brand {
+        display: flex;
         align-items: center;
         gap: 10px;
-        margin-bottom: 14px;
-        font-size: 12px;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+      }
+
+      .hero-brand::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+      }
+
+      .hero-topbar nav {
+        display: flex;
+        gap: 22px;
+      }
+
+      .hero-topbar nav a {
+        color: var(--muted-deep);
+        text-decoration: none;
+        transition: color 140ms ease;
+      }
+
+      .hero-topbar nav a:hover,
+      .hero-topbar nav a:focus-visible {
+        color: var(--ink);
+        outline: none;
+      }
+
+      .hero-body {
+        flex: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: 48px;
+        padding: 80px 8px 40px;
+        align-items: start;
+      }
+
+      .hero-statement {
+        font-size: clamp(36px, 5vw, 56px);
+        line-height: 1.02;
+        font-weight: 500;
+        letter-spacing: -0.045em;
+        margin: 0;
+      }
+
+      .hero-statement .step-muted {
+        color: var(--muted-deep);
+      }
+
+      .hero-statement .step-accent {
+        color: var(--accent);
+      }
+
+      .hero-lede {
+        margin-top: 20px;
+        max-width: 46ch;
+        font-size: 15px;
+        line-height: 1.55;
         color: var(--muted);
       }
 
-      .eyebrow::before {
-        content: "";
-        width: 34px;
-        height: 1px;
-        background: var(--line-strong);
+      .hero-cta {
+        margin-top: 22px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .hero-cta a {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        font-size: 13px;
+        text-decoration: none;
+        letter-spacing: -0.01em;
+        transition: opacity 140ms ease, background 140ms ease, border-color 140ms ease;
+      }
+
+      .hero-cta .primary {
+        background: var(--accent);
+        color: #000;
+        font-weight: 500;
+      }
+
+      .hero-cta .primary:hover,
+      .hero-cta .primary:focus-visible {
+        opacity: 0.85;
+        outline: none;
+      }
+
+      .hero-cta .ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line-strong);
+      }
+
+      .hero-cta .ghost:hover,
+      .hero-cta .ghost:focus-visible {
+        border-color: var(--accent);
+        color: var(--accent);
+        outline: none;
+      }
+
+      .hero-kpi {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--line);
+      }
+
+      .hero-kpi .card {
+        background: var(--bg);
+        padding: 22px 18px;
+      }
+
+      .hero-kpi .label {
+        font-size: 10px;
+        color: var(--muted-deep);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+
+      .hero-kpi .value {
+        font-family: var(--mono);
+        font-size: 36px;
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        margin-top: 6px;
+      }
+
+      .hero-kpi .value.accent {
+        color: var(--accent);
+      }
+
+      .hero-kpi .note {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+
+      .hero-top-preview {
+        margin-top: 20px;
+        padding: 18px 0;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        line-height: 1.55;
+        color: var(--muted);
+      }
+
+      .hero-top-preview strong {
+        color: var(--ink);
+        font-weight: 500;
+      }
+
+      .hero-top-preview .mono {
+        font-family: var(--mono);
+        color: var(--accent);
+      }
+
+      .hero-footer {
+        padding: 20px 8px;
+        border-top: 1px solid var(--surface);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        color: var(--muted-deep);
       }
 
       h1,
@@ -108,46 +280,10 @@
         font-size: 1rem;
       }
 
-      .lede,
       .section-copy,
       .muted {
         color: var(--muted);
         line-height: 1.6;
-      }
-
-      .masthead-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.75fr);
-        gap: 20px;
-        align-items: end;
-      }
-
-      .lede {
-        margin-top: 12px;
-        max-width: 64ch;
-      }
-
-      .focus-note,
-      .asset-note {
-        padding: 16px 18px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.5);
-      }
-
-      .focus-value {
-        display: block;
-        font-size: 1rem;
-        line-height: 1.55;
-        color: var(--ink);
-      }
-
-      .asset-label {
-        display: block;
-        margin-bottom: 8px;
-        font-size: 11px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
       }
 
       .asset-value {
@@ -161,15 +297,6 @@
       .shortlist-grid {
         display: grid;
         gap: 14px;
-      }
-
-      .priority-strip {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 18px;
-        padding-top: 14px;
-        border-top: 1px solid var(--line);
       }
 
       .explainer-grid {
@@ -213,37 +340,9 @@
         color: var(--ink);
       }
 
-      .priority-item {
-        display: grid;
-        gap: 4px;
-      }
-
-      .priority-label {
-        font-size: 11px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      .priority-value {
-        font-family: var(--mono);
-        font-size: 1rem;
-        color: var(--ink);
-      }
-
-      .priority-note {
-        color: var(--muted);
-        font-size: 0.9rem;
-        line-height: 1.45;
-      }
-
       .metric-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         margin-top: 20px;
-      }
-
-      .hero-metric-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
 
       .metric-card {
@@ -642,43 +741,8 @@
         transform: translateY(0);
       }
 
-      .section-nav {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 8px;
-        padding: 10px 0;
-        margin-bottom: 4px;
-        background: rgba(255, 250, 244, 0.88);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--line);
-        overflow-x: auto;
-        scrollbar-width: thin;
-      }
-
-      .section-nav a {
-        flex: 0 0 auto;
-        padding: 6px 12px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.58);
-        color: var(--muted);
-        font-size: 0.88rem;
-        text-decoration: none;
-        white-space: nowrap;
-        transition: border-color 140ms ease, color 140ms ease, background-color 140ms ease;
-      }
-
-      .section-nav a:hover,
-      .section-nav a:focus-visible {
-        border-color: var(--accent);
-        color: var(--accent-strong);
-        background: rgba(255, 255, 255, 0.92);
-      }
-
       [id$="-section"] {
-        scroll-margin-top: 72px;
+        scroll-margin-top: 20px;
       }
 
       details.panel > summary,
@@ -991,10 +1055,8 @@
       }
 
       @media (max-width: 980px) {
-        .masthead-grid,
         .section-grid,
         .shortlist-grid,
-        .priority-strip,
         .explainer-grid {
           grid-template-columns: 1fr;
         }
@@ -1010,7 +1072,6 @@
           padding-top: 20px;
         }
 
-        .masthead,
         .panel,
         .shortlist-card,
         .strong-card {
@@ -1033,28 +1094,38 @@
   </head>
   <body>
     <main class="app">
-      <section class="masthead" data-reveal>
-        <div class="eyebrow">공공데이터포털 인텔리전스</div>
-        <div class="masthead-grid">
+      <section class="hero" data-reveal>
+        <div class="hero-topbar">
+          <div class="hero-brand">Public Data Portal Intelligence</div>
+          <nav>
+            <a href="#queue-section">Queue</a>
+            <a href="#method-section">Method</a>
+            <a href="https://github.com/hosungseo/public-data-portal-intelligence" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
+          </nav>
+        </div>
+        <div class="hero-body">
           <div>
-            <h1>공공데이터포털 파일데이터 API 전환 검토 큐</h1>
-            <p class="lede" id="hero-lede"></p>
+            <h1 class="hero-statement">
+              10,045건의 파일데이터.<br>
+              <span class="step-muted">무엇을 먼저 API로</span><br>
+              <span class="step-accent">바꿀 것인가.</span>
+            </h1>
+            <p class="hero-lede" id="hero-lede"></p>
+            <div class="hero-cta">
+              <a class="primary" href="#queue-section">전체 큐 보기 ↓</a>
+              <a class="ghost" href="#method-section">방법론</a>
+            </div>
           </div>
-          <div class="focus-note">
-            <span class="asset-label">핵심 질문</span>
-            <span class="focus-value">공공데이터포털 파일데이터 가운데 무엇을 먼저 API 전환 검토 대상으로 볼 것인가.</span>
+          <div>
+            <div class="hero-kpi" id="hero-metrics"></div>
+            <div class="hero-top-preview" id="hero-top-preview"></div>
           </div>
         </div>
-        <div class="metric-grid hero-metric-grid" id="hero-metrics"></div>
+        <div class="hero-footer">
+          <span>↓ SCROLL</span>
+          <span>2026</span>
+        </div>
       </section>
-
-      <nav class="section-nav" aria-label="섹션">
-        <a href="#shortlist-section">우선 검토</a>
-        <a href="#queue-section">전체 큐</a>
-        <a href="#shape-section">큐 현황</a>
-        <a href="#provider-section">기관별</a>
-        <a href="#method-section">방법</a>
-      </nav>
 
       <section class="section explainer-grid">
         <div class="explainer-panel" data-reveal>
