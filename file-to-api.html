@@ -51,8 +51,7 @@
         padding: 28px 0 72px;
       }
 
-      .panel,
-      .strong-card {
+      .panel {
         border: 1px solid var(--line);
         background: var(--surface);
         box-shadow: none;
@@ -107,7 +106,6 @@
       .hero-topbar nav a:hover,
       .hero-topbar nav a:focus-visible {
         color: var(--ink);
-        outline: none;
       }
 
       .hero-body {
@@ -157,7 +155,7 @@
         font-size: 13px;
         text-decoration: none;
         letter-spacing: -0.01em;
-        transition: opacity 140ms ease, background 140ms ease, border-color 140ms ease;
+        transition: opacity 140ms ease, background-color 140ms ease, border-color 140ms ease;
       }
 
       .hero-cta .primary {
@@ -169,7 +167,6 @@
       .hero-cta .primary:hover,
       .hero-cta .primary:focus-visible {
         opacity: 0.85;
-        outline: none;
       }
 
       .hero-cta .ghost {
@@ -182,7 +179,6 @@
       .hero-cta .ghost:focus-visible {
         border-color: var(--accent);
         color: var(--accent);
-        outline: none;
       }
 
       .hero-kpi {
@@ -285,12 +281,6 @@
         line-height: 1.6;
       }
 
-      .metric-grid,
-      .provider-grid {
-        display: grid;
-        gap: 14px;
-      }
-
       .shape-panel {
         padding: 18px;
       }
@@ -313,36 +303,6 @@
         margin-bottom: 12px;
       }
 
-
-      .metric-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        margin-top: 20px;
-      }
-
-      .metric-card {
-        padding-top: 12px;
-        border-top: 1px solid var(--line);
-      }
-
-      .metric-label {
-        font-size: 11px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      .metric-value {
-        margin-top: 8px;
-        font-family: var(--mono);
-        font-size: clamp(1.2rem, 2vw, 1.62rem);
-      }
-
-      .metric-note {
-        margin-top: 6px;
-        color: var(--muted);
-        font-size: 0.92rem;
-        line-height: 1.45;
-      }
 
       .section {
         margin-top: 18px;
@@ -376,8 +336,7 @@
         margin-bottom: 12px;
       }
 
-      .bar-row + .bar-row,
-      .strong-card + .strong-card {
+      .bar-row + .bar-row {
         margin-top: 14px;
       }
 
@@ -444,22 +403,10 @@
       }
 
       .meta-row,
-      .reason-list,
-      .provider-examples,
-      .tag-row {
+      .reason-list {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-      }
-
-      .tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 10px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.58);
-        color: var(--muted);
       }
 
       .lane {
@@ -499,7 +446,7 @@
         padding: 22px;
         background: var(--surface);
         border: 1px solid var(--line);
-        transition: border-color 140ms ease, background 140ms ease;
+        transition: border-color 140ms ease, background-color 140ms ease;
       }
 
       details.shortlist-card[open] {
@@ -683,10 +630,6 @@
         color: var(--muted);
       }
 
-      .strong-card {
-        padding: 18px;
-      }
-
       .action-note {
         margin-top: 12px;
         padding-top: 12px;
@@ -706,39 +649,8 @@
         line-height: 1.5;
       }
 
-      .card-head {
-        display: flex;
-        align-items: start;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .rank {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 999px;
-        background: rgba(24, 35, 43, 0.08);
-        font-family: var(--mono);
-        font-size: 0.92rem;
-      }
-
-      .title {
-        margin-top: 8px;
-        font-size: 1.08rem;
-        line-height: 1.35;
-      }
-
-      .provider {
-        margin-top: 4px;
-        color: var(--muted);
-      }
-
       .meta-row,
-      .reason-list,
-      .tag-row {
+      .reason-list {
         margin-top: 12px;
       }
 
@@ -780,11 +692,6 @@
         display: none;
       }
 
-      .strong-summary {
-        display: grid;
-        gap: 10px;
-      }
-
       .summary-copy {
         color: var(--muted);
         line-height: 1.5;
@@ -798,64 +705,24 @@
         color: var(--muted);
       }
 
-      .detail-body {
-        margin-top: 14px;
-        padding-top: 14px;
-        border-top: 1px solid var(--line);
-      }
-
-      .detail-evidence {
-        margin-top: 12px;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .detail-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 14px;
-      }
-
-      .detail-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 10px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.62);
-        color: var(--ink);
-        text-decoration: none;
-      }
-
-      .detail-link:hover,
-      .detail-link:focus-visible {
-        border-color: var(--accent);
-        color: var(--accent-strong);
-      }
-
-      .show-more {
-        margin-top: 16px;
-        padding: 10px 14px;
-        border: 1px solid var(--line-strong);
-        background: rgba(255, 255, 255, 0.66);
-        color: var(--ink);
-        cursor: pointer;
-        transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease;
-      }
-
-      .show-more:hover,
-      .show-more:focus-visible {
-        transform: translateY(-1px);
-        border-color: var(--accent);
-        background: rgba(255, 255, 255, 0.9);
-      }
-
       .empty {
         padding: 18px;
         border: 1px dashed var(--line-strong);
         color: var(--muted);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      details > summary:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
       }
 
       [data-reveal] {
@@ -867,6 +734,18 @@
       [data-reveal].is-visible {
         opacity: 1;
         transform: translateY(0);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        [data-reveal],
+        .hero-cta a,
+        .queue-row,
+        .shortlist-card,
+        .queue-field input,
+        .queue-field select,
+        .hero-topbar nav a {
+          transition: none !important;
+        }
       }
 
       [id$="-section"] {
@@ -937,7 +816,7 @@
         color: var(--ink);
         font: inherit;
         outline: none;
-        transition: border-color 140ms ease, background 140ms ease;
+        transition: border-color 140ms ease, background-color 140ms ease;
       }
 
       .queue-field input:focus,
@@ -953,7 +832,7 @@
         background: var(--surface);
         color: var(--ink);
         cursor: pointer;
-        transition: border-color 140ms ease, background 140ms ease, color 140ms ease;
+        transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease;
       }
 
       .queue-reset:hover,
@@ -962,7 +841,6 @@
       .queue-page-btn:focus-visible:not(:disabled) {
         border-color: var(--accent);
         color: var(--accent);
-        outline: none;
       }
 
       .queue-page-btn:disabled {
@@ -984,7 +862,7 @@
       .queue-row {
         border: 1px solid var(--line);
         background: var(--bg);
-        transition: border-color 140ms ease, background 140ms ease;
+        transition: border-color 140ms ease, background-color 140ms ease;
       }
 
       .queue-row:hover,
@@ -1172,7 +1050,6 @@
       .queue-row-body .portal-link:hover,
       .queue-row-body .portal-link:focus-visible {
         opacity: 0.8;
-        outline: none;
       }
 
       .queue-pagination {
@@ -1509,7 +1386,7 @@
         <details class="panel method-panel" data-reveal>
           <summary>
             <h2>방법론과 공개 범위</h2>
-            <span class="method-toggle"></span>
+            <span class="method-toggle" aria-label="방법론 펼치기/접기"></span>
           </summary>
           <div class="panel-body">
             <p class="section-copy">이 페이지는 자동 판정기가 아니라, 사람이 API 전환 검토 우선순위를 빠르게 읽기 위한 경량 리뷰 화면입니다.</p>
