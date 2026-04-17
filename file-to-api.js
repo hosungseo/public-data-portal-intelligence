@@ -257,9 +257,6 @@
       byId("hero-top-preview").textContent = "";
     }
 
-    const ec = byId("explainer-copy");
-    if (ec) ec.textContent =
-      `이 페이지는 공공데이터포털 파일데이터 가운데, 수요와 메타데이터 상태를 바탕으로 무엇을 먼저 API 전환 검토 대상으로 볼지 빠르게 가늠하기 위한 검토 큐입니다.`;
   }
 
   function renderShape() {
