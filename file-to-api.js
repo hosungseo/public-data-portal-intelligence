@@ -68,30 +68,6 @@
       .replaceAll("'", "&#39;");
   }
 
-  function translateSummary(text) {
-    return String(text || "")
-      .replace(/Signal downloads ([\d,]+); no API-like metadata\. Response fields already exist\./g, "다운로드 신호 $1건, API형 메타데이터는 아직 보이지 않으며 응답 필드는 이미 존재합니다.")
-      .replace(/Signal downloads ([\d,]+); no API-like metadata\. Metadata is still thin, so demand is doing most of the work\./g, "다운로드 신호 $1건, API형 메타데이터는 아직 보이지 않으며 현재는 메타정보보다 수요 신호가 더 강하게 작동합니다.");
-  }
-
-  function translateRationale(text) {
-    return String(text || "")
-      .replace(/Demand is proven and response fields already exist, so this is one of the easier records to spec first\./g, "수요가 이미 확인됐고 응답 필드도 보여서, API 설계 검토를 먼저 붙여보기 쉬운 후보입니다.")
-      .replace(/Demand is strong enough to justify manual review even without a clearer request\/response contract yet\./g, "요청·응답 계약이 아직 선명하지 않더라도 수요가 충분히 강해 수작업 검토를 먼저 붙일 가치가 있습니다.")
-      .replace(/File demand is high and API applies are already showing up, which suggests users are looking for an API-shaped workflow\./g, "파일 수요가 높고 API형 신청도 이미 보여서, 이용자들이 API형 제공방식을 기대하고 있을 가능성이 큽니다.")
-      .replace(/Current demand is large enough to matter, but usage history did not attach\. Confirm the join before planning conversion\./g, "현재 수요는 충분히 크지만 이용 이력이 붙지 않았습니다. 전환 계획 전에 결합 상태를 먼저 재확인해야 합니다.");
-  }
-
-  function translateReason(text) {
-    return String(text || "")
-      .replace(/File-like row with signal downloads ([\d,]+), above the 1,000 threshold\./g, "파일형 행이며 다운로드 신호 $1건으로 1,000건 기준을 넘습니다.")
-      .replace(/No API-like metadata pattern was detected from list type, service type, or data format\./g, "목록 유형, 서비스 유형, 데이터 형식 기준으로 API형 메타데이터 패턴이 감지되지 않았습니다.")
-      .replace(/Metadata richness is ([\d.]+)\/5, but request\/response structure is still thin\./g, "메타정보는 $1/5 수준이지만 요청·응답 구조는 아직 얇습니다.")
-      .replace(/Response fields already exist in metadata, so the output shape is partly visible\./g, "메타데이터에 응답 필드가 이미 있어 출력 구조를 일부 가늠할 수 있습니다.")
-      .replace(/Universe \+ metadata attach, but usage history is missing; demand is coming from the current counter\./g, "우주·메타는 결합되어 있지만 이용 이력은 빠져 있으며, 현재 수요는 현재 카운터 기준으로만 보입니다.")
-      .replace(/Universe \+ metadata \+ usage already attach, so this is ready for human review instead of more join work\./g, "우주·메타·이용이력이 이미 결합되어 있어 추가 결합 작업보다 사람 검토를 먼저 붙일 수 있습니다.");
-  }
-
   function portalSearchUrl(title) {
     return `https://www.data.go.kr/tcs/dss/selectDataSetList.do?keyword=${encodeURIComponent(title || "")}`;
   }
@@ -140,7 +116,7 @@
   }
 
   function reasonList(items) {
-    return `<ul class="reason-list">${items.map((item) => `<li>${escapeHtml(translateReason(item))}</li>`).join("")}</ul>`;
+    return `<ul class="reason-list">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
   }
 
   function metaItems(row) {
@@ -169,19 +145,21 @@
   }
 
   function shortlistCard(row) {
+    const evidence = serverEvidence(row);
+    const lane = row.inspect_lane || deriveLaneFromEvidence(evidence);
     return `
       <article class="shortlist-card">
         <div class="card-head">
           <div>
             <span class="rank">${String(row.rank).padStart(2, "0")}</span>
           </div>
-          <span class="${laneClass(row.inspect_lane)}">${escapeHtml(laneLabel(row.inspect_lane))}</span>
+          <span class="${laneClass(lane)}">${escapeHtml(laneLabel(lane))}</span>
         </div>
         <h3 class="title">${escapeHtml(row.title)}</h3>
         <div class="provider">${escapeHtml(row.provider_name)}</div>
         <div class="action-note">
           <div class="action-label">왜 먼저 검토?</div>
-          <div class="action-copy">${escapeHtml(translateRationale(row.inspect_rationale))}</div>
+          <div class="action-copy">${escapeHtml(koRationale(evidence, lane))}</div>
         </div>
         <div class="tag-row">
           <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
@@ -191,13 +169,15 @@
         </div>
         <div class="meta-row">${metaItems(row)}</div>
         <div class="summary-label">근거 요약</div>
-        <p class="summary-copy">${escapeHtml(translateSummary(row.candidate_reason_summary))}</p>
-        ${reasonList(row.candidate_reasons)}
+        <p class="summary-copy">${escapeHtml(koReasonSummary(evidence))}</p>
+        ${reasonList(koReasons(evidence))}
       </article>
     `;
   }
 
   function strongestCard(row) {
+    const evidence = serverEvidence(row);
+    const lane = row.inspect_lane || deriveLaneFromEvidence(evidence);
     return `
       <details class="strong-card"${row.rank <= 3 ? " open" : ""}>
         <summary class="strong-summary">
@@ -212,10 +192,10 @@
           <div class="meta-row">${metaItems(row)}</div>
           <div class="action-note">
             <div class="action-label">왜 먼저 검토?</div>
-            <div class="action-copy">${escapeHtml(translateRationale(row.inspect_rationale))}</div>
+            <div class="action-copy">${escapeHtml(koRationale(evidence, lane))}</div>
           </div>
           <div class="summary-label">근거 요약</div>
-          <p class="summary-copy">${escapeHtml(translateSummary(row.candidate_reason_summary))}</p>
+          <p class="summary-copy">${escapeHtml(koReasonSummary(evidence))}</p>
         </summary>
         <div class="detail-body">
           <div class="tag-row">
@@ -236,7 +216,7 @@
           <div class="detail-links">
             <a class="detail-link" href="${escapeHtml(portalSearchUrl(row.title))}" target="_blank" rel="noreferrer noopener">포털에서 제목으로 검색 ↗</a>
           </div>
-          ${reasonList(row.candidate_reasons)}
+          ${reasonList(koReasons(evidence))}
         </div>
       </details>
     `;
@@ -454,47 +434,88 @@
     return "Demand leader";
   }
 
-  function deriveReasonSummary(row) {
-    const base = `Signal downloads ${number(row.downloads)}; no API-like metadata.`;
-    if (flagBit(row, "has_response_fields")) return base + " Response fields already exist.";
-    if (row.metadata_score >= 4) return base + " Metadata is already richer than the minimum join shape.";
-    return base + " Metadata is still thin, so demand is doing most of the work.";
+  function queueEvidence(row) {
+    return {
+      downloads: row.downloads,
+      hasResponse: flagBit(row, "has_response_fields"),
+      hasRequest: flagBit(row, "has_request_variables"),
+      metadataScore: row.metadata_score,
+      comboKey: row.combo,
+      comboLabelKo: sourceComboLabel(row.combo_label),
+      apiApplies: row.api_applies,
+      threshold: index.candidate_threshold,
+    };
   }
 
-  function deriveReasons(row) {
+  function serverEvidence(row) {
+    return {
+      downloads: Number(row.signal_downloads) || 0,
+      hasResponse: !!row.has_response_fields,
+      hasRequest: !!row.has_request_variables,
+      metadataScore: Number(row.metadata_richness_score) || 0,
+      comboKey: row.source_combo,
+      comboLabelKo: sourceComboLabel(row.source_combo_label),
+      apiApplies: Number(row.usage_openapi_apply_count_total) || 0,
+      threshold: 1000,
+    };
+  }
+
+  function deriveLaneFromEvidence(e) {
+    if (e.comboKey === "UM-") return "Usage gap check";
+    if (e.hasResponse && e.metadataScore >= 4) return "Metadata-ready";
+    if (e.apiApplies > 0) return "Cross-channel demand";
+    return "Demand leader";
+  }
+
+  function deriveLane(row) {
+    return deriveLaneFromEvidence(queueEvidence(row));
+  }
+
+  function koReasonSummary(e) {
+    const base = `다운로드 신호 ${number(e.downloads)}건, API형 메타데이터는 아직 보이지 않으며`;
+    if (e.hasResponse) return `${base} 응답 필드는 이미 존재합니다.`;
+    if (e.metadataScore >= 4) return `${base} 메타정보는 이미 최소 결합 형태보다 풍부합니다.`;
+    return `${base} 현재는 메타정보보다 수요 신호가 더 강하게 작동합니다.`;
+  }
+
+  function koReasons(e) {
     const reasons = [
-      `File-like row with signal downloads ${number(row.downloads)}, above the ${number(index.candidate_threshold)} threshold.`,
-      "No API-like metadata pattern was detected from list type, service type, or data format.",
+      `파일형 행이며 다운로드 신호 ${number(e.downloads)}건으로 ${number(e.threshold)}건 기준을 넘습니다.`,
+      "목록 유형, 서비스 유형, 데이터 형식 기준으로 API형 메타데이터 패턴이 감지되지 않았습니다.",
     ];
-    const hasResponse = flagBit(row, "has_response_fields");
-    const hasRequest = flagBit(row, "has_request_variables");
-    if (hasResponse) {
-      reasons.push("Response fields already exist in metadata, so the output shape is partly visible.");
-    } else if (hasRequest) {
-      reasons.push("Request variables already exist in metadata, so some API contract hints are already present.");
+    if (e.hasResponse) {
+      reasons.push("메타데이터에 응답 필드가 이미 있어 출력 구조를 일부 가늠할 수 있습니다.");
+    } else if (e.hasRequest) {
+      reasons.push("메타데이터에 요청 변수가 이미 있어 API 계약의 일부 단서가 보입니다.");
     } else {
-      reasons.push(`Metadata richness is ${row.metadata_score}/5, but request/response structure is still thin.`);
+      reasons.push(`메타정보는 ${e.metadataScore}/5 수준이지만 요청·응답 구조는 아직 얇습니다.`);
     }
-    const label = row.combo_label;
-    if (row.combo === "UMY") {
-      reasons.push(`${label} already attach, so this is ready for human review instead of more join work.`);
-    } else if (row.combo === "UM-") {
-      reasons.push(`${label} attach, but usage history is missing; demand is coming from the current counter.`);
-    } else if (row.combo === "-MY") {
-      reasons.push(`${label} attach, but the universe-side row is still missing and should be reconciled first.`);
-    } else if (row.combo === "U-Y") {
-      reasons.push(`${label} attach, but metadata still needs repair before any API framing.`);
+    const label = e.comboLabelKo;
+    if (e.comboKey === "UMY") {
+      reasons.push(`${label}이(가) 이미 결합되어 있어, 추가 결합 작업보다 사람 검토를 먼저 붙일 수 있습니다.`);
+    } else if (e.comboKey === "UM-") {
+      reasons.push(`${label}은(는) 결합되어 있지만 이용 이력은 빠져 있어, 수요 신호가 현재 카운터 기준으로만 집계됩니다.`);
+    } else if (e.comboKey === "-MY") {
+      reasons.push(`${label}이(가) 결합되어 있지만 우주 쪽 행이 아직 없어 먼저 정합성 확인이 필요합니다.`);
+    } else if (e.comboKey === "U-Y") {
+      reasons.push(`${label}이(가) 결합되어 있지만 메타정보가 아직 약해, API 설계 전에 메타 보강이 필요합니다.`);
     } else {
-      reasons.push(`Attachment state is ${label}; this still needs reconciliation before any API conversion work.`);
+      reasons.push(`결합 상태는 ${label}이며, API 전환 검토 전에 결합 보완이 필요합니다.`);
     }
     return reasons;
   }
 
-  function deriveRationale(lane) {
-    if (lane === "Metadata-ready") return "Demand is proven and response fields already exist, so this is one of the easier records to spec first.";
-    if (lane === "Cross-channel demand") return "File demand is high and API applies are already showing up, which suggests users are looking for an API-shaped workflow.";
-    if (lane === "Usage gap check") return "Current demand is large enough to matter, but usage history did not attach. Confirm the join before planning conversion.";
-    return "Demand is strong enough to justify manual review even without a clearer request/response contract yet.";
+  function koRationale(e, lane) {
+    if (lane === "Metadata-ready") {
+      return `수요가 이미 확인됐고 응답 필드도 보여서 API 설계 검토를 먼저 붙이기 쉽습니다. (다운로드 ${number(e.downloads)}건 · 메타 ${e.metadataScore}/5 · 응답 필드 존재)`;
+    }
+    if (lane === "Cross-channel demand") {
+      return `파일 수요가 높고 API형 신청도 이미 보여, 이용자들이 API형 제공방식을 기대하고 있을 가능성이 큽니다. (다운로드 ${number(e.downloads)}건 · API 신청 ${number(e.apiApplies)}건)`;
+    }
+    if (lane === "Usage gap check") {
+      return `현재 수요는 충분히 크지만 이용 이력이 붙지 않았습니다. 전환 계획 전에 결합 상태를 먼저 재확인해야 합니다. (다운로드 ${number(e.downloads)}건 · 결합 ${e.comboLabelKo})`;
+    }
+    return `요청·응답 계약이 아직 선명하지 않더라도 수요가 충분히 강해 수작업 검토를 먼저 붙일 가치가 있습니다. (다운로드 ${number(e.downloads)}건 · 메타 ${e.metadataScore}/5)`;
   }
 
   function populateQueueSelects() {
@@ -554,14 +575,14 @@
 
   function queueRowHtml(rowIdx, rank) {
     const row = rowAt(rowIdx);
-    const lane = deriveLane(row);
-    const comboLabel = sourceComboLabel(row.combo_label);
+    const evidence = queueEvidence(row);
+    const lane = deriveLaneFromEvidence(evidence);
     return `
       <details class="queue-row">
         <summary>
           <div>
             <div class="queue-row-title">${escapeHtml(row.title || "(제목 없음)")}</div>
-            <div class="queue-row-provider">${escapeHtml(row.provider)} &middot; ${escapeHtml(row.format || "-")} &middot; ${escapeHtml(comboLabel)}</div>
+            <div class="queue-row-provider">${escapeHtml(row.provider)} &middot; ${escapeHtml(row.format || "-")} &middot; ${escapeHtml(evidence.comboLabelKo)}</div>
             <div class="queue-row-facts">
               <span class="queue-row-fact">종합 신호 <strong>${escapeHtml(number(row.usage_signal))}</strong></span>
               <span class="queue-row-fact">다운로드 <strong>${escapeHtml(number(row.downloads))}</strong></span>
@@ -576,11 +597,11 @@
         </summary>
         <div class="queue-row-body">
           <div class="summary-label">근거 요약</div>
-          <p class="summary-copy">${escapeHtml(translateSummary(deriveReasonSummary(row)))}</p>
-          ${reasonList(deriveReasons(row))}
+          <p class="summary-copy">${escapeHtml(koReasonSummary(evidence))}</p>
+          ${reasonList(koReasons(evidence))}
           <div class="action-note">
             <div class="action-label">왜 먼저 검토?</div>
-            <div class="action-copy">${escapeHtml(translateRationale(deriveRationale(lane)))}</div>
+            <div class="action-copy">${escapeHtml(koRationale(evidence, lane))}</div>
           </div>
           <div class="detail-links">
             <a class="detail-link" href="${escapeHtml(portalSearchUrl(row.title))}" target="_blank" rel="noreferrer noopener">포털에서 제목으로 검색 ↗</a>
