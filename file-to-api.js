@@ -35,11 +35,11 @@
   };
 
   const sourceComboLabelMap = {
-    "Universe + metadata + usage": "우주 + 메타 + 이용이력",
-    "Universe + metadata": "우주 + 메타",
+    "Universe + metadata + usage": "지원센터목록 + 메타 + 이용이력",
+    "Universe + metadata": "지원센터목록 + 메타",
     "Metadata + usage": "메타 + 이용이력",
-    "Universe only": "우주만 결합",
-    "Universe + usage": "우주 + 이용이력",
+    "Universe only": "지원센터목록만 결합",
+    "Universe + usage": "지원센터목록 + 이용이력",
   };
 
   const basisLabelMap = {
@@ -334,7 +334,7 @@
       {
         label: "3종 결합",
         value: percent(overview.joined_share),
-        note: `우주·메타·이용 이력이 함께 붙은 ${number(overview.joined_count)}건`,
+        note: `지원센터목록·메타·이용 이력이 함께 붙은 ${number(overview.joined_count)}건`,
       },
       {
         label: "이용 이력 부착",
@@ -496,7 +496,7 @@
     } else if (e.comboKey === "UM-") {
       reasons.push(`${label}은(는) 결합되어 있지만 이용 이력은 빠져 있어, 수요 신호가 현재 카운터 기준으로만 집계됩니다.`);
     } else if (e.comboKey === "-MY") {
-      reasons.push(`${label}이(가) 결합되어 있지만 우주 쪽 행이 아직 없어 먼저 정합성 확인이 필요합니다.`);
+      reasons.push(`${label}이(가) 결합되어 있지만 지원센터목록 쪽 행이 아직 없어 먼저 정합성 확인이 필요합니다.`);
     } else if (e.comboKey === "U-Y") {
       reasons.push(`${label}이(가) 결합되어 있지만 메타정보가 아직 약해, API 설계 전에 메타 보강이 필요합니다.`);
     } else {
