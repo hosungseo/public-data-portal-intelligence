@@ -7,11 +7,43 @@
   }
 
   function number(value) {
-    return new Intl.NumberFormat("en-US").format(value || 0);
+    return new Intl.NumberFormat("ko-KR").format(value || 0);
   }
 
   function percent(value) {
     return `${((value || 0) * 100).toFixed(1)}%`;
+  }
+
+  const laneLabelMap = {
+    "Metadata-ready": "즉시 검토 가능",
+    "Demand leader": "수요 우선",
+    "Cross-channel demand": "교차수요 확인",
+    "Usage gap check": "이력 재검증 필요",
+  };
+
+  const sourceComboLabelMap = {
+    "Universe + metadata + usage": "우주 + 메타 + 이용이력",
+    "Universe + metadata": "우주 + 메타",
+    "Metadata + usage": "메타 + 이용이력",
+    "Universe only": "우주만 결합",
+    "Universe + usage": "우주 + 이용이력",
+  };
+
+  const basisLabelMap = {
+    "usage-rollup": "이용이력 집계",
+    "current-counter": "현재 카운터",
+  };
+
+  function laneLabel(lane) {
+    return laneLabelMap[lane] || lane || "-";
+  }
+
+  function sourceComboLabel(label) {
+    return sourceComboLabelMap[label] || label || "-";
+  }
+
+  function basisLabel(label) {
+    return basisLabelMap[label] || label || "-";
   }
 
   function escapeHtml(value) {
@@ -21,6 +53,28 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#39;");
+  }
+
+  function translateSummary(text) {
+    return String(text || "")
+      .replace(/Signal downloads ([\d,]+); no API-like metadata\. Response fields already exist\./g, "다운로드 신호 $1건, API형 메타데이터는 아직 보이지 않으며 응답 필드는 이미 존재합니다.")
+      .replace(/Signal downloads ([\d,]+); no API-like metadata\. Metadata is still thin, so demand is doing most of the work\./g, "다운로드 신호 $1건, API형 메타데이터는 아직 보이지 않으며 현재는 메타정보보다 수요 신호가 더 강하게 작동합니다.");
+  }
+
+  function translateRationale(text) {
+    return String(text || "")
+      .replace(/Demand is proven and response fields already exist, so this is one of the easier records to spec first\./g, "수요가 이미 확인됐고 응답 필드도 보여서, API 설계 검토를 먼저 붙여보기 쉬운 후보입니다.")
+      .replace(/Demand is strong enough to justify manual review even without a clearer request\/response contract yet\./g, "요청·응답 계약이 아직 선명하지 않더라도 수요가 충분히 강해 수작업 검토를 먼저 붙일 가치가 있습니다.")
+      .replace(/File demand is high and API applies are already showing up, which suggests users are looking for an API-shaped workflow\./g, "파일 수요가 높고 API형 신청도 이미 보여서, 이용자들이 API형 제공방식을 기대하고 있을 가능성이 큽니다.")
+      .replace(/Current demand is large enough to matter, but usage history did not attach\. Confirm the join before planning conversion\./g, "현재 수요는 충분히 크지만 이용 이력이 붙지 않았습니다. 전환 계획 전에 결합 상태를 먼저 재확인해야 합니다.");
+  }
+
+  function translateReason(text) {
+    return String(text || "")
+      .replace(/File-like row with signal downloads ([\d,]+), above the 1,000 threshold\./g, "파일형 행이며 다운로드 신호 $1건으로 1,000건 기준을 넘습니다.")
+      .replace(/No API-like metadata pattern was detected from list type, service type, or data format\./g, "목록 유형, 서비스 유형, 데이터 형식 기준으로 API형 메타데이터 패턴이 감지되지 않았습니다.")
+      .replace(/Response fields already exist in metadata, so the output shape is partly visible\./g, "메타데이터에 응답 필드가 이미 있어 출력 구조를 일부 가늠할 수 있습니다.")
+      .replace(/Universe \+ metadata \+ usage already attach, so this is ready for human review instead of more join work\./g, "우주·메타·이용이력이 이미 결합되어 있어 추가 결합 작업보다 사람 검토를 먼저 붙일 수 있습니다.");
   }
 
   function metricCard(item) {
@@ -57,11 +111,11 @@
   }
 
   function laneClass(lane) {
-    return `lane lane-${String(lane || '').toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`;
+    return `lane lane-${String(lane || "").toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`;
   }
 
   function reasonList(items) {
-    return `<ul class="reason-list">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+    return `<ul class="reason-list">${items.map((item) => `<li>${escapeHtml(translateReason(item))}</li>`).join("")}</ul>`;
   }
 
   function metaItems(row) {
@@ -71,12 +125,12 @@
         : row.usage_year_min || "-";
 
     return [
-      { label: "Signal", value: number(row.usage_total_signal) },
-      { label: "Downloads", value: number(row.signal_downloads) },
-      { label: "API applies", value: number(row.usage_openapi_apply_count_total) },
-      { label: "Join", value: row.source_combo },
-      { label: "Format", value: row.data_format || "-" },
-      { label: "Years", value: String(yearText) },
+      { label: "종합 신호", value: number(row.usage_total_signal) },
+      { label: "다운로드", value: number(row.signal_downloads) },
+      { label: "API 신청", value: number(row.usage_openapi_apply_count_total) },
+      { label: "결합상태", value: sourceComboLabel(row.source_combo_label) },
+      { label: "포맷", value: row.data_format || "-" },
+      { label: "연도", value: String(yearText) },
     ]
       .map(
         (item) => `
@@ -96,21 +150,21 @@
           <div>
             <span class="rank">${String(row.rank).padStart(2, "0")}</span>
           </div>
-          <span class="${laneClass(row.inspect_lane)}">${escapeHtml(row.inspect_lane)}</span>
+          <span class="${laneClass(row.inspect_lane)}">${escapeHtml(laneLabel(row.inspect_lane))}</span>
         </div>
         <h3 class="title">${escapeHtml(row.title)}</h3>
         <div class="provider">${escapeHtml(row.provider_name)}</div>
         <div class="tag-row">
-          <span class="tag">${escapeHtml(row.source_combo_label)}</span>
-          <span class="tag">richness ${escapeHtml(row.metadata_richness_score)}</span>
-          ${row.has_response_fields ? '<span class="tag">response fields</span>' : ""}
-          ${row.usage_openapi_apply_count_total ? `<span class="tag">api applies ${escapeHtml(number(row.usage_openapi_apply_count_total))}</span>` : ""}
+          <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
+          <span class="tag">메타정보 ${escapeHtml(row.metadata_richness_score)}</span>
+          ${row.has_response_fields ? '<span class="tag">응답 필드 있음</span>' : ""}
+          ${row.usage_openapi_apply_count_total ? `<span class="tag">API 신청 ${escapeHtml(number(row.usage_openapi_apply_count_total))}</span>` : ""}
         </div>
         <div class="meta-row">${metaItems(row)}</div>
-        <p class="section-copy">${escapeHtml(row.candidate_reason_summary)}</p>
+        <p class="section-copy">${escapeHtml(translateSummary(row.candidate_reason_summary))}</p>
         <div class="action-note">
-          <div class="action-label">Next move</div>
-          <div class="action-copy">${escapeHtml(row.inspect_rationale)}</div>
+          <div class="action-label">다음 검토</div>
+          <div class="action-copy">${escapeHtml(translateRationale(row.inspect_rationale))}</div>
         </div>
         ${reasonList(row.candidate_reasons)}
       </article>
@@ -123,22 +177,22 @@
         <summary class="strong-summary">
           <div class="detail-topline">
             <span class="rank">${String(row.rank).padStart(2, "0")}</span>
-            <span class="tag">${escapeHtml(row.source_combo)}</span>
+            <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
           </div>
           <div>
             <h3 class="title">${escapeHtml(row.title)}</h3>
             <div class="provider">${escapeHtml(row.provider_name)}</div>
           </div>
           <div class="meta-row">${metaItems(row)}</div>
-          <p class="summary-copy">${escapeHtml(row.candidate_reason_summary)}</p>
+          <p class="summary-copy">${escapeHtml(translateSummary(row.candidate_reason_summary))}</p>
         </summary>
         <div class="detail-body">
           <div class="tag-row">
-            <span class="tag">${escapeHtml(row.source_combo_label)}</span>
-            <span class="tag">richness ${escapeHtml(row.metadata_richness_score)}</span>
-            ${row.has_response_fields ? '<span class="tag">response fields</span>' : ""}
-            ${row.has_request_variables ? '<span class="tag">request vars</span>' : ""}
-            <span class="tag">${escapeHtml(row.signal_download_basis)}</span>
+            <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
+            <span class="tag">메타정보 ${escapeHtml(row.metadata_richness_score)}</span>
+            ${row.has_response_fields ? '<span class="tag">응답 필드 있음</span>' : ""}
+            ${row.has_request_variables ? '<span class="tag">요청 변수 있음</span>' : ""}
+            <span class="tag">${escapeHtml(basisLabel(row.signal_download_basis))}</span>
           </div>
           ${reasonList(row.candidate_reasons)}
         </div>
@@ -152,21 +206,21 @@
         <div class="provider-topline">
           <div>
             <div class="provider-name">${escapeHtml(item.provider_name)}</div>
-            <div class="muted">${escapeHtml(number(item.candidate_count))} candidates</div>
+            <div class="muted">${escapeHtml(number(item.candidate_count))}건 후보</div>
           </div>
           <div class="provider-metric">${escapeHtml(number(item.signal_total))}</div>
         </div>
         <div class="provider-meta">
           <div>
-            <div class="mini-label">Response fields</div>
+            <div class="mini-label">응답 필드</div>
             <div class="mini-value">${escapeHtml(number(item.response_field_count))}</div>
           </div>
           <div>
-            <div class="mini-label">All three joined</div>
+            <div class="mini-label">3종 결합</div>
             <div class="mini-value">${escapeHtml(number(item.joined_count))}</div>
           </div>
           <div>
-            <div class="mini-label">Shortlist hits</div>
+            <div class="mini-label">우선 검토</div>
             <div class="mini-value">${escapeHtml(number(item.shortlist_count))}</div>
           </div>
         </div>
@@ -187,56 +241,50 @@
 
   function renderOverview() {
     const overview = data.overview;
-    const providerRollup = data.provider_rollup;
     byId("hero-lede").textContent =
-      `${number(overview.candidate_count)} file datasets currently sit in the API-conversion review queue. ` +
-      `Most already attach enough metadata and usage history to support human inspection, so the immediate question is what to review first for API conversion.`;
+      `현재 ${number(overview.candidate_count)}건의 파일데이터가 API 전환 검토 큐에 올라와 있습니다. ` +
+      `이미 메타데이터와 이용 이력이 어느 정도 붙어 있는 만큼, 지금의 질문은 무엇을 먼저 API 전환 검토 대상으로 볼 것인가입니다.`;
     byId("asset-note").textContent =
-      `${number(data.source_assets.summary_js_bytes)} bytes from ${data.source_assets.summary_js_path} instead of ${number(data.source_assets.master_bytes)} bytes from ${data.source_assets.master_path}`;
+      `현재 페이지는 ${data.source_assets.summary_js_path} (${number(data.source_assets.summary_js_bytes)} bytes) 기준으로 동작하며, 전체 마스터 자산 ${data.source_assets.master_path} (${number(data.source_assets.master_bytes)} bytes) 전체를 직접 노출하지 않습니다.`;
 
     byId("hero-metrics").innerHTML = [
       {
-        label: "Candidates",
+        label: "검토 후보",
         value: number(overview.candidate_count),
-        note: `${percent(overview.share_of_merged)} of merged catalog`,
+        note: `전체 병합 카탈로그의 ${percent(overview.share_of_merged)}`,
       },
       {
-        label: "All three joined",
-        value: percent(overview.joined_share),
-        note: `${number(overview.joined_count)} rows already attach universe, metadata, and usage`,
+        label: "즉시 검토 가능",
+        value: number(overview.response_field_count),
+        note: `응답 필드가 보여 API 설계를 덜 추측적으로 시작할 수 있는 ${number(overview.response_field_count)}건`,
       },
       {
-        label: "Response fields",
-        value: percent(overview.response_field_share),
-        note: `${number(overview.response_field_count)} rows already show output fields`,
-      },
-      {
-        label: "Top-10 providers",
-        value: percent(providerRollup.top_10_share),
-        note: "candidate concentration in the first provider cluster",
+        label: "교차수요 관찰",
+        value: number(overview.api_applies_present_count),
+        note: `파일 수요와 API형 수요가 함께 관찰되는 ${number(overview.api_applies_present_count)}건`,
       },
     ]
       .map(metricCard)
       .join("");
 
     byId("explainer-copy").textContent =
-      `Many public datasets are still delivered mainly as downloadable files. This page surfaces which file datasets should be reviewed earlier as possible API-conversion candidates because demand is already visible.`;
+      `이 페이지는 공공데이터포털 파일데이터 가운데, 수요와 메타데이터 상태를 바탕으로 무엇을 먼저 API 전환 검토 대상으로 볼지 빠르게 가늠하기 위한 검토 큐입니다.`;
 
     byId("priority-strip").innerHTML = [
       {
-        label: "Inspect-first review shortlist",
-        value: `${number(data.shortlist.items.length)} rows`,
-        note: "Balanced across metadata-ready, demand leader, cross-channel demand, and usage-gap checks.",
+        label: "우선 검토 묶음",
+        value: `${number(data.shortlist.items.length)}건`,
+        note: "즉시 검토 가능, 수요 우선, 교차수요, 이력 재검증 필요 후보를 함께 묶어 보여줍니다.",
       },
       {
-        label: "Immediate conversion surface",
-        value: `${number(overview.response_field_count)} rows`,
-        note: "These already expose response fields, so the data shape is easier to reason about.",
+        label: "즉시 검토 가능",
+        value: `${number(overview.response_field_count)}건`,
+        note: "응답 필드가 이미 드러나 데이터 구조를 더 쉽게 파악할 수 있습니다.",
       },
       {
-        label: "Cross-channel demand",
-        value: `${number(overview.api_applies_present_count)} rows`,
-        note: "File demand is already paired with API-side demand in a meaningful minority of the queue.",
+        label: "교차수요 관찰",
+        value: `${number(overview.api_applies_present_count)}건`,
+        note: "파일 수요와 API형 수요가 함께 관찰되어 전환 검토 압력이 상대적으로 높습니다.",
       },
     ]
       .map((item) => `
@@ -254,24 +302,24 @@
 
     byId("readiness-metrics").innerHTML = [
       {
-        label: "All three joined",
+        label: "3종 결합",
         value: percent(overview.joined_share),
-        note: `${number(overview.joined_count)} rows already attach universe, metadata, and usage`,
+        note: `우주·메타·이용 이력이 함께 붙은 ${number(overview.joined_count)}건`,
       },
       {
-        label: "Usage attached",
+        label: "이용 이력 부착",
         value: percent(overview.usage_attached_share),
-        note: `${number(overview.usage_attached_count)} rows carry usage history`,
+        note: `이용 이력이 붙은 ${number(overview.usage_attached_count)}건`,
       },
       {
-        label: "Response fields",
+        label: "응답 필드 노출",
         value: percent(overview.response_field_share),
-        note: `${number(overview.response_field_count)} rows already show output fields`,
+        note: `응답 필드가 보이는 ${number(overview.response_field_count)}건`,
       },
       {
-        label: "API applies present",
+        label: "API형 수요 관찰",
         value: percent(overview.api_applies_present_share),
-        note: `${number(overview.api_applies_present_count)} rows already see some API-side demand`,
+        note: `API형 수요가 관찰되는 ${number(overview.api_applies_present_count)}건`,
       },
     ]
       .map(metricCard)
@@ -279,9 +327,9 @@
 
     byId("source-combo-bars").innerHTML = barRows(
       data.slice_shape.source_combos.map((item) => ({
-        label: item.label,
+        label: sourceComboLabel(item.label),
         value: percent(item.share),
-        note: `${number(item.count)} rows`,
+        note: `${number(item.count)}건`,
         share: item.share,
       })),
     );
@@ -297,15 +345,15 @@
   function renderProviders() {
     const providerRollup = data.provider_rollup;
     byId("provider-copy").textContent =
-          `The top 10 providers account for ${percent(providerRollup.top_10_share)} of all file-to-API candidates. Start there if the goal is to reduce the API-conversion review queue, not to cover the long tail first.`;
+      `상위 10개 기관이 전체 후보의 ${percent(providerRollup.top_10_share)}를 차지합니다. 롱테일보다는 검토 큐를 빨리 줄이는 것이 목표라면 여기부터 보는 편이 효율적입니다.`;
     byId("provider-list").innerHTML = providerRollup.providers.map(providerRow).join("");
   }
 
   function renderShortlist() {
-    const metadataReady = data.shortlist.items.filter((item) => item.inspect_lane === 'Metadata-ready').length;
-    const usageGap = data.shortlist.items.filter((item) => item.inspect_lane === 'Usage gap check').length;
+    const metadataReady = data.shortlist.items.filter((item) => item.inspect_lane === "Metadata-ready").length;
+    const usageGap = data.shortlist.items.filter((item) => item.inspect_lane === "Usage gap check").length;
     byId("shortlist-copy").textContent =
-      `${data.shortlist.ranking_note} ${number(metadataReady)} rows already look easier to review for API conversion because the metadata is clearer, while ${number(usageGap)} still need a human check before conversion planning.`;
+      `${number(metadataReady)}건은 메타데이터가 더 선명해 먼저 검토하기 좋고, ${number(usageGap)}건은 전환 검토 전 이력 재확인이 더 필요합니다.`;
     byId("shortlist-grid").innerHTML = data.shortlist.items.map(shortlistCard).join("");
   }
 
@@ -313,7 +361,7 @@
     const strongest = data.strongest_candidates.items;
     const shown = strongest.slice(0, visibleStrongCount);
     byId("strongest-copy").textContent =
-      `${data.strongest_candidates.ranking_note} Showing ${number(shown.length)} of ${number(strongest.length)} rows in the current API-conversion review asset.`;
+      `신호 강도가 높은 후보를 먼저 펼쳐 보여줍니다. 현재 공개 자산에서는 ${number(strongest.length)}건 중 ${number(shown.length)}건을 먼저 제시합니다.`;
     byId("strongest-list").innerHTML = shown.map(strongestCard).join("");
 
     const button = byId("show-more");
@@ -322,7 +370,7 @@
       return;
     }
     button.hidden = false;
-    button.textContent = `Show ${Math.min(12, strongest.length - visibleStrongCount)} more`;
+    button.textContent = `${Math.min(12, strongest.length - visibleStrongCount)}개 더 보기`;
   }
 
   function initReveal() {
@@ -349,7 +397,7 @@
 
   function init() {
     if (!data) {
-      document.body.innerHTML = '<main class="app"><div class="empty">Missing output/file_to_api_summary.js. Run `python3 scripts/build_file_to_api_assets.py` first.</div></main>';
+      document.body.innerHTML = '<main class="app"><div class="empty">output/file_to_api_summary.js 가 없습니다. 요약 자산을 먼저 생성해야 합니다.</div></main>';
       return;
     }
 
