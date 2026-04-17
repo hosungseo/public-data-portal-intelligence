@@ -7,21 +7,22 @@
     <title>Public Data Portal Intelligence — API 전환 검토 큐</title>
     <style>
       :root {
-        --bg: #f4f0e8;
-        --bg-deep: #e7ddcf;
-        --surface: rgba(255, 250, 244, 0.88);
-        --surface-strong: rgba(255, 250, 244, 0.96);
-        --line: rgba(30, 39, 48, 0.12);
-        --line-strong: rgba(30, 39, 48, 0.24);
-        --ink: #18232b;
-        --muted: #5d6972;
-        --accent: #2a6f6a;
-        --accent-soft: rgba(42, 111, 106, 0.12);
-        --accent-strong: #144844;
-        --shadow: 0 18px 42px rgba(26, 35, 43, 0.08);
+        --bg: #000000;
+        --surface: #0a0a0a;
+        --surface-muted: #050505;
+        --line: #1a1a1a;
+        --line-strong: #333333;
+        --ink: #fafafa;
+        --muted: #a0a0a0;
+        --muted-deep: #666666;
+        --accent: #0af97a;
+        --accent-soft: rgba(10, 249, 122, 0.08);
+        --accent-edge: rgba(10, 249, 122, 0.04);
+        --accent-strong: #0af97a;
+        --shadow: 0 18px 42px rgba(0, 0, 0, 0.6);
         --sans: "Pretendard Variable", "Pretendard", "Inter", "SF Pro Text", "Apple SD Gothic Neo", sans-serif;
         --mono: "SFMono-Regular", "JetBrains Mono", "IBM Plex Mono", "Menlo", monospace;
-        color-scheme: light;
+        color-scheme: dark;
       }
 
       * {
@@ -33,23 +34,7 @@
         min-height: 100vh;
         font-family: var(--sans);
         color: var(--ink);
-        background:
-          radial-gradient(circle at top left, rgba(42, 111, 106, 0.18), transparent 34%),
-          radial-gradient(circle at 82% 12%, rgba(195, 126, 51, 0.1), transparent 24%),
-          linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.18)),
-          linear-gradient(135deg, var(--bg) 0%, var(--bg-deep) 100%);
-      }
-
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        background-image:
-          linear-gradient(rgba(24, 35, 43, 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(24, 35, 43, 0.035) 1px, transparent 1px);
-        background-size: 40px 40px;
-        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.34), transparent 88%);
+        background: var(--bg);
       }
 
       a {
@@ -72,8 +57,7 @@
       .strong-card {
         border: 1px solid var(--line);
         background: var(--surface);
-        backdrop-filter: blur(12px);
-        box-shadow: var(--shadow);
+        box-shadow: none;
       }
 
       .masthead {
@@ -567,10 +551,6 @@
 
       details summary::-webkit-details-marker {
         display: none;
-      }
-
-      .strong-card {
-        background: var(--surface-strong);
       }
 
       .strong-summary {
