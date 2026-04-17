@@ -186,7 +186,7 @@
     const topRow = data.shortlist.items[0];
 
     byId("hero-lede").textContent =
-      `공공데이터포털 파일데이터 중 수요가 이미 높고 메타정보까지 갖춘 것부터 골라낸 리뷰 큐입니다. 모든 파일을 API로 바꾸자는 주장이 아니라, 무엇을 먼저 검토해야 하는지 드러내는 화면입니다.`;
+      `파일은 매번 여는 단계를 요구하고 API는 그 단계를 줄입니다. 수요가 반복되고 메타정보까지 갖춘 후보부터, 어디서 그 전환이 가치 있는지 훑어보는 검토 큐입니다. 모든 파일을 API로 바꾸자는 주장은 아닙니다.`;
 
     byId("asset-note").textContent =
       `현재 페이지는 ${data.source_assets.summary_js_path} (${number(data.source_assets.summary_js_bytes)} bytes) 기준으로 동작하며, 전체 마스터 자산 ${data.source_assets.master_path} (${number(data.source_assets.master_bytes)} bytes) 전체를 직접 노출하지 않습니다.`;
