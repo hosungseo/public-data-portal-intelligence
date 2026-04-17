@@ -10,8 +10,6 @@
 
 > 공공데이터포털 파일데이터 가운데, 무엇을 먼저 API 전환 검토 대상으로 볼 것인가?
 
-첫 공개 버전은 `file_to_api` 슬라이스만 다룹니다.
-
 ## What this repo is for
 
 이 프로젝트는 공공데이터포털의 전체 파일데이터를 공개하는 저장소가 아닙니다.
@@ -22,13 +20,17 @@
 - 어떤 제공기관이 API 전환 검토 후보를 많이 보유하고 있는가
 - 파일 수요와 API형 수요가 동시에 관찰되는 후보는 어디인가
 
-즉, 이 저장소의 목적은 **API 전환 검토 우선순위를 시각적으로 정리하는 것**입니다.
+이 페이지는 자동 판정기가 아니라 **사람이 먼저 볼 검토 큐**입니다.
 
 ## What the page does
 
-페이지는 현재 메타데이터상 여전히 파일 중심으로 보이지만, 실제 이용 수요는 높아서 **API 전환 검토 대상**으로 먼저 살펴볼 만한 후보를 보여줍니다.
+공개 페이지는 다섯 개 섹션으로 구성됩니다.
 
-이 페이지는 자동 판정기가 아니라, **사람이 먼저 볼 검토 큐(prioritization surface)** 입니다.
+1. **히어로** — 선언문과 4개 KPI(검토 후보·우선 검토·즉시 검토 가능·교차수요 관찰). 첫 화면에서 규모와 질문을 같이 보여줍니다.
+2. **우선 검토 대상 12건** — shortlist 카드. 각 카드를 펼치면 해당 행이 왜 우선순위에 올랐는지 근거 4가지와 "왜 먼저 검토?" 문구가 수치와 함께 나옵니다.
+3. **전체 검토 큐 (10,045건)** — 검색·제공기관·검토 레인·포맷·정렬·페이지네이션. 아무 행이나 클릭해 펼치면 근거 요약·이유 4개·레인별 검토 사유를 확인할 수 있습니다.
+4. **큐의 모습** — 결합 상태 분포 바, 주요 포맷·갱신 주기 칩, 기관 상위 5개.
+5. **방법론과 공개 범위** — 접힘 패널. 사용된 자산, 이 페이지가 하지 않는 일, 공개 범위.
 
 ## Current heuristic
 
@@ -38,21 +40,42 @@
 - 다운로드 수요가 **1,000+** 이상이며
 - 목록 유형, 서비스 유형, 데이터 형식만 봤을 때 아직 API형 데이터처럼 보이지 않는 경우
 
+## Review lanes
+
+후보는 네 가지 검토 레인으로 분류됩니다.
+
+- **즉시 검토 가능** — 응답 필드가 드러나고 메타정보가 충분해 API 설계 검토를 바로 붙일 수 있는 후보
+- **수요 우선** — 메타정보는 얇더라도 다운로드 수요가 강해 수작업 검토부터 붙일 가치가 큰 후보
+- **교차수요 확인** — 파일 수요와 API형 신청이 함께 관찰되는 후보
+- **이력 재검증 필요** — 수요는 크지만 이용 이력 결합이 덜 붙어 있어 결합 확인이 먼저 필요한 후보
+
+## Source joins
+
+페이지는 공공데이터포털 위에 올라간 세 가지 카탈로그의 결합 상태를 `UMY` 형식으로 표시합니다.
+
+- **U — 지원센터목록** · `15062804` 공공데이터활용지원센터의 목록개방현황
+- **M — 메타** · `15121937` 행정안전부 목록 메타정보
+- **Y — 이용이력** · `15076332` 행정안전부 공공데이터 활용 현황(파일_API)
+
+`UMY`는 세 소스 모두에 행이 있다는 뜻이고, `UM-`는 이용이력이 없고, `-MY`는 지원센터목록 쪽에 행이 없다는 뜻입니다.
+
 ## Current snapshot
 
-현재 공개 페이지는 경량 summary asset 기반으로 다음 검토 큐를 보여줍니다.
+현재 공개 페이지가 보여주는 검토 큐의 규모:
 
-- **10,045** file-to-API candidates
+- **10,045** file-to-API candidates (검색·필터·페이지네이션 가능)
 - **8,762** rows already attach universe, metadata, and usage
 - **6,763** rows already expose response fields
 - **2,621** rows already show some API-side demand
 
-## What this page helps answer
+## Design
 
-- 현재 API 전환 검토 큐의 규모는 어느 정도인가?
-- 무엇을 먼저 검토해야 하는가?
-- 어떤 제공기관이 후보군을 많이 보유하고 있는가?
-- 어떤 후보는 이미 response fields나 cross-channel demand를 갖고 있는가?
+페이지는 다크 프리미엄 톤으로 설계되었습니다.
+
+- **색** — 순검정 배경(`#000`), 네온 녹색 포인트(`#0af97a`)를 한 화면에 한두 곳만
+- **타이포** — 한글 Pretendard Variable · 라틴 Inter · 숫자 SF Mono / JetBrains Mono
+- **상호작용** — native `<details>`로 행 펼침, `prefers-reduced-motion` 지원, `:focus-visible` 녹색 아웃라인
+- **반응형** — 1080px 기준에서 2열 레이아웃이 1열로, 640px 기준에서 KPI가 4→2열로 축소
 
 ## Data policy
 
@@ -62,19 +85,29 @@ Included:
 - `index.html`
 - `file-to-api.html`
 - `file-to-api.js`
-- `output/file_to_api_summary.js`
-- `output/file_to_api_summary.json`
+- `output/file_to_api_summary.{json,js}` — 집계·shortlist(상위 12건)·strongest(48건)
+- `output/file_to_api_index.{json,js}` — 전체 10,045건 경량 인덱스(컬럼형, 한 행당 약 96바이트, gzip 후 약 246KB)
 
 Not included:
 - full merged master JSON
 - raw source datasets
 - internal scratch files
 - intermediate analysis files
+- 빌드 스크립트(`scripts/`)
 
-공개 페이지는 이 lightweight summary asset을 브라우저에서 직접 읽습니다.
+공개 페이지는 이 lightweight summary/index asset을 브라우저에서 직접 읽습니다. `file_to_api_index`는 각 행의 title·provider·포맷·combo·플래그·수치만 담고, 근거 문장은 빌드 시 저장하지 않고 클라이언트에서 규칙으로 유도합니다. 빌드 스크립트와 완전히 동일한 규칙을 사용해 일관된 근거 문장을 생성합니다.
 
 ## Notes
 
 - 이 페이지는 **API 전환 검토 큐**이지, 모든 flagged 파일이 반드시 API가 되어야 한다는 뜻은 아닙니다.
-- 실제 API 전환 여부는 schema, update cycle, legal constraints, 운영 가능성 검토가 추가로 필요합니다.
+- 실제 API 전환 여부는 스키마, 갱신 주기, 법적 제약, 운영 가능성 검토가 추가로 필요합니다.
 - 공개 페이지는 전체 원천 공개보다 **검토 우선순위의 가독성**에 최적화되어 있습니다.
+
+## Local preview
+
+```bash
+git clone https://github.com/hosungseo/public-data-portal-intelligence.git
+cd public-data-portal-intelligence
+python3 -m http.server 8000
+# open http://localhost:8000/file-to-api.html
+```
