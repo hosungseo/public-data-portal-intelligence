@@ -1,9 +1,8 @@
 (function () {
   const data = window.FILE_TO_API_DATA;
   const index = window.FILE_TO_API_INDEX;
-  let visibleStrongCount = 12;
 
-  const QUEUE_PAGE_SIZE = 50;
+  const QUEUE_PAGE_SIZE = 25;
   const queueState = {
     search: "",
     provider: "",
@@ -144,136 +143,91 @@
       .join("");
   }
 
-  function shortlistCard(row) {
+  function shortlistCard(row, rankInList) {
     const evidence = serverEvidence(row);
     const lane = row.inspect_lane || deriveLaneFromEvidence(evidence);
+    const openAttr = rankInList === 0 ? " open" : "";
     return `
-      <article class="shortlist-card">
-        <div class="card-head">
+      <details class="shortlist-card"${openAttr}>
+        <summary>
+          <span class="rank">${String(row.rank).padStart(2, "0")}</span>
           <div>
-            <span class="rank">${String(row.rank).padStart(2, "0")}</span>
+            <h3 class="shortlist-card-title">${escapeHtml(row.title)}</h3>
+            <div class="shortlist-card-provider">${escapeHtml(row.provider_name)}</div>
+            <div class="shortlist-card-quick">${escapeHtml(koRationale(evidence, lane))}</div>
           </div>
           <span class="${laneClass(lane)}">${escapeHtml(laneLabel(lane))}</span>
-        </div>
-        <h3 class="title">${escapeHtml(row.title)}</h3>
-        <div class="provider">${escapeHtml(row.provider_name)}</div>
-        <div class="action-note">
-          <div class="action-label">왜 먼저 검토?</div>
-          <div class="action-copy">${escapeHtml(koRationale(evidence, lane))}</div>
-        </div>
-        <div class="tag-row">
-          <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
-          <span class="tag">메타정보 ${escapeHtml(row.metadata_richness_score)}</span>
-          ${row.has_response_fields ? '<span class="tag">응답 필드 있음</span>' : ""}
-          ${row.usage_openapi_apply_count_total ? `<span class="tag">API 신청 ${escapeHtml(number(row.usage_openapi_apply_count_total))}</span>` : ""}
-        </div>
-        <div class="meta-row">${metaItems(row)}</div>
-        <div class="summary-label">근거 요약</div>
-        <p class="summary-copy">${escapeHtml(koReasonSummary(evidence))}</p>
-        ${reasonList(koReasons(evidence))}
-      </article>
-    `;
-  }
-
-  function strongestCard(row) {
-    const evidence = serverEvidence(row);
-    const lane = row.inspect_lane || deriveLaneFromEvidence(evidence);
-    return `
-      <details class="strong-card"${row.rank <= 3 ? " open" : ""}>
-        <summary class="strong-summary">
-          <div class="detail-topline">
-            <span class="rank">${String(row.rank).padStart(2, "0")}</span>
-            <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
-          </div>
-          <div>
-            <h3 class="title">${escapeHtml(row.title)}</h3>
-            <div class="provider">${escapeHtml(row.provider_name)}</div>
-          </div>
-          <div class="meta-row">${metaItems(row)}</div>
-          <div class="action-note">
-            <div class="action-label">왜 먼저 검토?</div>
-            <div class="action-copy">${escapeHtml(koRationale(evidence, lane))}</div>
-          </div>
-          <div class="summary-label">근거 요약</div>
-          <p class="summary-copy">${escapeHtml(koReasonSummary(evidence))}</p>
         </summary>
-        <div class="detail-body">
+        <div class="shortlist-card-body">
           <div class="tag-row">
             <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
             <span class="tag">메타정보 ${escapeHtml(row.metadata_richness_score)}</span>
             ${row.has_response_fields ? '<span class="tag">응답 필드 있음</span>' : ""}
-            ${row.has_request_variables ? '<span class="tag">요청 변수 있음</span>' : ""}
-            <span class="tag">${escapeHtml(basisLabel(row.signal_download_basis))}</span>
+            ${row.usage_openapi_apply_count_total ? `<span class="tag">API 신청 ${escapeHtml(number(row.usage_openapi_apply_count_total))}</span>` : ""}
           </div>
-          <div class="detail-evidence">
-            <div class="meta-item"><div class="meta-label">갱신 주기</div><div class="meta-value">${escapeHtml(row.update_cycle || '-')}</div></div>
-            <div class="meta-item"><div class="meta-label">전체 행 수</div><div class="meta-value">${escapeHtml(number(row.total_rows))}</div></div>
-            <div class="meta-item"><div class="meta-label">이용 이력 행 수</div><div class="meta-value">${escapeHtml(number(row.usage_row_count))}</div></div>
-            <div class="meta-item"><div class="meta-label">이력 연도</div><div class="meta-value">${escapeHtml(yearSpanText(row))}</div></div>
-            <div class="meta-item"><div class="meta-label">포털 list_key</div><div class="meta-value">${escapeHtml(row.list_key || '-')}</div></div>
-            <div class="meta-item"><div class="meta-label">다운로드 기준</div><div class="meta-value">${escapeHtml(basisLabel(row.signal_download_basis))}</div></div>
-          </div>
-          <div class="detail-links">
-            <a class="detail-link" href="${escapeHtml(portalSearchUrl(row.title))}" target="_blank" rel="noreferrer noopener">포털에서 제목으로 검색 ↗</a>
-          </div>
+          <div class="meta-row">${metaItems(row)}</div>
+          <div class="summary-label">근거 요약</div>
+          <p class="summary-copy">${escapeHtml(koReasonSummary(evidence))}</p>
           ${reasonList(koReasons(evidence))}
         </div>
       </details>
     `;
   }
 
-  function providerRow(item) {
+  function providerRow(item, rankInList) {
     const shareText = percent(item.share_of_candidates || 0);
     const actionText = item.shortlist_count > 0
       ? `이 기관은 전체 후보의 ${shareText}를 차지하며, 바로 우선 검토로 넘겨볼 수 있는 후보가 ${number(item.shortlist_count)}건 있습니다.`
       : `이 기관은 후보가 많이 몰려 있어 큐를 줄이는 관점에서는 중요하지만, 바로 우선 검토로 분류된 후보는 아직 없습니다.`;
+    const openAttr = rankInList < 3 ? " open" : "";
     return `
-      <div class="provider-row">
-        <div class="provider-topline">
+      <details class="provider-row"${openAttr}>
+        <summary>
           <div>
             <div class="provider-name">${escapeHtml(item.provider_name)}</div>
-            <div class="muted">${escapeHtml(number(item.candidate_count))}건 후보 · 전체의 ${escapeHtml(shareText)}</div>
+            <div class="muted">${escapeHtml(number(item.candidate_count))}건 후보 · 전체의 ${escapeHtml(shareText)} · 우선 ${escapeHtml(number(item.shortlist_count))}</div>
           </div>
-          <div class="provider-metric">${escapeHtml(number(item.shortlist_count))}</div>
-        </div>
-        <div class="provider-action">
-          <strong>어디부터 줄일까?</strong>
-          <div class="provider-submetric">${escapeHtml(actionText)}</div>
-        </div>
-        <div class="provider-meta">
-          <div>
-            <div class="mini-label">응답 필드</div>
-            <div class="mini-value">${escapeHtml(number(item.response_field_count))}</div>
+          <span class="provider-row-toggle"></span>
+        </summary>
+        <div class="provider-row-body">
+          <div class="provider-action">
+            <strong>어디부터 줄일까?</strong>
+            <div class="provider-submetric">${escapeHtml(actionText)}</div>
           </div>
-          <div>
-            <div class="mini-label">3종 결합</div>
-            <div class="mini-value">${escapeHtml(number(item.joined_count))}</div>
+          <div class="provider-meta">
+            <div>
+              <div class="mini-label">응답 필드</div>
+              <div class="mini-value">${escapeHtml(number(item.response_field_count))}</div>
+            </div>
+            <div>
+              <div class="mini-label">3종 결합</div>
+              <div class="mini-value">${escapeHtml(number(item.joined_count))}</div>
+            </div>
+            <div>
+              <div class="mini-label">우선 검토</div>
+              <div class="mini-value">${escapeHtml(number(item.shortlist_count))}</div>
+            </div>
           </div>
-          <div>
-            <div class="mini-label">우선 검토</div>
-            <div class="mini-value">${escapeHtml(number(item.shortlist_count))}</div>
+          <div class="provider-examples">
+            ${item.top_examples
+              .map(
+                (example) => `
+                  <span class="example-pill">
+                    ${escapeHtml(example.title)} · ${escapeHtml(number(example.signal_downloads))}
+                  </span>
+                `,
+              )
+              .join("")}
           </div>
         </div>
-        <div class="provider-examples">
-          ${item.top_examples
-            .map(
-              (example) => `
-                <span class="example-pill">
-                  ${escapeHtml(example.title)} · ${escapeHtml(number(example.signal_downloads))}
-                </span>
-              `,
-            )
-            .join("")}
-        </div>
-      </div>
+      </details>
     `;
   }
 
   function renderOverview() {
     const overview = data.overview;
     byId("hero-lede").textContent =
-      `현재 ${number(overview.candidate_count)}건의 파일데이터가 API 전환 검토 큐에 올라와 있습니다. ` +
-      `이미 메타데이터와 이용 이력이 어느 정도 붙어 있는 만큼, 지금의 질문은 무엇을 먼저 API 전환 검토 대상으로 볼 것인가입니다.`;
+      `현재 ${number(overview.candidate_count)}건의 파일데이터가 검토 큐에 있으며, 이 페이지는 무엇을 먼저 API 전환 검토 대상으로 볼지 우선순위를 보여줍니다.`;
     byId("asset-note").textContent =
       `현재 페이지는 ${data.source_assets.summary_js_path} (${number(data.source_assets.summary_js_bytes)} bytes) 기준으로 동작하며, 전체 마스터 자산 ${data.source_assets.master_path} (${number(data.source_assets.master_bytes)} bytes) 전체를 직접 노출하지 않습니다.`;
 
@@ -284,9 +238,14 @@
         note: `전체 병합 카탈로그의 ${percent(overview.share_of_merged)}`,
       },
       {
+        label: "우선 검토 묶음",
+        value: number(data.shortlist.items.length),
+        note: "즉시·수요·교차·재검증을 묶은 최우선 후보",
+      },
+      {
         label: "즉시 검토 가능",
         value: number(overview.response_field_count),
-        note: `응답 필드가 보여 API 설계를 덜 추측적으로 시작할 수 있는 ${number(overview.response_field_count)}건`,
+        note: `응답 필드가 드러나 API 설계를 덜 추측적으로 시작할 수 있는 ${number(overview.response_field_count)}건`,
       },
       {
         label: "교차수요 관찰",
@@ -299,32 +258,6 @@
 
     byId("explainer-copy").textContent =
       `이 페이지는 공공데이터포털 파일데이터 가운데, 수요와 메타데이터 상태를 바탕으로 무엇을 먼저 API 전환 검토 대상으로 볼지 빠르게 가늠하기 위한 검토 큐입니다.`;
-
-    byId("priority-strip").innerHTML = [
-      {
-        label: "우선 검토 묶음",
-        value: `${number(data.shortlist.items.length)}건`,
-        note: "즉시 검토 가능, 수요 우선, 교차수요, 이력 재검증 필요 후보를 함께 묶어 보여줍니다.",
-      },
-      {
-        label: "즉시 검토 가능",
-        value: `${number(overview.response_field_count)}건`,
-        note: "응답 필드가 이미 드러나 데이터 구조를 더 쉽게 파악할 수 있습니다.",
-      },
-      {
-        label: "교차수요 관찰",
-        value: `${number(overview.api_applies_present_count)}건`,
-        note: "파일 수요와 API형 수요가 함께 관찰되어 전환 검토 압력이 상대적으로 높습니다.",
-      },
-    ]
-      .map((item) => `
-        <div class="priority-item">
-          <div class="priority-label">${escapeHtml(item.label)}</div>
-          <div class="priority-value">${escapeHtml(item.value)}</div>
-          <div class="priority-note">${escapeHtml(item.note)}</div>
-        </div>
-      `)
-      .join("");
   }
 
   function renderShape() {
@@ -376,7 +309,7 @@
     const providerRollup = data.provider_rollup;
     byId("provider-copy").textContent =
       `상위 10개 기관이 전체 후보의 ${percent(providerRollup.top_10_share)}를 차지합니다. 어디부터 큐를 줄일지 보려면 후보가 집중된 기관과 우선 검토 후보가 함께 있는 기관을 먼저 보는 편이 효율적입니다.`;
-    byId("provider-list").innerHTML = providerRollup.providers.map(providerRow).join("");
+    byId("provider-list").innerHTML = providerRollup.providers.map((item, i) => providerRow(item, i)).join("");
   }
 
   function renderShortlist() {
@@ -384,23 +317,7 @@
     const usageGap = data.shortlist.items.filter((item) => item.inspect_lane === "Usage gap check").length;
     byId("shortlist-copy").textContent =
       `${number(metadataReady)}건은 메타데이터가 더 선명해 먼저 검토하기 좋고, ${number(usageGap)}건은 전환 검토 전 이력 재확인이 더 필요합니다.`;
-    byId("shortlist-grid").innerHTML = data.shortlist.items.map(shortlistCard).join("");
-  }
-
-  function renderStrongest() {
-    const strongest = data.strongest_candidates.items;
-    const shown = strongest.slice(0, visibleStrongCount);
-    byId("strongest-copy").textContent =
-      `신호 강도가 높은 후보를 먼저 펼쳐 보여줍니다. 현재 공개 자산에서는 ${number(strongest.length)}건 중 ${number(shown.length)}건을 먼저 제시합니다.`;
-    byId("strongest-list").innerHTML = shown.map(strongestCard).join("");
-
-    const button = byId("show-more");
-    if (visibleStrongCount >= strongest.length) {
-      button.hidden = true;
-      return;
-    }
-    button.hidden = false;
-    button.textContent = `${Math.min(12, strongest.length - visibleStrongCount)}개 더 보기`;
+    byId("shortlist-grid").innerHTML = data.shortlist.items.map((row, i) => shortlistCard(row, i)).join("");
   }
 
   function rowAt(i) {
@@ -754,14 +671,8 @@
     renderShape();
     renderProviders();
     renderShortlist();
-    renderStrongest();
     renderReviewQueue();
     initReveal();
-
-    byId("show-more").addEventListener("click", () => {
-      visibleStrongCount += 12;
-      renderStrongest();
-    });
   }
 
   init();
