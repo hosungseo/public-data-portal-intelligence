@@ -73,7 +73,9 @@
     return String(text || "")
       .replace(/File-like row with signal downloads ([\d,]+), above the 1,000 threshold\./g, "파일형 행이며 다운로드 신호 $1건으로 1,000건 기준을 넘습니다.")
       .replace(/No API-like metadata pattern was detected from list type, service type, or data format\./g, "목록 유형, 서비스 유형, 데이터 형식 기준으로 API형 메타데이터 패턴이 감지되지 않았습니다.")
+      .replace(/Metadata richness is ([\d.]+)\/5, but request\/response structure is still thin\./g, "메타정보는 $1/5 수준이지만 요청·응답 구조는 아직 얇습니다.")
       .replace(/Response fields already exist in metadata, so the output shape is partly visible\./g, "메타데이터에 응답 필드가 이미 있어 출력 구조를 일부 가늠할 수 있습니다.")
+      .replace(/Universe \+ metadata attach, but usage history is missing; demand is coming from the current counter\./g, "우주·메타는 결합되어 있지만 이용 이력은 빠져 있으며, 현재 수요는 현재 카운터 기준으로만 보입니다.")
       .replace(/Universe \+ metadata \+ usage already attach, so this is ready for human review instead of more join work\./g, "우주·메타·이용이력이 이미 결합되어 있어 추가 결합 작업보다 사람 검토를 먼저 붙일 수 있습니다.");
   }
 
