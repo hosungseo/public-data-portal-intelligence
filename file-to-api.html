@@ -1287,57 +1287,93 @@
         color: var(--ink);
       }
 
-      @media (max-width: 980px) {
+      @media (max-width: 1080px) {
+        .hero-body {
+          grid-template-columns: 1fr;
+          padding: 60px 8px 40px;
+        }
+
+        .hero-kpi {
+          grid-template-columns: repeat(4, 1fr);
+        }
+
+        .shape-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .method-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .shortlist-grid {
+          grid-template-columns: 1fr;
+        }
+
         .queue-controls {
           grid-template-columns: 1fr 1fr;
         }
 
-        .queue-field--search {
-          grid-column: 1 / -1;
-        }
-
+        .queue-field--search,
         .queue-reset {
           grid-column: 1 / -1;
         }
       }
 
       @media (max-width: 640px) {
+        .app {
+          width: min(100vw - 16px, 1120px);
+          padding-top: 0;
+        }
+
+        .hero-topbar,
+        .hero-footer {
+          padding-left: 4px;
+          padding-right: 4px;
+        }
+
+        .hero-topbar nav {
+          gap: 12px;
+        }
+
+        .hero-statement {
+          font-size: 32px;
+        }
+
+        .hero-kpi {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .hero-kpi .value {
+          font-size: 28px;
+        }
+
         .queue-controls {
           grid-template-columns: 1fr;
         }
-      }
 
-      @media (max-width: 980px) {
-        .section-grid {
-          grid-template-columns: 1fr;
+        .queue-row > summary {
+          grid-template-columns: 32px minmax(0, 1fr);
+          gap: 12px;
         }
 
-        .metric-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 640px) {
-        .app {
-          width: min(100vw - 20px, 1120px);
-          padding-top: 20px;
+        .queue-row-tail {
+          grid-column: 2;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 6px;
         }
 
-        .panel,
-        .strong-card {
-          padding: 16px;
+        .queue-row-body {
+          padding: 18px 14px 18px 14px;
         }
 
-        .metric-grid {
-          grid-template-columns: 1fr;
+        .shortlist-card {
+          padding: 18px;
         }
 
-        .provider-meta {
-          grid-template-columns: 1fr;
-        }
-
-        .detail-evidence {
-          grid-template-columns: 1fr;
+        .shortlist-card-title {
+          font-size: 17px;
         }
       }
     </style>
