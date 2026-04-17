@@ -147,28 +147,35 @@
     const evidence = serverEvidence(row);
     const lane = row.inspect_lane || deriveLaneFromEvidence(evidence);
     const openAttr = rankInList === 0 ? " open" : "";
+    const rank = String(row.rank).padStart(2, "0");
+    const total = data.shortlist.items.length;
     return `
       <details class="shortlist-card"${openAttr}>
         <summary>
-          <span class="rank">${String(row.rank).padStart(2, "0")}</span>
-          <div>
-            <h3 class="shortlist-card-title">${escapeHtml(row.title)}</h3>
-            <div class="shortlist-card-provider">${escapeHtml(row.provider_name)}</div>
-            <div class="shortlist-card-quick">${escapeHtml(koRationale(evidence, lane))}</div>
+          <div class="shortlist-card-head">
+            <div class="shortlist-card-rank">${rank} / ${total}</div>
+            <span class="${laneClass(lane)}">${escapeHtml(laneLabel(lane))}</span>
           </div>
-          <span class="${laneClass(lane)}">${escapeHtml(laneLabel(lane))}</span>
+          <h3 class="shortlist-card-title">${escapeHtml(row.title)}</h3>
+          <div class="shortlist-card-provider">${escapeHtml(row.provider_name)} · ${escapeHtml(row.data_format || '-')} · ${escapeHtml(row.update_cycle || '-')}</div>
+          <div class="shortlist-card-rationale">
+            <div class="label">왜 먼저?</div>
+            <div class="copy">${escapeHtml(koRationaleBase(lane))} <span class="mono">${escapeHtml(koRationaleNumbers(evidence, lane))}</span></div>
+          </div>
+          <div class="shortlist-card-stats">
+            <span><span class="k">↓</span> <span class="v accent">${escapeHtml(number(row.signal_downloads))}</span></span>
+            <span><span class="k">신호</span> <span class="v">${escapeHtml(number(row.usage_total_signal))}</span></span>
+            <span><span class="k">메타</span> <span class="v">${escapeHtml(row.metadata_richness_score)}/5</span></span>
+            ${row.usage_openapi_apply_count_total ? `<span><span class="k">API</span> <span class="v">${escapeHtml(number(row.usage_openapi_apply_count_total))}</span></span>` : ""}
+          </div>
+          <div class="shortlist-card-toggle">${openAttr ? '접기 −' : '펼쳐서 근거 보기 ▾'}</div>
         </summary>
         <div class="shortlist-card-body">
-          <div class="tag-row">
-            <span class="tag">${escapeHtml(sourceComboLabel(row.source_combo_label))}</span>
-            <span class="tag">메타정보 ${escapeHtml(row.metadata_richness_score)}</span>
-            ${row.has_response_fields ? '<span class="tag">응답 필드 있음</span>' : ""}
-            ${row.usage_openapi_apply_count_total ? `<span class="tag">API 신청 ${escapeHtml(number(row.usage_openapi_apply_count_total))}</span>` : ""}
-          </div>
-          <div class="meta-row">${metaItems(row)}</div>
           <div class="summary-label">근거 요약</div>
           <p class="summary-copy">${escapeHtml(koReasonSummary(evidence))}</p>
-          ${reasonList(koReasons(evidence))}
+          <ol class="reason-list">
+            ${koReasons(evidence).map((item) => `<li><span>${escapeHtml(item)}</span></li>`).join("")}
+          </ol>
         </div>
       </details>
     `;
@@ -421,17 +428,22 @@
     return reasons;
   }
 
+  function koRationaleBase(lane) {
+    if (lane === "Metadata-ready") return "수요가 이미 확인됐고 응답 필드도 보여서 API 설계 검토를 먼저 붙이기 쉽습니다.";
+    if (lane === "Cross-channel demand") return "파일 수요가 높고 API형 신청도 이미 보여, 이용자들이 API형 제공방식을 기대하고 있을 가능성이 큽니다.";
+    if (lane === "Usage gap check") return "현재 수요는 충분히 크지만 이용 이력이 붙지 않았습니다. 전환 계획 전에 결합 상태를 먼저 재확인해야 합니다.";
+    return "요청·응답 계약이 아직 선명하지 않더라도 수요가 충분히 강해 수작업 검토를 먼저 붙일 가치가 있습니다.";
+  }
+
+  function koRationaleNumbers(e, lane) {
+    if (lane === "Metadata-ready") return `(다운로드 ${number(e.downloads)}건 · 메타 ${e.metadataScore}/5 · 응답 필드 존재)`;
+    if (lane === "Cross-channel demand") return `(다운로드 ${number(e.downloads)}건 · API 신청 ${number(e.apiApplies)}건)`;
+    if (lane === "Usage gap check") return `(다운로드 ${number(e.downloads)}건 · 결합 ${e.comboLabelKo})`;
+    return `(다운로드 ${number(e.downloads)}건 · 메타 ${e.metadataScore}/5)`;
+  }
+
   function koRationale(e, lane) {
-    if (lane === "Metadata-ready") {
-      return `수요가 이미 확인됐고 응답 필드도 보여서 API 설계 검토를 먼저 붙이기 쉽습니다. (다운로드 ${number(e.downloads)}건 · 메타 ${e.metadataScore}/5 · 응답 필드 존재)`;
-    }
-    if (lane === "Cross-channel demand") {
-      return `파일 수요가 높고 API형 신청도 이미 보여, 이용자들이 API형 제공방식을 기대하고 있을 가능성이 큽니다. (다운로드 ${number(e.downloads)}건 · API 신청 ${number(e.apiApplies)}건)`;
-    }
-    if (lane === "Usage gap check") {
-      return `현재 수요는 충분히 크지만 이용 이력이 붙지 않았습니다. 전환 계획 전에 결합 상태를 먼저 재확인해야 합니다. (다운로드 ${number(e.downloads)}건 · 결합 ${e.comboLabelKo})`;
-    }
-    return `요청·응답 계약이 아직 선명하지 않더라도 수요가 충분히 강해 수작업 검토를 먼저 붙일 가치가 있습니다. (다운로드 ${number(e.downloads)}건 · 메타 ${e.metadataScore}/5)`;
+    return `${koRationaleBase(lane)} ${koRationaleNumbers(e, lane)}`;
   }
 
   function populateQueueSelects() {
