@@ -1,141 +1,145 @@
 {
-  "generated_at": "2026-04-01T09:02:17+09:00",
+  "generated_at": "2026-04-18T06:15:58+09:00",
   "source_assets": {
     "master_path": "output/public_data_portal_catalog_master.json",
     "report_path": "output/build-report.json",
-    "master_bytes": 264774175,
+    "master_bytes": 313377283,
     "summary_json_path": "output/file_to_api_summary.json",
     "summary_js_path": "output/file_to_api_summary.js",
-    "summary_json_bytes": 103588,
-    "summary_js_bytes": 80253
+    "summary_json_bytes": 103520,
+    "summary_js_bytes": 80185,
+    "index_json_path": "output/file_to_api_index.json",
+    "index_js_path": "output/file_to_api_index.js",
+    "index_json_bytes": 1072780,
+    "index_js_bytes": 1072809
   },
   "overview": {
     "rule_label": "file_to_api_candidate",
     "rule_note": "File-like rows with signal downloads >= 1,000 and no API-like metadata pattern in list type, service type, or data format.",
-    "candidate_count": 10045,
+    "candidate_count": 11238,
     "merged_count": 164024,
-    "share_of_merged": 0.0612,
-    "signal_total": 46796152,
-    "provider_count": 715,
-    "joined_count": 8762,
-    "joined_share": 0.8723,
-    "usage_attached_count": 9068,
-    "usage_attached_share": 0.9027,
-    "metadata_attached_count": 10024,
-    "metadata_attached_share": 0.9979,
-    "response_field_count": 6763,
-    "response_field_share": 0.6733,
-    "api_applies_present_count": 2621,
-    "api_applies_present_share": 0.2609,
+    "share_of_merged": 0.0685,
+    "signal_total": 48073312,
+    "provider_count": 718,
+    "joined_count": 9573,
+    "joined_share": 0.8518,
+    "usage_attached_count": 9879,
+    "usage_attached_share": 0.8791,
+    "metadata_attached_count": 11212,
+    "metadata_attached_share": 0.9977,
+    "response_field_count": 7286,
+    "response_field_share": 0.6483,
+    "api_applies_present_count": 2839,
+    "api_applies_present_share": 0.2526,
     "top_signal": 394025,
     "top_downloads": 360588,
-    "expected_count_from_report": 10045
+    "expected_count_from_report": 11238
   },
   "slice_shape": {
     "source_combos": [
       {
         "code": "UMY",
         "label": "Universe + metadata + usage",
-        "count": 8762,
-        "share": 0.8723
+        "count": 9573,
+        "share": 0.8518
       },
       {
         "code": "UM-",
         "label": "Universe + metadata",
-        "count": 965,
-        "share": 0.0961
+        "count": 1342,
+        "share": 0.1194
       },
       {
         "code": "-MY",
         "label": "Metadata + usage",
         "count": 297,
-        "share": 0.0296
+        "share": 0.0264
       },
       {
         "code": "U--",
         "label": "Universe only",
-        "count": 12,
-        "share": 0.0012
+        "count": 17,
+        "share": 0.0015
       },
       {
         "code": "U-Y",
         "label": "Universe + usage",
         "count": 9,
-        "share": 0.0009
+        "share": 0.0008
       }
     ],
     "data_formats": [
       {
         "label": "csv",
-        "count": 7905,
-        "share": 0.787
+        "count": 8842,
+        "share": 0.7868
       },
       {
         "label": "xlsx",
-        "count": 462,
-        "share": 0.046
+        "count": 612,
+        "share": 0.0545
       },
       {
         "label": "jpg",
-        "count": 320,
-        "share": 0.0319
+        "count": 329,
+        "share": 0.0293
       },
       {
         "label": "shp",
-        "count": 312,
-        "share": 0.0311
+        "count": 321,
+        "share": 0.0286
       },
       {
         "label": "pdf",
-        "count": 234,
-        "share": 0.0233
+        "count": 250,
+        "share": 0.0222
       },
       {
         "label": "hwpx",
-        "count": 157,
-        "share": 0.0156
+        "count": 161,
+        "share": 0.0143
       },
       {
         "label": "png",
-        "count": 116,
-        "share": 0.0115
+        "count": 120,
+        "share": 0.0107
       },
       {
         "label": "mp4",
-        "count": 87,
-        "share": 0.0087
+        "count": 89,
+        "share": 0.0079
       }
     ],
     "update_cycles": [
       {
         "label": "연간",
-        "count": 5510,
-        "share": 0.5485
+        "count": 5974,
+        "share": 0.5316
       },
       {
         "label": "수시",
-        "count": 3739,
-        "share": 0.3722
+        "count": 4439,
+        "share": 0.395
       },
       {
         "label": "월간",
-        "count": 319,
-        "share": 0.0318
+        "count": 327,
+        "share": 0.0291
       },
       {
         "label": "분기",
-        "count": 242,
-        "share": 0.0241
-      },
-      {
-        "label": "반기",
-        "count": 219,
+        "count": 245,
         "share": 0.0218
       },
       {
+        "label": "반기",
+        "count": 223,
+        "share": 0.0198
+      },
+      {
         "label": "일간",
-        "count": 13,
-        "share": 0.0013
+        "count": 27,
+        "share": 0.0024
       },
       {
         "label": "주간",
@@ -145,13 +149,55 @@
     ]
   },
   "provider_rollup": {
-    "provider_count": 715,
-    "top_10_share": 0.1524,
+    "provider_count": 718,
+    "top_10_share": 0.1935,
     "providers": [
+      {
+        "provider_name": "국가철도공단",
+        "candidate_count": 485,
+        "share_of_candidates": 0.0432,
+        "signal_total": 817689,
+        "response_field_count": 451,
+        "joined_count": 477,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "국가철도공단_철도 여행기",
+            "usage_total_signal": 31101,
+            "signal_downloads": 31096
+          },
+          {
+            "title": "국가철도공단_해외 철도 뉴스",
+            "usage_total_signal": 26077,
+            "signal_downloads": 8459
+          }
+        ]
+      },
+      {
+        "provider_name": "행정안전부",
+        "candidate_count": 323,
+        "share_of_candidates": 0.0287,
+        "signal_total": 840410,
+        "response_field_count": 49,
+        "joined_count": 93,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "행정안전부_지역별 연령별 주민등록 인구현황",
+            "usage_total_signal": 30866,
+            "signal_downloads": 15433
+          },
+          {
+            "title": "행정안전부_행정표준코드_전체코드_다운로드(전체)",
+            "usage_total_signal": 18402,
+            "signal_downloads": 5913
+          }
+        ]
+      },
       {
         "provider_name": "인천광역시",
         "candidate_count": 273,
-        "share_of_candidates": 0.0272,
+        "share_of_candidates": 0.0243,
         "signal_total": 1269569,
         "response_field_count": 255,
         "joined_count": 265,
@@ -170,9 +216,30 @@
         ]
       },
       {
+        "provider_name": "국토교통부",
+        "candidate_count": 203,
+        "share_of_candidates": 0.0181,
+        "signal_total": 1094113,
+        "response_field_count": 51,
+        "joined_count": 180,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "국토교통부_행정구역시군구_경계",
+            "usage_total_signal": 63943,
+            "signal_downloads": 13712
+          },
+          {
+            "title": "국토교통부_주택 공시가격 정보",
+            "usage_total_signal": 57262,
+            "signal_downloads": 20996
+          }
+        ]
+      },
+      {
         "provider_name": "제주특별자치도",
         "candidate_count": 194,
-        "share_of_candidates": 0.0193,
+        "share_of_candidates": 0.0173,
         "signal_total": 791872,
         "response_field_count": 131,
         "joined_count": 192,
@@ -193,7 +260,7 @@
       {
         "provider_name": "대구광역시 북구",
         "candidate_count": 163,
-        "share_of_candidates": 0.0162,
+        "share_of_candidates": 0.0145,
         "signal_total": 1861949,
         "response_field_count": 127,
         "joined_count": 159,
@@ -213,11 +280,11 @@
       },
       {
         "provider_name": "경상북도",
-        "candidate_count": 137,
-        "share_of_candidates": 0.0136,
-        "signal_total": 393547,
+        "candidate_count": 138,
+        "share_of_candidates": 0.0123,
+        "signal_total": 395510,
         "response_field_count": 73,
-        "joined_count": 135,
+        "joined_count": 136,
         "shortlist_count": 0,
         "top_examples": [
           {
@@ -235,7 +302,7 @@
       {
         "provider_name": "동북아역사재단",
         "candidate_count": 134,
-        "share_of_candidates": 0.0133,
+        "share_of_candidates": 0.0119,
         "signal_total": 406773,
         "response_field_count": 0,
         "joined_count": 115,
@@ -256,7 +323,7 @@
       {
         "provider_name": "서울특별시",
         "candidate_count": 132,
-        "share_of_candidates": 0.0131,
+        "share_of_candidates": 0.0117,
         "signal_total": 633318,
         "response_field_count": 5,
         "joined_count": 117,
@@ -275,30 +342,9 @@
         ]
       },
       {
-        "provider_name": "행정안전부",
-        "candidate_count": 131,
-        "share_of_candidates": 0.013,
-        "signal_total": 693407,
-        "response_field_count": 47,
-        "joined_count": 71,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "행정안전부_지역별 연령별 주민등록 인구현황",
-            "usage_total_signal": 30866,
-            "signal_downloads": 15433
-          },
-          {
-            "title": "행정안전부_행정표준코드_전체코드_다운로드(전체)",
-            "usage_total_signal": 18402,
-            "signal_downloads": 5913
-          }
-        ]
-      },
-      {
         "provider_name": "대구광역시",
         "candidate_count": 129,
-        "share_of_candidates": 0.0128,
+        "share_of_candidates": 0.0115,
         "signal_total": 475011,
         "response_field_count": 45,
         "joined_count": 125,
@@ -317,30 +363,9 @@
         ]
       },
       {
-        "provider_name": "국토교통부",
-        "candidate_count": 125,
-        "share_of_candidates": 0.0124,
-        "signal_total": 1017015,
-        "response_field_count": 49,
-        "joined_count": 114,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "국토교통부_행정구역시군구_경계",
-            "usage_total_signal": 63943,
-            "signal_downloads": 13712
-          },
-          {
-            "title": "국토교통부_주택 공시가격 정보",
-            "usage_total_signal": 57262,
-            "signal_downloads": 20996
-          }
-        ]
-      },
-      {
         "provider_name": "부산광역시",
         "candidate_count": 113,
-        "share_of_candidates": 0.0112,
+        "share_of_candidates": 0.0101,
         "signal_total": 392998,
         "response_field_count": 62,
         "joined_count": 103,
@@ -361,7 +386,7 @@
       {
         "provider_name": "한국교통안전공단",
         "candidate_count": 106,
-        "share_of_candidates": 0.0106,
+        "share_of_candidates": 0.0094,
         "signal_total": 387285,
         "response_field_count": 88,
         "joined_count": 101,
@@ -376,27 +401,6 @@
             "title": "한국교통안전공단_대전광역시 도로별 일반택시 평균 통행량 및 속도",
             "usage_total_signal": 15225,
             "signal_downloads": 5715
-          }
-        ]
-      },
-      {
-        "provider_name": "광주광역시",
-        "candidate_count": 105,
-        "share_of_candidates": 0.0105,
-        "signal_total": 444511,
-        "response_field_count": 82,
-        "joined_count": 96,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "광주광역시_시내버스 노선별 승하차 인원",
-            "usage_total_signal": 83330,
-            "signal_downloads": 41665
-          },
-          {
-            "title": "광주광역시_서부농수산물도매시장 농수산물 거래실적",
-            "usage_total_signal": 18109,
-            "signal_downloads": 6156
           }
         ]
       }
@@ -438,7 +442,7 @@
         ],
         "inspect_lane": "Metadata-ready",
         "inspect_rationale": "Demand is proven and response fields already exist, so this is one of the easier records to spec first.",
-        "shortlist_score": 646390
+        "shortlist_score": 650390
       },
       {
         "rank": 2,
@@ -473,77 +477,77 @@
         ],
         "inspect_lane": "Metadata-ready",
         "inspect_rationale": "Demand is proven and response fields already exist, so this is one of the easier records to spec first.",
-        "shortlist_score": 336959
+        "shortlist_score": 390959
       },
       {
         "rank": 3,
-        "list_key": "3072689",
-        "title": "대전광역시 서구_갈마도서관 도서현황",
-        "provider_name": "대전광역시 서구",
+        "list_key": "15102792",
+        "title": "해양수산부_위판장별위탁판매현황",
+        "provider_name": "해양수산부",
         "source_combo": "UMY",
         "source_combo_label": "Universe + metadata + usage",
         "data_format": "csv",
-        "update_cycle": "연간",
-        "total_rows": "-1",
+        "update_cycle": "월간",
+        "total_rows": "544785",
         "metadata_richness_score": 4,
-        "usage_total_signal": 72953,
-        "signal_downloads": 22646,
+        "usage_total_signal": 49836,
+        "signal_downloads": 21076,
         "signal_download_basis": "usage-rollup",
-        "usage_file_download_count_total": 22646,
-        "current_file_download_count": 50307,
+        "usage_file_download_count_total": 21076,
+        "current_file_download_count": 28760,
         "usage_openapi_apply_count_total": 0,
-        "current_openapi_apply_count": 50307,
-        "usage_row_count": 22,
-        "usage_year_min": 2014,
+        "current_openapi_apply_count": 28760,
+        "usage_row_count": 96,
+        "usage_year_min": 2022,
         "usage_year_max": 2024,
-        "usage_year_span": 11,
+        "usage_year_span": 3,
         "has_response_fields": true,
         "has_request_variables": false,
-        "candidate_reason_summary": "Signal downloads 22,646; no API-like metadata. Response fields already exist.",
+        "candidate_reason_summary": "Signal downloads 21,076; no API-like metadata. Response fields already exist.",
         "candidate_reasons": [
-          "File-like row with signal downloads 22,646, above the 1,000 threshold.",
+          "File-like row with signal downloads 21,076, above the 1,000 threshold.",
           "No API-like metadata pattern was detected from list type, service type, or data format.",
           "Response fields already exist in metadata, so the output shape is partly visible.",
           "Universe + metadata + usage already attach, so this is ready for human review instead of more join work."
         ],
         "inspect_lane": "Metadata-ready",
         "inspect_rationale": "Demand is proven and response fields already exist, so this is one of the easier records to spec first.",
-        "shortlist_score": 167276
+        "shortlist_score": 190374
       },
       {
         "rank": 4,
-        "list_key": "15048178",
-        "title": "충청북도_푸드뱅크현황",
-        "provider_name": "충청북도",
+        "list_key": "15102794",
+        "title": "해양수산부_위판장별어종별위탁판매집계",
+        "provider_name": "해양수산부",
         "source_combo": "UMY",
         "source_combo_label": "Universe + metadata + usage",
-        "data_format": "csv",
-        "update_cycle": "연간",
-        "total_rows": "30",
+        "data_format": "CSV",
+        "update_cycle": "월간",
+        "total_rows": "47905",
         "metadata_richness_score": 4,
-        "usage_total_signal": 56308,
-        "signal_downloads": 56306,
+        "usage_total_signal": 48908,
+        "signal_downloads": 20938,
         "signal_download_basis": "usage-rollup",
-        "usage_file_download_count_total": 56306,
-        "current_file_download_count": 56946,
-        "usage_openapi_apply_count_total": 2,
-        "current_openapi_apply_count": 56946,
-        "usage_row_count": 30,
-        "usage_year_min": 2019,
+        "usage_file_download_count_total": 20938,
+        "current_file_download_count": 27970,
+        "usage_openapi_apply_count_total": 0,
+        "current_openapi_apply_count": 27970,
+        "usage_row_count": 95,
+        "usage_year_min": 2022,
         "usage_year_max": 2024,
-        "usage_year_span": 6,
+        "usage_year_span": 3,
         "has_response_fields": true,
         "has_request_variables": false,
-        "candidate_reason_summary": "Signal downloads 56,306; no API-like metadata. Response fields already exist.",
+        "candidate_reason_summary": "Signal downloads 20,938; no API-like metadata. Response fields already exist.",
         "candidate_reasons": [
-          "File-like row with signal downloads 56,306, above the 1,000 threshold.",
+          "File-like row with signal downloads 20,938, above the 1,000 threshold.",
           "No API-like metadata pattern was detected from list type, service type, or data format.",
           "Response fields already exist in metadata, so the output shape is partly visible.",
           "Universe + metadata + usage already attach, so this is ready for human review instead of more join work."
         ],
         "inspect_lane": "Metadata-ready",
         "inspect_rationale": "Demand is proven and response fields already exist, so this is one of the easier records to spec first.",
-        "shortlist_score": 163501
+        "shortlist_score": 189377
       },
       {
         "rank": 5,
@@ -578,7 +582,7 @@
         ],
         "inspect_lane": "Demand leader",
         "inspect_rationale": "Demand is strong enough to justify manual review even without a clearer request/response contract yet.",
-        "shortlist_score": 624319
+        "shortlist_score": 678319
       },
       {
         "rank": 6,
@@ -613,77 +617,77 @@
         ],
         "inspect_lane": "Demand leader",
         "inspect_rationale": "Demand is strong enough to justify manual review even without a clearer request/response contract yet.",
-        "shortlist_score": 288509
+        "shortlist_score": 292509
       },
       {
         "rank": 7,
-        "list_key": "15004274",
-        "title": "한국행정연구원 설문조사 데이터 현황",
-        "provider_name": "한국행정연구원",
-        "source_combo": "UMY",
-        "source_combo_label": "Universe + metadata + usage",
-        "data_format": "hwp",
-        "update_cycle": "연간",
-        "total_rows": "1",
-        "metadata_richness_score": 3,
-        "usage_total_signal": 143700,
-        "signal_downloads": 21123,
-        "signal_download_basis": "usage-rollup",
-        "usage_file_download_count_total": 21123,
-        "current_file_download_count": 122577,
-        "usage_openapi_apply_count_total": 0,
-        "current_openapi_apply_count": 122577,
-        "usage_row_count": 260,
-        "usage_year_min": 2015,
-        "usage_year_max": 2024,
-        "usage_year_span": 10,
-        "has_response_fields": false,
-        "has_request_variables": false,
-        "candidate_reason_summary": "Signal downloads 21,123; no API-like metadata. Metadata is still thin, so demand is doing most of the work.",
-        "candidate_reasons": [
-          "File-like row with signal downloads 21,123, above the 1,000 threshold.",
-          "No API-like metadata pattern was detected from list type, service type, or data format.",
-          "Metadata richness is 3/5, but request/response structure is still thin.",
-          "Universe + metadata + usage already attach, so this is ready for human review instead of more join work."
-        ],
-        "inspect_lane": "Demand leader",
-        "inspect_rationale": "Demand is strong enough to justify manual review even without a clearer request/response contract yet.",
-        "shortlist_score": 209261
-      },
-      {
-        "rank": 8,
-        "list_key": "15003297",
-        "title": "대한무역투자진흥공사_해외진출 한국기업 디렉토리 DB",
-        "provider_name": "대한무역투자진흥공사",
+        "list_key": "15051059",
+        "title": "건강보험심사평가원_전국 병의원 및 약국 현황",
+        "provider_name": "건강보험심사평가원",
         "source_combo": "UMY",
         "source_combo_label": "Universe + metadata + usage",
         "data_format": "xlsx",
-        "update_cycle": "연간",
-        "total_rows": "31891",
+        "update_cycle": "수시",
+        "total_rows": "12",
         "metadata_richness_score": 3,
-        "usage_total_signal": 95685,
-        "signal_downloads": 45873,
+        "usage_total_signal": 86364,
+        "signal_downloads": 32765,
         "signal_download_basis": "usage-rollup",
-        "usage_file_download_count_total": 45873,
-        "current_file_download_count": 49812,
+        "usage_file_download_count_total": 32765,
+        "current_file_download_count": 53599,
         "usage_openapi_apply_count_total": 0,
-        "current_openapi_apply_count": 49812,
-        "usage_row_count": 36,
-        "usage_year_min": 2014,
+        "current_openapi_apply_count": 53599,
+        "usage_row_count": 22,
+        "usage_year_min": 2020,
         "usage_year_max": 2024,
-        "usage_year_span": 11,
+        "usage_year_span": 5,
         "has_response_fields": false,
         "has_request_variables": false,
-        "candidate_reason_summary": "Signal downloads 45,873; no API-like metadata. Metadata is still thin, so demand is doing most of the work.",
+        "candidate_reason_summary": "Signal downloads 32,765; no API-like metadata. Metadata is still thin, so demand is doing most of the work.",
         "candidate_reasons": [
-          "File-like row with signal downloads 45,873, above the 1,000 threshold.",
+          "File-like row with signal downloads 32,765, above the 1,000 threshold.",
           "No API-like metadata pattern was detected from list type, service type, or data format.",
           "Metadata richness is 3/5, but request/response structure is still thin.",
           "Universe + metadata + usage already attach, so this is ready for human review instead of more join work."
         ],
         "inspect_lane": "Demand leader",
         "inspect_rationale": "Demand is strong enough to justify manual review even without a clearer request/response contract yet.",
-        "shortlist_score": 173621
+        "shortlist_score": 202746
+      },
+      {
+        "rank": 8,
+        "list_key": "15043494",
+        "title": "기상청_단기예보",
+        "provider_name": "기상청",
+        "source_combo": "UMY",
+        "source_combo_label": "Universe + metadata + usage",
+        "data_format": "CSV",
+        "update_cycle": "수시",
+        "total_rows": "1",
+        "metadata_richness_score": 3,
+        "usage_total_signal": 71061,
+        "signal_downloads": 27895,
+        "signal_download_basis": "usage-rollup",
+        "usage_file_download_count_total": 27895,
+        "current_file_download_count": 43166,
+        "usage_openapi_apply_count_total": 0,
+        "current_openapi_apply_count": 43166,
+        "usage_row_count": 3,
+        "usage_year_min": 2022,
+        "usage_year_max": 2024,
+        "usage_year_span": 3,
+        "has_response_fields": false,
+        "has_request_variables": false,
+        "candidate_reason_summary": "Signal downloads 27,895; no API-like metadata. Metadata is still thin, so demand is doing most of the work.",
+        "candidate_reasons": [
+          "File-like row with signal downloads 27,895, above the 1,000 threshold.",
+          "No API-like metadata pattern was detected from list type, service type, or data format.",
+          "Metadata richness is 3/5, but request/response structure is still thin.",
+          "Universe + metadata + usage already attach, so this is ready for human review instead of more join work."
+        ],
+        "inspect_lane": "Demand leader",
+        "inspect_rationale": "Demand is strong enough to justify manual review even without a clearer request/response contract yet.",
+        "shortlist_score": 183008
       },
       {
         "rank": 9,
@@ -718,7 +722,7 @@
         ],
         "inspect_lane": "Cross-channel demand",
         "inspect_rationale": "File demand is high and API applies are already showing up, which suggests users are looking for an API-shaped workflow.",
-        "shortlist_score": 523874
+        "shortlist_score": 577874
       },
       {
         "rank": 10,
@@ -753,7 +757,7 @@
         ],
         "inspect_lane": "Cross-channel demand",
         "inspect_rationale": "File demand is high and API applies are already showing up, which suggests users are looking for an API-shaped workflow.",
-        "shortlist_score": 139078
+        "shortlist_score": 193078
       },
       {
         "rank": 11,
@@ -788,7 +792,7 @@
         ],
         "inspect_lane": "Usage gap check",
         "inspect_rationale": "Current demand is large enough to matter, but usage history did not attach. Confirm the join before planning conversion.",
-        "shortlist_score": 245282
+        "shortlist_score": 249282
       },
       {
         "rank": 12,
@@ -823,7 +827,7 @@
         ],
         "inspect_lane": "Usage gap check",
         "inspect_rationale": "Current demand is large enough to matter, but usage history did not attach. Confirm the join before planning conversion.",
-        "shortlist_score": 178227
+        "shortlist_score": 182227
       }
     ]
   },
@@ -1409,6 +1413,38 @@
       },
       {
         "rank": 19,
+        "list_key": "15034381",
+        "title": "농림수산식품교육문화정보원_농업기상",
+        "provider_name": "농림수산식품교육문화정보원",
+        "source_combo": "UMY",
+        "source_combo_label": "Universe + metadata + usage",
+        "data_format": "csv",
+        "update_cycle": "수시",
+        "total_rows": "1",
+        "metadata_richness_score": 3,
+        "usage_total_signal": 75371,
+        "signal_downloads": 381,
+        "signal_download_basis": "usage-rollup",
+        "usage_file_download_count_total": 381,
+        "current_file_download_count": 74990,
+        "usage_openapi_apply_count_total": 0,
+        "current_openapi_apply_count": 74990,
+        "usage_row_count": 1,
+        "usage_year_min": 2024,
+        "usage_year_max": 2024,
+        "usage_year_span": 1,
+        "has_response_fields": false,
+        "has_request_variables": false,
+        "candidate_reason_summary": "Signal downloads 381; no API-like metadata. Metadata is still thin, so demand is doing most of the work.",
+        "candidate_reasons": [
+          "File-like row with signal downloads 381, above the 1,000 threshold.",
+          "No API-like metadata pattern was detected from list type, service type, or data format.",
+          "Metadata richness is 3/5, but request/response structure is still thin.",
+          "Universe + metadata + usage already attach, so this is ready for human review instead of more join work."
+        ]
+      },
+      {
+        "rank": 20,
         "list_key": "3072689",
         "title": "대전광역시 서구_갈마도서관 도서현황",
         "provider_name": "대전광역시 서구",
@@ -1440,7 +1476,7 @@
         ]
       },
       {
-        "rank": 20,
+        "rank": 21,
         "list_key": "15043494",
         "title": "기상청_단기예보",
         "provider_name": "기상청",
@@ -1472,7 +1508,7 @@
         ]
       },
       {
-        "rank": 21,
+        "rank": 22,
         "list_key": "15095903",
         "title": "인천광역시_도로 내 운행속도",
         "provider_name": "인천광역시",
@@ -1504,7 +1540,7 @@
         ]
       },
       {
-        "rank": 22,
+        "rank": 23,
         "list_key": "3038385",
         "title": "대구광역시 북구_월별인구현황",
         "provider_name": "대구광역시 북구",
@@ -1536,7 +1572,7 @@
         ]
       },
       {
-        "rank": 23,
+        "rank": 24,
         "list_key": "15095905",
         "title": "인천광역시_도로 주변 조도",
         "provider_name": "인천광역시",
@@ -1568,7 +1604,7 @@
         ]
       },
       {
-        "rank": 24,
+        "rank": 25,
         "list_key": "15125045",
         "title": "국토교통부_행정구역시군구_경계",
         "provider_name": "국토교통부",
@@ -1600,7 +1636,7 @@
         ]
       },
       {
-        "rank": 25,
+        "rank": 26,
         "list_key": "3068263",
         "title": "병무청_산업지원분야 관리 현황",
         "provider_name": "병무청",
@@ -1632,7 +1668,7 @@
         ]
       },
       {
-        "rank": 26,
+        "rank": 27,
         "list_key": "3033237",
         "title": "경상북도 경산시_도서관 도서구입목록",
         "provider_name": "경상북도 경산시",
@@ -1664,7 +1700,7 @@
         ]
       },
       {
-        "rank": 27,
+        "rank": 28,
         "list_key": "15095908",
         "title": "인천광역시_도로 주변 습도",
         "provider_name": "인천광역시",
@@ -1696,7 +1732,7 @@
         ]
       },
       {
-        "rank": 28,
+        "rank": 29,
         "list_key": "15076556",
         "title": "질병관리청_국민건강영양조사 원시자료 이용지침서",
         "provider_name": "질병관리청",
@@ -1728,7 +1764,7 @@
         ]
       },
       {
-        "rank": 29,
+        "rank": 30,
         "list_key": "15095907",
         "title": "인천광역시_도로 주변 온도",
         "provider_name": "인천광역시",
@@ -1760,7 +1796,7 @@
         ]
       },
       {
-        "rank": 30,
+        "rank": 31,
         "list_key": "3073746",
         "title": "국토교통부_주택 공시가격 정보",
         "provider_name": "국토교통부",
@@ -1792,7 +1828,7 @@
         ]
       },
       {
-        "rank": 31,
+        "rank": 32,
         "list_key": "15007122",
         "title": "국민건강보험공단_건강검진정보",
         "provider_name": "국민건강보험공단",
@@ -1824,7 +1860,7 @@
         ]
       },
       {
-        "rank": 32,
+        "rank": 33,
         "list_key": "15048178",
         "title": "충청북도_푸드뱅크현황",
         "provider_name": "충청북도",
@@ -1856,7 +1892,7 @@
         ]
       },
       {
-        "rank": 33,
+        "rank": 34,
         "list_key": "3060496",
         "title": "한국장학재단_장학금 통계 정보(통계연보)",
         "provider_name": "한국장학재단",
@@ -1888,7 +1924,7 @@
         ]
       },
       {
-        "rank": 34,
+        "rank": 35,
         "list_key": "15078491",
         "title": "대구광역시 북구_지방세 징수 현황",
         "provider_name": "대구광역시 북구",
@@ -1920,7 +1956,7 @@
         ]
       },
       {
-        "rank": 35,
+        "rank": 36,
         "list_key": "15080096",
         "title": "대구광역시 북구_지방세 비과감면율 현황",
         "provider_name": "대구광역시 북구",
@@ -1952,7 +1988,7 @@
         ]
       },
       {
-        "rank": 36,
+        "rank": 37,
         "list_key": "15089833",
         "title": "한국언론진흥재단_뉴스빅데이터_메타데이터_일자리",
         "provider_name": "한국언론진흥재단",
@@ -1984,7 +2020,7 @@
         ]
       },
       {
-        "rank": 37,
+        "rank": 38,
         "list_key": "15078492",
         "title": "대구광역시 북구_지방세 납세자 현황",
         "provider_name": "대구광역시 북구",
@@ -2016,7 +2052,7 @@
         ]
       },
       {
-        "rank": 38,
+        "rank": 39,
         "list_key": "15080383",
         "title": "대구광역시 북구_지방세 체납 현황",
         "provider_name": "대구광역시 북구",
@@ -2048,7 +2084,7 @@
         ]
       },
       {
-        "rank": 39,
+        "rank": 40,
         "list_key": "15080109",
         "title": "대구광역시 북구_일반건축물 시가표준액",
         "provider_name": "대구광역시 북구",
@@ -2080,7 +2116,7 @@
         ]
       },
       {
-        "rank": 40,
+        "rank": 41,
         "list_key": "15078497",
         "title": "대구광역시 북구_지방세 미환급 현황",
         "provider_name": "대구광역시 북구",
@@ -2112,7 +2148,7 @@
         ]
       },
       {
-        "rank": 41,
+        "rank": 42,
         "list_key": "15078494",
         "title": "대구광역시 북구_지방세 납부 현황",
         "provider_name": "대구광역시 북구",
@@ -2144,7 +2180,7 @@
         ]
       },
       {
-        "rank": 42,
+        "rank": 43,
         "list_key": "15078540",
         "title": "대구광역시 북구_지방세 과세 현황",
         "provider_name": "대구광역시 북구",
@@ -2176,7 +2212,7 @@
         ]
       },
       {
-        "rank": 43,
+        "rank": 44,
         "list_key": "2200084",
         "title": "대검찰청 범죄의 발생 검거상황",
         "provider_name": "대검찰청",
@@ -2208,7 +2244,7 @@
         ]
       },
       {
-        "rank": 44,
+        "rank": 45,
         "list_key": "15090461",
         "title": "한국언론진흥재단_뉴스빅데이터_메타데이터_노인",
         "provider_name": "한국언론진흥재단",
@@ -2240,7 +2276,7 @@
         ]
       },
       {
-        "rank": 45,
+        "rank": 46,
         "list_key": "15102792",
         "title": "해양수산부_위판장별위탁판매현황",
         "provider_name": "해양수산부",
@@ -2272,7 +2308,7 @@
         ]
       },
       {
-        "rank": 46,
+        "rank": 47,
         "list_key": "15102794",
         "title": "해양수산부_위판장별어종별위탁판매집계",
         "provider_name": "해양수산부",
@@ -2304,7 +2340,7 @@
         ]
       },
       {
-        "rank": 47,
+        "rank": 48,
         "list_key": "3079429",
         "title": "전북특별자치도 익산시_음식점",
         "provider_name": "전북특별자치도 익산시",
@@ -2332,38 +2368,6 @@
           "File-like row with signal downloads 48,752, above the 1,000 threshold.",
           "No API-like metadata pattern was detected from list type, service type, or data format.",
           "Response fields already exist in metadata, so the output shape is partly visible.",
-          "Universe + metadata + usage already attach, so this is ready for human review instead of more join work."
-        ]
-      },
-      {
-        "rank": 48,
-        "list_key": "3038856",
-        "title": "교육부_고등교육기관 졸업자 취업통계",
-        "provider_name": "교육부",
-        "source_combo": "UMY",
-        "source_combo_label": "Universe + metadata + usage",
-        "data_format": "xlsx",
-        "update_cycle": "수시",
-        "total_rows": "141",
-        "metadata_richness_score": 3,
-        "usage_total_signal": 46545,
-        "signal_downloads": 46543,
-        "signal_download_basis": "usage-rollup",
-        "usage_file_download_count_total": 46543,
-        "current_file_download_count": 9753,
-        "usage_openapi_apply_count_total": 2,
-        "current_openapi_apply_count": 9753,
-        "usage_row_count": 25,
-        "usage_year_min": 2015,
-        "usage_year_max": 2024,
-        "usage_year_span": 10,
-        "has_response_fields": false,
-        "has_request_variables": false,
-        "candidate_reason_summary": "Signal downloads 46,543; no API-like metadata. Metadata is still thin, so demand is doing most of the work.",
-        "candidate_reasons": [
-          "File-like row with signal downloads 46,543, above the 1,000 threshold.",
-          "No API-like metadata pattern was detected from list type, service type, or data format.",
-          "Metadata richness is 3/5, but request/response structure is still thin.",
           "Universe + metadata + usage already attach, so this is ready for human review instead of more join work."
         ]
       }
