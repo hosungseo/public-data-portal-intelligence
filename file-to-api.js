@@ -508,32 +508,33 @@
     return `
       <details class="queue-row">
         <summary>
+          <div class="queue-row-rank">${String(rank).padStart(2, "0")}</div>
           <div>
-            <div class="queue-row-title">${escapeHtml(row.title || "(제목 없음)")}</div>
-            <div class="queue-row-provider">${escapeHtml(row.provider)} &middot; ${escapeHtml(row.format || "-")} &middot; ${escapeHtml(evidence.comboLabelKo)}</div>
-            <div class="queue-row-facts">
-              <span class="queue-row-fact">종합 신호 <strong>${escapeHtml(number(row.usage_signal))}</strong></span>
-              <span class="queue-row-fact">다운로드 <strong>${escapeHtml(number(row.downloads))}</strong></span>
-              <span class="queue-row-fact">메타정보 <strong>${row.metadata_score}/5</strong></span>
-              ${row.api_applies > 0 ? `<span class="queue-row-fact">API 신청 <strong>${escapeHtml(number(row.api_applies))}</strong></span>` : ""}
+            <span class="queue-row-title">${escapeHtml(row.title || "(제목 없음)")}</span><span class="queue-row-provider">${escapeHtml(row.provider)} · ${escapeHtml(row.format || '-')}</span>
+            <div class="queue-row-stats">
+              <span><span class="k">↓</span> <span class="v accent">${escapeHtml(number(row.downloads))}</span></span>
+              <span><span class="k">신호</span> <span class="v">${escapeHtml(number(row.usage_signal))}</span></span>
+              <span><span class="k">메타</span> <span class="v">${row.metadata_score}/5</span></span>
+              ${row.api_applies > 0 ? `<span><span class="k">API</span> <span class="v">${escapeHtml(number(row.api_applies))}</span></span>` : ""}
+              <span class="combo">결합 ${escapeHtml(row.combo)}</span>
             </div>
           </div>
           <div class="queue-row-tail">
             <span class="${laneClass(lane)}">${escapeHtml(laneLabel(lane))}</span>
-            <span class="queue-row-toggle">#${rank}</span>
+            <span class="queue-row-toggle">펼치기 +</span>
           </div>
         </summary>
         <div class="queue-row-body">
-          <div class="summary-label">근거 요약</div>
           <p class="summary-copy">${escapeHtml(koReasonSummary(evidence))}</p>
-          ${reasonList(koReasons(evidence))}
-          <div class="action-note">
-            <div class="action-label">왜 먼저 검토?</div>
-            <div class="action-copy">${escapeHtml(koRationale(evidence, lane))}</div>
+          <div class="reasons-label">근거</div>
+          <ol class="reason-list">
+            ${koReasons(evidence).map((item) => `<li><span>${escapeHtml(item)}</span></li>`).join("")}
+          </ol>
+          <div class="rationale">
+            <div class="label">왜 먼저 검토?</div>
+            <div class="copy">${escapeHtml(koRationaleBase(lane))} <span class="mono">${escapeHtml(koRationaleNumbers(evidence, lane))}</span></div>
           </div>
-          <div class="detail-links">
-            <a class="detail-link" href="${escapeHtml(portalSearchUrl(row.title))}" target="_blank" rel="noreferrer noopener">포털에서 제목으로 검색 ↗</a>
-          </div>
+          <a class="portal-link" href="${escapeHtml(portalSearchUrl(row.title))}" target="_blank" rel="noreferrer noopener">↗ 공공데이터포털에서 검색</a>
         </div>
       </details>
     `;
