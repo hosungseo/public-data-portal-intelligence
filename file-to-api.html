@@ -661,6 +661,220 @@
         transform: translateY(0);
       }
 
+      .queue-controls {
+        display: grid;
+        grid-template-columns: minmax(220px, 2fr) repeat(4, minmax(140px, 1fr)) auto;
+        gap: 10px;
+        align-items: end;
+        margin-bottom: 14px;
+      }
+
+      .queue-field {
+        display: grid;
+        gap: 4px;
+      }
+
+      .queue-field-label {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .queue-field input,
+      .queue-field select {
+        width: 100%;
+        padding: 9px 10px;
+        border: 1px solid var(--line-strong);
+        background: rgba(255, 255, 255, 0.7);
+        color: var(--ink);
+        font: inherit;
+        outline: none;
+        transition: border-color 140ms ease, background-color 140ms ease;
+      }
+
+      .queue-field input:focus,
+      .queue-field select:focus {
+        border-color: var(--accent);
+        background: rgba(255, 255, 255, 0.94);
+      }
+
+      .queue-reset {
+        padding: 9px 14px;
+        border: 1px solid var(--line-strong);
+        background: rgba(255, 255, 255, 0.6);
+        color: var(--ink);
+        cursor: pointer;
+        transition: border-color 140ms ease, background-color 140ms ease;
+      }
+
+      .queue-reset:hover,
+      .queue-reset:focus-visible {
+        border-color: var(--accent);
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .queue-summary {
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .queue-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .queue-row {
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        transition: border-color 140ms ease;
+      }
+
+      .queue-row[open] {
+        border-color: var(--accent);
+      }
+
+      .queue-row summary {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        list-style: none;
+      }
+
+      .queue-row summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .queue-row-title {
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.35;
+      }
+
+      .queue-row-provider {
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .queue-row-facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        margin-top: 8px;
+        font-family: var(--mono);
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .queue-row-fact strong {
+        color: var(--ink);
+        font-weight: 500;
+      }
+
+      .queue-row-tail {
+        display: grid;
+        gap: 6px;
+        justify-items: end;
+        text-align: right;
+      }
+
+      .queue-row-toggle {
+        font-size: 0.82rem;
+        color: var(--accent);
+      }
+
+      .queue-row[open] .queue-row-toggle::after {
+        content: " \2212";
+      }
+
+      .queue-row:not([open]) .queue-row-toggle::after {
+        content: " +";
+      }
+
+      .queue-row-body {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+      }
+
+      .queue-row-body .summary-copy {
+        margin-bottom: 8px;
+      }
+
+      .queue-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .queue-page-btn {
+        padding: 8px 14px;
+        border: 1px solid var(--line-strong);
+        background: rgba(255, 255, 255, 0.6);
+        color: var(--ink);
+        cursor: pointer;
+        transition: border-color 140ms ease, background-color 140ms ease;
+      }
+
+      .queue-page-btn:hover:not(:disabled),
+      .queue-page-btn:focus-visible:not(:disabled) {
+        border-color: var(--accent);
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .queue-page-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .queue-page-info {
+        font-family: var(--mono);
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .queue-empty {
+        padding: 24px;
+        border: 1px dashed var(--line-strong);
+        text-align: center;
+        color: var(--muted);
+      }
+
+      @media (max-width: 980px) {
+        .queue-controls {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .queue-field--search {
+          grid-column: 1 / -1;
+        }
+
+        .queue-reset {
+          grid-column: 1 / -1;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .queue-controls {
+          grid-template-columns: 1fr;
+        }
+
+        .queue-row summary {
+          grid-template-columns: 1fr;
+        }
+
+        .queue-row-tail {
+          justify-items: start;
+          text-align: left;
+        }
+      }
+
       @media (max-width: 980px) {
         .masthead-grid,
         .section-grid,
@@ -864,9 +1078,62 @@
           </div>
         </div>
       </section>
+
+      <section class="section" id="queue-section">
+        <div class="panel" data-reveal>
+          <div class="panel-head">
+            <div>
+              <h2>전체 검토 큐</h2>
+              <p class="section-copy" id="queue-copy"></p>
+            </div>
+          </div>
+          <div class="queue-controls">
+            <label class="queue-field queue-field--search">
+              <span class="queue-field-label">검색</span>
+              <input type="search" id="queue-search" placeholder="제목 또는 제공기관" autocomplete="off" spellcheck="false">
+            </label>
+            <label class="queue-field">
+              <span class="queue-field-label">제공기관</span>
+              <select id="queue-provider"></select>
+            </label>
+            <label class="queue-field">
+              <span class="queue-field-label">검토 레인</span>
+              <select id="queue-lane">
+                <option value="">전체</option>
+                <option value="Metadata-ready">즉시 검토 가능</option>
+                <option value="Demand leader">수요 우선</option>
+                <option value="Cross-channel demand">교차수요 확인</option>
+                <option value="Usage gap check">이력 재검증 필요</option>
+              </select>
+            </label>
+            <label class="queue-field">
+              <span class="queue-field-label">포맷</span>
+              <select id="queue-format"></select>
+            </label>
+            <label class="queue-field">
+              <span class="queue-field-label">정렬</span>
+              <select id="queue-sort">
+                <option value="usage_signal">종합 신호 순</option>
+                <option value="downloads">다운로드 순</option>
+                <option value="metadata_score">메타정보 풍부도 순</option>
+                <option value="api_applies">API 신청 순</option>
+              </select>
+            </label>
+            <button class="queue-reset" id="queue-reset" type="button">초기화</button>
+          </div>
+          <div class="queue-summary" id="queue-summary"></div>
+          <div class="queue-list" id="queue-list"></div>
+          <div class="queue-pagination">
+            <button class="queue-page-btn" id="queue-prev" type="button">&larr; 이전</button>
+            <span class="queue-page-info" id="queue-page-info"></span>
+            <button class="queue-page-btn" id="queue-next" type="button">다음 &rarr;</button>
+          </div>
+        </div>
+      </section>
     </main>
 
     <script src="output/file_to_api_summary.js"></script>
+    <script src="output/file_to_api_index.js"></script>
     <script src="file-to-api.js"></script>
   </body>
 </html>

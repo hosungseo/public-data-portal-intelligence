@@ -1,6 +1,19 @@
 (function () {
   const data = window.FILE_TO_API_DATA;
+  const index = window.FILE_TO_API_INDEX;
   let visibleStrongCount = 12;
+
+  const QUEUE_PAGE_SIZE = 50;
+  const queueState = {
+    search: "",
+    provider: "",
+    lane: "",
+    format: "",
+    sort: "usage_signal",
+    page: 0,
+    filtered: [],
+  };
+  let queueSearchTimer = null;
 
   function byId(id) {
     return document.getElementById(id);
@@ -410,6 +423,284 @@
     button.textContent = `${Math.min(12, strongest.length - visibleStrongCount)}개 더 보기`;
   }
 
+  function rowAt(i) {
+    const r = index.rows;
+    return {
+      list_key: r.list_keys[i],
+      title: r.titles[i],
+      provider: index.providers[r.provider_idx[i]],
+      format: index.formats[r.format_idx[i]],
+      combo: index.combos[r.combo_idx[i]],
+      combo_label: index.combo_labels[index.combos[r.combo_idx[i]]] || index.combos[r.combo_idx[i]],
+      downloads: r.downloads[i],
+      usage_signal: r.usage_signal[i],
+      api_applies: r.api_applies[i],
+      metadata_score: r.metadata_score[i],
+      flags: r.flags[i],
+    };
+  }
+
+  function flagBit(row, name) {
+    const mask = index.flag_bits[name];
+    return (row.flags & mask) !== 0;
+  }
+
+  function deriveLane(row) {
+    const hasUsage = flagBit(row, "source_usage");
+    const hasResponse = flagBit(row, "has_response_fields");
+    if (row.combo === "UM-" && !hasUsage) return "Usage gap check";
+    if (hasResponse && row.metadata_score >= 4) return "Metadata-ready";
+    if (row.api_applies > 0) return "Cross-channel demand";
+    return "Demand leader";
+  }
+
+  function deriveReasonSummary(row) {
+    const base = `Signal downloads ${number(row.downloads)}; no API-like metadata.`;
+    if (flagBit(row, "has_response_fields")) return base + " Response fields already exist.";
+    if (row.metadata_score >= 4) return base + " Metadata is already richer than the minimum join shape.";
+    return base + " Metadata is still thin, so demand is doing most of the work.";
+  }
+
+  function deriveReasons(row) {
+    const reasons = [
+      `File-like row with signal downloads ${number(row.downloads)}, above the ${number(index.candidate_threshold)} threshold.`,
+      "No API-like metadata pattern was detected from list type, service type, or data format.",
+    ];
+    const hasResponse = flagBit(row, "has_response_fields");
+    const hasRequest = flagBit(row, "has_request_variables");
+    if (hasResponse) {
+      reasons.push("Response fields already exist in metadata, so the output shape is partly visible.");
+    } else if (hasRequest) {
+      reasons.push("Request variables already exist in metadata, so some API contract hints are already present.");
+    } else {
+      reasons.push(`Metadata richness is ${row.metadata_score}/5, but request/response structure is still thin.`);
+    }
+    const label = row.combo_label;
+    if (row.combo === "UMY") {
+      reasons.push(`${label} already attach, so this is ready for human review instead of more join work.`);
+    } else if (row.combo === "UM-") {
+      reasons.push(`${label} attach, but usage history is missing; demand is coming from the current counter.`);
+    } else if (row.combo === "-MY") {
+      reasons.push(`${label} attach, but the universe-side row is still missing and should be reconciled first.`);
+    } else if (row.combo === "U-Y") {
+      reasons.push(`${label} attach, but metadata still needs repair before any API framing.`);
+    } else {
+      reasons.push(`Attachment state is ${label}; this still needs reconciliation before any API conversion work.`);
+    }
+    return reasons;
+  }
+
+  function deriveRationale(lane) {
+    if (lane === "Metadata-ready") return "Demand is proven and response fields already exist, so this is one of the easier records to spec first.";
+    if (lane === "Cross-channel demand") return "File demand is high and API applies are already showing up, which suggests users are looking for an API-shaped workflow.";
+    if (lane === "Usage gap check") return "Current demand is large enough to matter, but usage history did not attach. Confirm the join before planning conversion.";
+    return "Demand is strong enough to justify manual review even without a clearer request/response contract yet.";
+  }
+
+  function populateQueueSelects() {
+    const providerSelect = byId("queue-provider");
+    const opts = ['<option value="">전체 기관</option>'];
+    for (const name of index.providers) {
+      opts.push(`<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`);
+    }
+    providerSelect.innerHTML = opts.join("");
+
+    const formatSelect = byId("queue-format");
+    const formatOpts = ['<option value="">전체 포맷</option>'];
+    for (const label of index.formats) {
+      formatOpts.push(`<option value="${escapeHtml(label)}">${escapeHtml(label)}</option>`);
+    }
+    formatSelect.innerHTML = formatOpts.join("");
+  }
+
+  function applyQueueFilter() {
+    const q = queueState.search.trim().toLowerCase();
+    const providerFilter = queueState.provider;
+    const laneFilter = queueState.lane;
+    const formatFilter = queueState.format;
+    const r = index.rows;
+    const total = index.count;
+    const filtered = [];
+
+    for (let i = 0; i < total; i++) {
+      if (providerFilter && index.providers[r.provider_idx[i]] !== providerFilter) continue;
+      if (formatFilter && index.formats[r.format_idx[i]] !== formatFilter) continue;
+      if (q) {
+        const title = r.titles[i].toLowerCase();
+        const provider = index.providers[r.provider_idx[i]].toLowerCase();
+        if (!title.includes(q) && !provider.includes(q)) continue;
+      }
+      if (laneFilter) {
+        const row = rowAt(i);
+        if (deriveLane(row) !== laneFilter) continue;
+      }
+      filtered.push(i);
+    }
+
+    const sortKey = queueState.sort;
+    if (sortKey === "downloads") {
+      filtered.sort((a, b) => r.downloads[b] - r.downloads[a]);
+    } else if (sortKey === "metadata_score") {
+      filtered.sort((a, b) => r.metadata_score[b] - r.metadata_score[a] || r.usage_signal[b] - r.usage_signal[a]);
+    } else if (sortKey === "api_applies") {
+      filtered.sort((a, b) => r.api_applies[b] - r.api_applies[a] || r.usage_signal[b] - r.usage_signal[a]);
+    } else {
+      filtered.sort((a, b) => r.usage_signal[b] - r.usage_signal[a] || r.downloads[b] - r.downloads[a]);
+    }
+
+    queueState.filtered = filtered;
+    queueState.page = 0;
+  }
+
+  function queueRowHtml(rowIdx, rank) {
+    const row = rowAt(rowIdx);
+    const lane = deriveLane(row);
+    const comboLabel = sourceComboLabel(row.combo_label);
+    return `
+      <details class="queue-row">
+        <summary>
+          <div>
+            <div class="queue-row-title">${escapeHtml(row.title || "(제목 없음)")}</div>
+            <div class="queue-row-provider">${escapeHtml(row.provider)} &middot; ${escapeHtml(row.format || "-")} &middot; ${escapeHtml(comboLabel)}</div>
+            <div class="queue-row-facts">
+              <span class="queue-row-fact">종합 신호 <strong>${escapeHtml(number(row.usage_signal))}</strong></span>
+              <span class="queue-row-fact">다운로드 <strong>${escapeHtml(number(row.downloads))}</strong></span>
+              <span class="queue-row-fact">메타정보 <strong>${row.metadata_score}/5</strong></span>
+              ${row.api_applies > 0 ? `<span class="queue-row-fact">API 신청 <strong>${escapeHtml(number(row.api_applies))}</strong></span>` : ""}
+            </div>
+          </div>
+          <div class="queue-row-tail">
+            <span class="${laneClass(lane)}">${escapeHtml(laneLabel(lane))}</span>
+            <span class="queue-row-toggle">#${rank}</span>
+          </div>
+        </summary>
+        <div class="queue-row-body">
+          <div class="summary-label">근거 요약</div>
+          <p class="summary-copy">${escapeHtml(translateSummary(deriveReasonSummary(row)))}</p>
+          ${reasonList(deriveReasons(row))}
+          <div class="action-note">
+            <div class="action-label">왜 먼저 검토?</div>
+            <div class="action-copy">${escapeHtml(translateRationale(deriveRationale(lane)))}</div>
+          </div>
+          <div class="detail-links">
+            <a class="detail-link" href="${escapeHtml(portalSearchUrl(row.title))}" target="_blank" rel="noreferrer noopener">포털에서 제목으로 검색 ↗</a>
+          </div>
+        </div>
+      </details>
+    `;
+  }
+
+  function renderQueue() {
+    const total = queueState.filtered.length;
+    const pageCount = Math.max(1, Math.ceil(total / QUEUE_PAGE_SIZE));
+    if (queueState.page >= pageCount) queueState.page = pageCount - 1;
+    if (queueState.page < 0) queueState.page = 0;
+
+    const start = queueState.page * QUEUE_PAGE_SIZE;
+    const end = Math.min(start + QUEUE_PAGE_SIZE, total);
+    const list = byId("queue-list");
+
+    byId("queue-summary").textContent = total === index.count
+      ? `전체 ${number(total)}건 중 ${number(total === 0 ? 0 : start + 1)}–${number(end)}건 표시`
+      : `전체 ${number(index.count)}건 중 ${number(total)}건 매치. ${number(total === 0 ? 0 : start + 1)}–${number(end)}건 표시.`;
+
+    if (total === 0) {
+      list.innerHTML = '<div class="queue-empty">조건에 맞는 후보가 없습니다.</div>';
+    } else {
+      const parts = [];
+      for (let i = start; i < end; i++) {
+        parts.push(queueRowHtml(queueState.filtered[i], i + 1));
+      }
+      list.innerHTML = parts.join("");
+    }
+
+    byId("queue-page-info").textContent = `${queueState.page + 1} / ${pageCount} 페이지`;
+    byId("queue-prev").disabled = queueState.page === 0;
+    byId("queue-next").disabled = queueState.page >= pageCount - 1;
+  }
+
+  function renderQueueCopy() {
+    byId("queue-copy").textContent =
+      `후보 ${number(index.count)}건 전체를 여기서 검색·필터할 수 있습니다. 각 행을 펼치면 어떤 근거로 후보가 되었는지 확인할 수 있습니다.`;
+  }
+
+  function wireQueueEvents() {
+    const search = byId("queue-search");
+    search.addEventListener("input", (event) => {
+      clearTimeout(queueSearchTimer);
+      const value = event.target.value;
+      queueSearchTimer = setTimeout(() => {
+        queueState.search = value;
+        applyQueueFilter();
+        renderQueue();
+      }, 140);
+    });
+
+    byId("queue-provider").addEventListener("change", (event) => {
+      queueState.provider = event.target.value;
+      applyQueueFilter();
+      renderQueue();
+    });
+    byId("queue-lane").addEventListener("change", (event) => {
+      queueState.lane = event.target.value;
+      applyQueueFilter();
+      renderQueue();
+    });
+    byId("queue-format").addEventListener("change", (event) => {
+      queueState.format = event.target.value;
+      applyQueueFilter();
+      renderQueue();
+    });
+    byId("queue-sort").addEventListener("change", (event) => {
+      queueState.sort = event.target.value;
+      applyQueueFilter();
+      renderQueue();
+    });
+
+    byId("queue-reset").addEventListener("click", () => {
+      queueState.search = "";
+      queueState.provider = "";
+      queueState.lane = "";
+      queueState.format = "";
+      queueState.sort = "usage_signal";
+      byId("queue-search").value = "";
+      byId("queue-provider").value = "";
+      byId("queue-lane").value = "";
+      byId("queue-format").value = "";
+      byId("queue-sort").value = "usage_signal";
+      applyQueueFilter();
+      renderQueue();
+    });
+
+    byId("queue-prev").addEventListener("click", () => {
+      if (queueState.page > 0) {
+        queueState.page -= 1;
+        renderQueue();
+        byId("queue-section").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+    byId("queue-next").addEventListener("click", () => {
+      queueState.page += 1;
+      renderQueue();
+      byId("queue-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function renderReviewQueue() {
+    if (!index) {
+      const section = byId("queue-section");
+      if (section) {
+        section.innerHTML = '<div class="panel"><div class="empty">output/file_to_api_index.js 가 없습니다. 인덱스 자산을 먼저 생성해야 합니다.</div></div>';
+      }
+      return;
+    }
+    renderQueueCopy();
+    populateQueueSelects();
+    applyQueueFilter();
+    renderQueue();
+    wireQueueEvents();
+  }
+
   function initReveal() {
     const nodes = document.querySelectorAll("[data-reveal]");
     if (!("IntersectionObserver" in window)) {
@@ -443,6 +734,7 @@
     renderProviders();
     renderShortlist();
     renderStrongest();
+    renderReviewQueue();
     initReveal();
 
     byId("show-more").addEventListener("click", () => {
