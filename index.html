@@ -1164,7 +1164,93 @@
         color: var(--ink);
       }
 
+      .criteria-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .criteria-block {
+        padding: 18px;
+        background: var(--surface-muted);
+        border: 1px solid var(--line);
+      }
+
+      .criteria-label {
+        font-size: 10px;
+        color: var(--accent);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .criteria-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ink);
+        margin-bottom: 12px;
+        letter-spacing: -0.01em;
+      }
+
+      .criteria-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .criteria-list li {
+        font-size: 12px;
+        line-height: 1.55;
+        color: var(--muted);
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+      }
+
+      .criteria-list .mono {
+        font-family: var(--mono);
+        color: var(--ink);
+      }
+
+      .criteria-list .lane-dot {
+        width: 8px;
+        height: 8px;
+        flex-shrink: 0;
+        margin-top: 6px;
+        border: 1px solid var(--line-strong);
+        background: transparent;
+        border-radius: 0;
+      }
+
+      .criteria-list .lane-dot.lane-metadata-ready {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+      }
+
+      .criteria-list .lane-dot.lane-cross-channel-demand {
+        border-color: #79c0ff;
+      }
+
+      .criteria-list .lane-dot.lane-usage-gap-check {
+        border-color: #d29922;
+      }
+
+      .criteria-list .bullet-dot {
+        width: 4px;
+        height: 4px;
+        flex-shrink: 0;
+        margin-top: 8px;
+        background: var(--muted-deep);
+        border-radius: 50%;
+      }
+
       @media (max-width: 1080px) {
+        .criteria-grid {
+          grid-template-columns: 1fr;
+        }
+
         .hero-body {
           grid-template-columns: 1fr;
           padding: 60px 8px 40px;
@@ -1261,6 +1347,7 @@
         <div class="hero-topbar">
           <div class="hero-brand">Public Data Portal Intelligence</div>
           <nav>
+            <a href="#criteria-section">Criteria</a>
             <a href="#queue-section">Queue</a>
             <a href="#method-section">Method</a>
             <a href="https://github.com/hosungseo/public-data-portal-intelligence" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
@@ -1287,6 +1374,49 @@
         <div class="hero-footer">
           <span>↓ SCROLL</span>
           <span>2026</span>
+        </div>
+      </section>
+
+      <section class="section" id="criteria-section">
+        <div class="panel" data-reveal>
+          <div class="panel-head">
+            <div>
+              <h2>어떻게 골랐나</h2>
+              <p class="section-copy">세 단계 기준이 후보 10,045건과 그 안의 우선순위를 결정합니다.</p>
+            </div>
+          </div>
+          <div class="criteria-grid">
+            <div class="criteria-block">
+              <div class="criteria-label">01 · 포함 기준</div>
+              <div class="criteria-title">어떤 행이 큐에 오르는가</div>
+              <ul class="criteria-list">
+                <li><span class="bullet-dot"></span>공공데이터포털의 파일형 데이터</li>
+                <li><span class="bullet-dot"></span>다운로드 수요 <span class="mono">1,000건 이상</span></li>
+                <li><span class="bullet-dot"></span>목록·서비스 유형·데이터 형식에서 API형 패턴이 감지되지 않음</li>
+              </ul>
+            </div>
+            <div class="criteria-block">
+              <div class="criteria-label">02 · 검토 레인</div>
+              <div class="criteria-title">어느 레인으로 분류되는가</div>
+              <ul class="criteria-list">
+                <li><span class="lane-dot lane-metadata-ready"></span>즉시 검토 가능 — 응답 필드 있고 메타정보 <span class="mono">≥ 4/5</span></li>
+                <li><span class="lane-dot lane-cross-channel-demand"></span>교차수요 확인 — API형 신청이 이미 관찰됨</li>
+                <li><span class="lane-dot lane-usage-gap-check"></span>이력 재검증 필요 — 이용 이력이 결합되지 않음</li>
+                <li><span class="lane-dot"></span>수요 우선 — 그 외, 수요가 먼저 근거가 되는 경우</li>
+              </ul>
+            </div>
+            <div class="criteria-block">
+              <div class="criteria-label">03 · 우선 검토 점수</div>
+              <div class="criteria-title">상위 12건은 어떻게 정해지는가</div>
+              <ul class="criteria-list">
+                <li><span class="bullet-dot"></span>종합 이용 신호 <span class="mono">(다운로드 + API 신청)</span></li>
+                <li><span class="bullet-dot"></span>응답 필드 노출 여부</li>
+                <li><span class="bullet-dot"></span>메타정보 풍부도 <span class="mono">1–5</span></li>
+                <li><span class="bullet-dot"></span>지원센터목록·메타·이용이력 <span class="mono">3종 결합</span></li>
+                <li><span class="bullet-dot"></span>같은 기관이 두 자리 이상 차지하지 않도록 배분</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
