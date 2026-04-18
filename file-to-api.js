@@ -184,9 +184,28 @@
   function renderOverview() {
     const overview = data.overview;
     const topRow = data.shortlist.items[0];
+    const universe = overview.reviewed_universe_count || 0;
+    const reviewedSharePct = ((overview.reviewed_share || 0) * 100).toFixed(1);
+
+    const universeEl = byId("hero-universe-count");
+    if (universeEl) universeEl.textContent = number(universe);
 
     byId("hero-lede").textContent =
-      `파일은 매번 여는 단계를 요구하고 API는 그 단계를 줄입니다. 수요가 반복되고 메타정보까지 갖춘 후보부터, 어디서 그 전환이 가치 있는지 훑어보는 검토 큐입니다. 모든 파일을 API로 바꾸자는 주장은 아닙니다.`;
+      `공공데이터포털의 파일데이터 ${number(universe)}건을 모두 훑어, 다운로드가 반복되거나 국가중점데이터로 지정된 ${number(overview.candidate_count)}건을 검토 큐로 모았습니다. 모든 파일을 API로 바꾸자는 주장은 아니라, 무엇을 먼저 검토할지 드러내는 화면입니다.`;
+
+    const criteriaCopy = byId("criteria-copy");
+    if (criteriaCopy) {
+      criteriaCopy.textContent =
+        `공공데이터포털의 파일데이터 ${number(universe)}건 전체를 검토했습니다. 그중 세 단계 기준에 부합하는 ${number(overview.candidate_count)}건이 큐에 올라 있고, 그 안의 우선순위까지 결정합니다.`;
+    }
+    const criteriaUniverseTag = byId("criteria-universe-tag");
+    if (criteriaUniverseTag) {
+      criteriaUniverseTag.textContent = `(전체 ${number(universe)}건)`;
+    }
+    const criteriaPass = byId("criteria-pass");
+    if (criteriaPass) {
+      criteriaPass.textContent = `${number(overview.candidate_count)} / ${number(universe)} (${reviewedSharePct}%)`;
+    }
 
     byId("asset-note").textContent =
       `현재 페이지는 ${data.source_assets.summary_js_path} (${number(data.source_assets.summary_js_bytes)} bytes) 기준으로 동작하며, 전체 마스터 자산 ${data.source_assets.master_path} (${number(data.source_assets.master_bytes)} bytes) 전체를 직접 노출하지 않습니다.`;
