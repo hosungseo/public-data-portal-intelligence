@@ -627,6 +627,91 @@
     nodes.forEach((node) => observer.observe(node));
   }
 
+  function renderWhySection() {
+    const counterEl = byId("why-counter-value");
+    const counter = byId("why-counter");
+    if (!counterEl || !counter) return;
+
+    const final = Number(data.overview.signal_total) || 0;
+    counter.dataset.final = String(final);
+
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function animateCounter() {
+      if (counterEl.dataset.animated === "1") return;
+      counterEl.dataset.animated = "1";
+
+      if (reduceMotion || final === 0) {
+        counterEl.textContent = number(final);
+        return;
+      }
+
+      const duration = 1800;
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const value = Math.floor(final * eased);
+        counterEl.textContent = number(value);
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          counterEl.textContent = number(final);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animateCounter();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      observer.observe(counter);
+    } else {
+      animateCounter();
+    }
+
+    const replayBtn = byId("why-replay");
+    const fileSteps = Array.from(document.querySelectorAll("#why-steps-file li"));
+    const apiSteps = Array.from(document.querySelectorAll("#why-steps-api li"));
+
+    function reset() {
+      fileSteps.concat(apiSteps).forEach((li) => {
+        li.classList.remove("is-active", "is-done");
+      });
+    }
+
+    function play() {
+      reset();
+      if (reduceMotion) {
+        fileSteps.concat(apiSteps).forEach((li) => li.classList.add("is-done"));
+        return;
+      }
+      apiSteps.forEach((li, i) => {
+        setTimeout(() => li.classList.add("is-done"), 80 * (i + 1));
+      });
+      fileSteps.forEach((li, i) => {
+        const enterDelay = 700 * (i + 1);
+        setTimeout(() => {
+          li.classList.add("is-active");
+          setTimeout(() => {
+            li.classList.remove("is-active");
+            li.classList.add("is-done");
+          }, 600);
+        }, enterDelay);
+      });
+    }
+
+    if (replayBtn) {
+      replayBtn.addEventListener("click", play);
+    }
+  }
+
   function init() {
     if (!data) {
       document.body.innerHTML = '<main class="app"><div class="empty">output/file_to_api_summary.js 가 없습니다. 요약 자산을 먼저 생성해야 합니다.</div></main>';
@@ -638,6 +723,7 @@
     renderProviders();
     renderShortlist();
     renderReviewQueue();
+    renderWhySection();
     initReveal();
   }
 

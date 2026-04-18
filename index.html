@@ -1246,8 +1246,176 @@
         border-radius: 50%;
       }
 
+      .why-panel {
+        padding: 26px 24px;
+      }
+
+      .why-counter {
+        margin: 22px 0 28px;
+        padding: 22px 0;
+        text-align: center;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .why-counter-value {
+        font-family: var(--mono);
+        font-size: clamp(44px, 7vw, 84px);
+        font-weight: 500;
+        letter-spacing: -0.04em;
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+      }
+
+      .why-counter-label {
+        margin-top: 10px;
+        font-size: 11px;
+        color: var(--muted-deep);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .why-counter-sublabel {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .why-compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .why-compare-col {
+        padding: 18px;
+        background: var(--surface-muted);
+        border: 1px solid var(--line);
+      }
+
+      .why-compare-col[data-side="api"] {
+        border-color: var(--accent);
+        background: var(--accent-edge);
+      }
+
+      .why-compare-label {
+        font-size: 10px;
+        color: var(--muted-deep);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+
+      .why-compare-col[data-side="api"] .why-compare-label {
+        color: var(--accent);
+      }
+
+      .why-steps {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 6px;
+      }
+
+      .why-steps li {
+        padding: 8px 10px;
+        background: var(--bg);
+        border: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        gap: 10px;
+        align-items: center;
+        font-size: 13px;
+        color: var(--muted);
+        transition: border-color 240ms ease, color 240ms ease, background 240ms ease;
+      }
+
+      .why-steps li.is-active {
+        color: var(--ink);
+        border-color: var(--line-strong);
+      }
+
+      .why-steps li.is-done {
+        color: var(--ink);
+        border-color: var(--accent);
+        background: var(--accent-edge);
+      }
+
+      .why-compare-col[data-side="api"] .why-steps li {
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+
+      .why-step-marker {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted-deep);
+        text-align: center;
+      }
+
+      .why-steps li.is-done .why-step-marker {
+        color: var(--accent);
+      }
+
+      .why-compare-tally {
+        margin-top: 12px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .why-compare-col[data-side="api"] .why-compare-tally {
+        color: var(--accent);
+      }
+
+      .why-actions {
+        margin-top: 18px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .why-replay {
+        padding: 9px 18px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+        font-size: 12px;
+        cursor: pointer;
+        transition: border-color 140ms ease, color 140ms ease;
+      }
+
+      .why-replay:hover,
+      .why-replay:focus-visible {
+        border-color: var(--accent);
+        color: var(--accent);
+        outline: none;
+      }
+
+      .why-closing {
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        text-align: center;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 14px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .why-steps li {
+          transition: none;
+        }
+      }
+
       @media (max-width: 1080px) {
         .criteria-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .why-compare {
           grid-template-columns: 1fr;
         }
 
@@ -1348,6 +1516,7 @@
           <div class="hero-brand">Public Data Portal Intelligence</div>
           <nav>
             <a href="#criteria-section">Criteria</a>
+            <a href="#why-section">Why</a>
             <a href="#queue-section">Queue</a>
             <a href="#method-section">Method</a>
             <a href="https://github.com/hosungseo/public-data-portal-intelligence" target="_blank" rel="noreferrer noopener">GitHub ↗</a>
@@ -1418,6 +1587,51 @@
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="section" id="why-section">
+        <div class="panel why-panel" data-reveal>
+          <div class="panel-head">
+            <div>
+              <h2>전환은 무엇을 줄이나</h2>
+              <p class="section-copy">파일은 매번 열어 구조를 다시 파악해야 쓸 수 있고, API는 그 단계를 한 번으로 줄입니다. 이 검토 큐가 누적해서 받은 이용 시그널이 그 반복의 크기입니다.</p>
+            </div>
+          </div>
+
+          <div class="why-counter" id="why-counter" data-final="0" aria-live="polite">
+            <div class="why-counter-value" id="why-counter-value">—</div>
+            <div class="why-counter-label">누적 이용 시그널</div>
+            <div class="why-counter-sublabel">다운로드와 API 신청을 합한 수치 — 같은 데이터 구조를 매번 다시 파악한 횟수의 근사치입니다.</div>
+          </div>
+
+          <div class="why-compare">
+            <div class="why-compare-col" data-side="file">
+              <div class="why-compare-label">현재 — 파일</div>
+              <ol class="why-steps" id="why-steps-file">
+                <li data-step="1"><span class="why-step-marker">①</span><span class="why-step-text">포털에서 데이터 검색</span></li>
+                <li data-step="2"><span class="why-step-marker">②</span><span class="why-step-text">데이터셋 페이지 열기</span></li>
+                <li data-step="3"><span class="why-step-marker">③</span><span class="why-step-text">CSV·HWP·XLSX 다운로드</span></li>
+                <li data-step="4"><span class="why-step-marker">④</span><span class="why-step-text">인코딩·파싱·정리</span></li>
+                <li data-step="5"><span class="why-step-marker">⑤</span><span class="why-step-text">사용</span></li>
+              </ol>
+              <div class="why-compare-tally">매 사용 = 5 단계</div>
+            </div>
+            <div class="why-compare-col" data-side="api">
+              <div class="why-compare-label">API라면</div>
+              <ol class="why-steps" id="why-steps-api">
+                <li data-step="1"><span class="why-step-marker">①</span><span class="why-step-text">GET /api/.../v1/data</span></li>
+                <li data-step="2"><span class="why-step-marker">→</span><span class="why-step-text">즉시 구조화된 응답</span></li>
+              </ol>
+              <div class="why-compare-tally">매 사용 = 1 단계</div>
+            </div>
+          </div>
+
+          <div class="why-actions">
+            <button class="why-replay" id="why-replay" type="button">▶ 단계 재생</button>
+          </div>
+
+          <p class="why-closing">전환은 그 단계를 한 번으로 줄이는 작업입니다. 이 검토 큐는 어디서부터 줄일지를 정하는 화면입니다.</p>
         </div>
       </section>
 
