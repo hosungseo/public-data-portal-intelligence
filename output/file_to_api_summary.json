@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-04-18T13:06:06+09:00",
+  "generated_at": "2026-04-18T13:10:56+09:00",
   "source_assets": {
     "master_path": "output/public_data_portal_catalog_master.json",
     "report_path": "output/build-report.json",
     "master_bytes": 319193981,
     "summary_json_path": "output/file_to_api_summary.json",
     "summary_js_path": "output/file_to_api_summary.js",
-    "summary_json_bytes": 106589,
-    "summary_js_bytes": 82671,
+    "summary_json_bytes": 105883,
+    "summary_js_bytes": 82062,
     "index_json_path": "output/file_to_api_index.json",
     "index_js_path": "output/file_to_api_index.js",
     "index_json_bytes": 8341737,
@@ -51,29 +51,20 @@
       },
       {
         "key": "download",
-        "label": "다운로드 신호",
-        "stage_title": "사람들이 실제로 자주 받아간 데이터",
+        "label": "다운로드 신호 — 핵심 후보",
+        "stage_title": "수요까지 누적된 핵심 후보군",
         "threshold_text": "누적 다운로드 ≥ 2,000건",
-        "explanation": "여기서부터 수요를 봅니다. 한두 번 받은 게 아니라 여러 명이 반복해서 가져간 흔적이 분명한 데이터만 남깁니다.",
+        "explanation": "운영 가능 + 데이터 깨끗 + 구조 보임 + 사람들이 자주 씀. 이 네 가지 기준을 모두 만족하는 데이터로, 우리가 우선 노릴 핵심 후보군입니다.",
         "count": 1480
-      },
-      {
-        "key": "api",
-        "label": "API 신호",
-        "stage_title": "API로도 받고 싶다는 요청이 누적된 데이터",
-        "threshold_text": "API 활용신청 ≥ 10건",
-        "explanation": "누군가 '파일 말고 API로 자동 호출하게 해달라'고 활용신청한 흔적이 누적된 데이터. 단순 다운로드를 넘어 더 유연한 사용을 원하는 신호입니다.",
-        "count": 176
-      },
-      {
-        "key": "core",
-        "label": "국가중점",
-        "stage_title": "정부가 '중요'라고 정식 지정한 데이터",
-        "threshold_text": "국가중점데이터(Y)",
-        "explanation": "마지막으로 정책 신호. 정부가 '국가중점데이터'로 공식 지정한 항목만 남깁니다. 위 모든 조건을 만족하면서 정책적 우선순위까지 가진 핵심 후보입니다.",
-        "count": 14
       }
     ],
+    "priority_highlights": {
+      "pool_count": 1480,
+      "api_count": 176,
+      "api_threshold": 10,
+      "core_count": 53,
+      "both_count": 14
+    },
     "signal_total": 95224711,
     "provider_count": 1147,
     "joined_count": 65327,

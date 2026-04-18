@@ -699,9 +699,26 @@
     }
 
     const copy = byId("funnel-copy");
+    const highlights = overview.priority_highlights || {};
+    const poolCount = highlights.pool_count || 0;
     if (copy) {
-      copy.textContent = `우선 후보 ${number(priorityCount)}건에 다운로드·API신청·메타·국가중점·결합·호스팅 6개 기준을 순차로 적용해 무엇이 남는지 보여줍니다. 마지막 단계의 ${number(shortlistCount)}건 shortlist는 같은 신호를 가중합 점수로 묶어 별도 산출됩니다.`;
+      copy.textContent = `우선 후보 ${number(priorityCount)}건에 호스팅·결합·메타·다운로드 4개 기준을 순차로 적용해 ${number(poolCount)}건의 핵심 후보군을 추립니다. 그 안에서도 특히 우선해야 할 데이터는 별도로 표기합니다.`;
     }
+
+    // 핵심 후보 풀 안의 highlights (API 신호·국가중점·둘 다)
+    const subEl = byId("priority-highlights-sub");
+    if (subEl) {
+      subEl.textContent = `위 ${number(poolCount)}건의 핵심 후보 안에서 — API 신호와 국가중점은 강제 필터가 아닌 '추가 우선순위 표시'입니다.`;
+    }
+    const highlightCounts = {
+      api: highlights.api_count,
+      core: highlights.core_count,
+      both: highlights.both_count,
+    };
+    Object.entries(highlightCounts).forEach(([key, value]) => {
+      const el = document.querySelector(`[data-highlight-count="${key}"]`);
+      if (el) el.textContent = number(value || 0);
+    });
 
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
