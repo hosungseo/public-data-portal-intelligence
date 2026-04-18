@@ -635,6 +635,12 @@
     const final = Number(data.overview.signal_total) || 0;
     counter.dataset.final = String(final);
 
+    const sublabel = byId("why-counter-sublabel");
+    if (sublabel) {
+      sublabel.textContent =
+        `이 검토 큐의 ${number(data.overview.candidate_count)}건이 누적해서 받은 다운로드·API 신청 횟수입니다. 매번 같은 구조를 다시 파악해야 했습니다.`;
+    }
+
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     function animateCounter() {

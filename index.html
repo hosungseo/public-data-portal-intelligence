@@ -1595,14 +1595,14 @@
           <div class="panel-head">
             <div>
               <h2>전환은 무엇을 줄이나</h2>
-              <p class="section-copy">파일은 매번 열어 구조를 다시 파악해야 쓸 수 있고, API는 그 단계를 한 번으로 줄입니다. 이 검토 큐가 누적해서 받은 이용 시그널이 그 반복의 크기입니다.</p>
+              <p class="section-copy">파일은 매번 열어 구조를 다시 파악해야 쓸 수 있고, API는 그 단계를 한 번으로 줄입니다. 이 검토 큐가 누적해서 받은 이용 시그널이 그 반복의 크기이자, API 전환으로 아낄 수 있는 양입니다.</p>
             </div>
           </div>
 
           <div class="why-counter" id="why-counter" data-final="0" aria-live="polite">
             <div class="why-counter-value" id="why-counter-value">—</div>
-            <div class="why-counter-label">누적 이용 시그널</div>
-            <div class="why-counter-sublabel">다운로드와 API 신청을 합한 수치 — 같은 데이터 구조를 매번 다시 파악한 횟수의 근사치입니다.</div>
+            <div class="why-counter-label">API였다면 아낄 수 있었던 단계</div>
+            <div class="why-counter-sublabel" id="why-counter-sublabel"></div>
           </div>
 
           <div class="why-compare">
@@ -1631,7 +1631,7 @@
             <button class="why-replay" id="why-replay" type="button">▶ 단계 재생</button>
           </div>
 
-          <p class="why-closing">전환은 그 단계를 한 번으로 줄이는 작업입니다. 이 검토 큐는 어디서부터 줄일지를 정하는 화면입니다.</p>
+          <p class="why-closing">전환은 그 단계를 한 번으로 줄이는 작업입니다. 이 검토 큐는 <strong>어느 데이터에서 가장 크게 아낄지</strong> 정하는 화면입니다.</p>
         </div>
       </section>
 
