@@ -628,6 +628,158 @@
     nodes.forEach((node) => observer.observe(node));
   }
 
+  function renderFunnelSection() {
+    const funnel = byId("funnel");
+    if (!funnel) return;
+
+    const overview = data.overview;
+    const stage1 = overview.candidate_count || 0;
+    const stage2 = overview.priority_count || 0;
+    const stage3 = data.shortlist.items.length || 0;
+    const drop1 = Math.max(0, stage1 - stage2);
+    const drop2 = Math.max(0, stage2 - stage3);
+
+    const stages = funnel.querySelectorAll(".funnel-stage");
+    const arrows = funnel.querySelectorAll(".funnel-arrow");
+    const targets = [stage1, stage2, stage3];
+    const drops = [drop1, drop2];
+    targets.forEach((value, idx) => {
+      const stage = stages[idx];
+      if (!stage) return;
+      stage.dataset.target = String(value);
+      const valueEl = stage.querySelector(".funnel-stage-value");
+      const fillEl = stage.querySelector(".funnel-bar-fill");
+      if (valueEl) valueEl.dataset.count = String(value);
+      if (fillEl) {
+        const pct = stage1 > 0 ? Math.max(0.6, (value / stage1) * 100) : 0;
+        fillEl.dataset.fill = String(pct);
+      }
+    });
+    arrows.forEach((arrow, idx) => {
+      const dropEl = arrow.querySelector(".drop-count");
+      if (dropEl) dropEl.dataset.count = String(drops[idx]);
+    });
+
+    const note2 = byId("funnel-stage-2-note");
+    if (note2) {
+      const sharePct = ((overview.priority_share || 0) * 100).toFixed(1);
+      note2.textContent = `전체 검토 후보의 ${sharePct}% — 다운로드가 반복되거나 국가중점`;
+    }
+
+    const copy = byId("funnel-copy");
+    if (copy) {
+      copy.textContent = `${number(stage1)}건이 ${number(stage3)}건으로 좁혀지는 단계별 흐름입니다. 각 단계마다 어떤 기준이 적용되고 무엇이 다음 단계로 넘어가는지 보여줍니다.`;
+    }
+
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function animateNumber(el, finalValue, duration) {
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = number(Math.floor(finalValue * eased));
+        if (t < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = number(finalValue);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    function reset() {
+      stages.forEach((stage) => {
+        stage.classList.remove("is-visible");
+        const valueEl = stage.querySelector(".funnel-stage-value");
+        const fillEl = stage.querySelector(".funnel-bar-fill");
+        if (valueEl) valueEl.textContent = "—";
+        if (fillEl) fillEl.style.width = "0%";
+      });
+      arrows.forEach((arrow) => {
+        arrow.classList.remove("is-visible");
+        const dropEl = arrow.querySelector(".drop-count");
+        if (dropEl) dropEl.textContent = "—";
+      });
+    }
+
+    function play() {
+      reset();
+      if (reduceMotion) {
+        stages.forEach((stage, idx) => {
+          stage.classList.add("is-visible");
+          const valueEl = stage.querySelector(".funnel-stage-value");
+          const fillEl = stage.querySelector(".funnel-bar-fill");
+          if (valueEl) valueEl.textContent = number(targets[idx]);
+          if (fillEl) fillEl.style.width = `${fillEl.dataset.fill}%`;
+        });
+        arrows.forEach((arrow, idx) => {
+          arrow.classList.add("is-visible");
+          const dropEl = arrow.querySelector(".drop-count");
+          if (dropEl) dropEl.textContent = number(drops[idx]);
+        });
+        return;
+      }
+
+      const sequence = [
+        { delay: 0, action: () => {
+          stages[0].classList.add("is-visible");
+          animateNumber(stages[0].querySelector(".funnel-stage-value"), targets[0], 900);
+          requestAnimationFrame(() => {
+            const fill = stages[0].querySelector(".funnel-bar-fill");
+            if (fill) fill.style.width = `${fill.dataset.fill}%`;
+          });
+        }},
+        { delay: 1000, action: () => {
+          arrows[0].classList.add("is-visible");
+          animateNumber(arrows[0].querySelector(".drop-count"), drops[0], 700);
+        }},
+        { delay: 1700, action: () => {
+          stages[1].classList.add("is-visible");
+          animateNumber(stages[1].querySelector(".funnel-stage-value"), targets[1], 900);
+          requestAnimationFrame(() => {
+            const fill = stages[1].querySelector(".funnel-bar-fill");
+            if (fill) fill.style.width = `${fill.dataset.fill}%`;
+          });
+        }},
+        { delay: 2700, action: () => {
+          arrows[1].classList.add("is-visible");
+          animateNumber(arrows[1].querySelector(".drop-count"), drops[1], 700);
+        }},
+        { delay: 3400, action: () => {
+          stages[2].classList.add("is-visible");
+          animateNumber(stages[2].querySelector(".funnel-stage-value"), targets[2], 700);
+          requestAnimationFrame(() => {
+            const fill = stages[2].querySelector(".funnel-bar-fill");
+            if (fill) fill.style.width = `${Math.max(0.5, parseFloat(fill.dataset.fill))}%`;
+          });
+        }},
+      ];
+      sequence.forEach(({ delay, action }) => setTimeout(action, delay));
+    }
+
+    let played = false;
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !played) {
+            played = true;
+            play();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      observer.observe(funnel);
+    } else {
+      play();
+    }
+
+    const replayBtn = byId("funnel-replay");
+    if (replayBtn) {
+      replayBtn.addEventListener("click", play);
+    }
+  }
+
   function renderWhySection() {
     const counterEl = byId("why-counter-value");
     const counter = byId("why-counter");
@@ -730,6 +882,7 @@
     renderProviders();
     renderShortlist();
     renderReviewQueue();
+    renderFunnelSection();
     renderWhySection();
     initReveal();
   }

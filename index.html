@@ -1246,6 +1246,215 @@
         border-radius: 50%;
       }
 
+      .funnel-panel {
+        padding: 26px 24px;
+      }
+
+      .funnel {
+        display: grid;
+        gap: 0;
+        margin-top: 18px;
+      }
+
+      .funnel-stage {
+        padding: 18px 20px;
+        background: var(--surface-muted);
+        border: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 14px;
+        align-items: center;
+        opacity: 0;
+        transform: translateX(-12px);
+        transition: opacity 320ms ease, transform 320ms ease, border-color 320ms ease, background 320ms ease;
+      }
+
+      .funnel-stage.is-visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .funnel-stage--accent.is-visible {
+        border-color: var(--accent);
+        background: var(--accent-edge);
+      }
+
+      .funnel-stage--top.is-visible {
+        border-color: var(--accent);
+        background: var(--bg);
+      }
+
+      .funnel-stage-meta {
+        min-width: 0;
+      }
+
+      .funnel-stage-label {
+        font-size: 10px;
+        color: var(--muted-deep);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      .funnel-stage--accent.is-visible .funnel-stage-label,
+      .funnel-stage--top.is-visible .funnel-stage-label {
+        color: var(--accent);
+      }
+
+      .funnel-stage-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+      }
+
+      .funnel-stage-note {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .funnel-stage-value {
+        font-family: var(--mono);
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 500;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      .funnel-stage--accent.is-visible .funnel-stage-value,
+      .funnel-stage--top.is-visible .funnel-stage-value {
+        color: var(--accent);
+      }
+
+      .funnel-bar {
+        height: 6px;
+        background: var(--line);
+        margin-top: 12px;
+        grid-column: 1 / -1;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .funnel-bar-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 0;
+        background: var(--ink);
+        transition: width 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .funnel-stage--accent .funnel-bar-fill {
+        background: var(--accent);
+      }
+
+      .funnel-stage--top .funnel-bar-fill {
+        background: var(--accent);
+      }
+
+      .funnel-arrow {
+        padding: 14px 20px;
+        display: grid;
+        grid-template-columns: 16px 1fr auto;
+        gap: 12px;
+        align-items: start;
+        opacity: 0;
+        transform: translateY(-6px);
+        transition: opacity 320ms ease, transform 320ms ease;
+      }
+
+      .funnel-arrow.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .funnel-arrow-rail {
+        width: 1px;
+        height: 100%;
+        background: var(--line-strong);
+        margin: 0 auto;
+        min-height: 28px;
+      }
+
+      .funnel-arrow-filter {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .funnel-filter-label {
+        font-size: 10px;
+        color: var(--muted-deep);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .funnel-filter-text {
+        color: var(--ink);
+      }
+
+      .funnel-filter-text strong {
+        color: var(--accent);
+        font-weight: 500;
+        font-family: var(--mono);
+        font-size: 11px;
+        padding: 1px 6px;
+        border: 1px solid var(--accent);
+        margin: 0 2px;
+      }
+
+      .funnel-arrow-drop {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+        text-align: right;
+        white-space: nowrap;
+        align-self: end;
+      }
+
+      .funnel-arrow-drop .drop-mark {
+        color: var(--muted-deep);
+        margin-right: 4px;
+      }
+
+      .funnel-actions {
+        margin-top: 18px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .funnel-replay {
+        padding: 9px 18px;
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+        font-size: 12px;
+        cursor: pointer;
+        transition: border-color 140ms ease, color 140ms ease;
+      }
+
+      .funnel-replay:hover,
+      .funnel-replay:focus-visible {
+        border-color: var(--accent);
+        color: var(--accent);
+        outline: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .funnel-stage,
+        .funnel-arrow,
+        .funnel-bar-fill {
+          transition: none;
+        }
+      }
+
       .why-panel {
         padding: 26px 24px;
       }
@@ -1586,6 +1795,71 @@
                 <li><span class="bullet-dot"></span>같은 기관이 두 자리 이상 차지하지 않도록 배분</li>
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="funnel-section">
+        <div class="panel funnel-panel" data-reveal>
+          <div class="panel-head">
+            <div>
+              <h2>이렇게 추려졌습니다</h2>
+              <p class="section-copy" id="funnel-copy"></p>
+            </div>
+          </div>
+
+          <div class="funnel" id="funnel">
+            <div class="funnel-stage" data-stage="0">
+              <div class="funnel-stage-meta">
+                <div class="funnel-stage-label">01 · 검토 후보</div>
+                <div class="funnel-stage-title">공공데이터포털의 모든 파일데이터</div>
+                <div class="funnel-stage-note">API형 패턴이 감지되지 않은 파일형 행 — 사상적으로 모두 API화 대상</div>
+              </div>
+              <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
+              <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="100"></div></div>
+            </div>
+
+            <div class="funnel-arrow" data-arrow="0">
+              <div class="funnel-arrow-rail"></div>
+              <div class="funnel-arrow-filter">
+                <div class="funnel-filter-label">필터</div>
+                <div class="funnel-filter-text">다운로드 <strong>≥ 1,000</strong> 또는 <strong>국가중점데이터</strong></div>
+              </div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 일반 후보로</div>
+            </div>
+
+            <div class="funnel-stage funnel-stage--accent" data-stage="1">
+              <div class="funnel-stage-meta">
+                <div class="funnel-stage-label">02 · 우선 후보</div>
+                <div class="funnel-stage-title">큐 상단에 정렬되는 후보군</div>
+                <div class="funnel-stage-note" id="funnel-stage-2-note">전체 검토 후보의 12.8%</div>
+              </div>
+              <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
+              <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
+            </div>
+
+            <div class="funnel-arrow" data-arrow="1">
+              <div class="funnel-arrow-rail"></div>
+              <div class="funnel-arrow-filter">
+                <div class="funnel-filter-label">정렬</div>
+                <div class="funnel-filter-text">점수 (수요 + 메타 풍부도 + 국가중점 + 결합) + 같은 기관 두 자리 이상 차지하지 않도록 배분</div>
+              </div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 후순위로</div>
+            </div>
+
+            <div class="funnel-stage funnel-stage--top" data-stage="2">
+              <div class="funnel-stage-meta">
+                <div class="funnel-stage-label">03 · 우선 검토 shortlist</div>
+                <div class="funnel-stage-title">사람이 가장 먼저 들여다볼 12건</div>
+                <div class="funnel-stage-note">점수 상위 + 4개 검토 레인 균형 (즉시·수요·교차·재검증)</div>
+              </div>
+              <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
+              <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
+            </div>
+          </div>
+
+          <div class="funnel-actions">
+            <button class="funnel-replay" id="funnel-replay" type="button">▶ 단계별로 다시 보기</button>
           </div>
         </div>
       </section>
