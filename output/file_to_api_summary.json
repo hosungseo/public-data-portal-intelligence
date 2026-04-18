@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-04-18T13:10:56+09:00",
+  "generated_at": "2026-04-18T13:19:52+09:00",
   "source_assets": {
     "master_path": "output/public_data_portal_catalog_master.json",
     "report_path": "output/build-report.json",
     "master_bytes": 319193981,
     "summary_json_path": "output/file_to_api_summary.json",
     "summary_js_path": "output/file_to_api_summary.js",
-    "summary_json_bytes": 105883,
-    "summary_js_bytes": 82062,
+    "summary_json_bytes": 106025,
+    "summary_js_bytes": 82161,
     "index_json_path": "output/file_to_api_index.json",
     "index_js_path": "output/file_to_api_index.js",
     "index_json_bytes": 8341737,
@@ -58,6 +58,12 @@
         "count": 1480
       }
     ],
+    "priority_split": {
+      "dl_threshold": 1000,
+      "dl_pass_count": 10045,
+      "core_added_count": 1193,
+      "total": 11238
+    },
     "priority_highlights": {
       "pool_count": 1480,
       "api_count": 176,

@@ -1423,6 +1423,14 @@
         margin-right: 4px;
       }
 
+      .funnel-arrow--union .funnel-arrow-drop {
+        color: var(--accent);
+      }
+
+      .funnel-arrow--union .funnel-arrow-drop .drop-mark {
+        color: var(--accent);
+      }
+
       .funnel-actions {
         margin-top: 18px;
         display: flex;
@@ -1910,36 +1918,36 @@
             <div class="funnel-arrow" data-arrow="0">
               <div class="funnel-arrow-rail"></div>
               <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label">필터</div>
-                <div class="funnel-filter-text">다운로드 <strong>≥ 1,000</strong> 또는 <strong>국가중점데이터</strong></div>
+                <div class="funnel-filter-label">수요 1차</div>
+                <div class="funnel-filter-text">누적 다운로드 <strong>≥ 1,000</strong>건</div>
               </div>
               <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 일반 후보로</div>
             </div>
 
             <div class="funnel-stage funnel-stage--accent" data-stage="1">
               <div class="funnel-stage-meta">
-                <div class="funnel-stage-label">02 · 우선 후보</div>
-                <div class="funnel-stage-title">큐 상단에 정렬되는 후보군</div>
-                <div class="funnel-stage-note" id="funnel-stage-2-note">전체 검토 후보의 12.8%</div>
+                <div class="funnel-stage-label">02 · 다운로드 통과</div>
+                <div class="funnel-stage-title">수요가 이미 반복된 후보</div>
+                <div class="funnel-stage-note">다운로드 1,000건 이상 — 자주 쓰인 데이터</div>
               </div>
               <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
               <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
             </div>
 
-            <div class="funnel-arrow" data-arrow="1">
+            <div class="funnel-arrow funnel-arrow--union" data-arrow="1">
               <div class="funnel-arrow-rail"></div>
               <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label" data-criterion-label>—</div>
-                <div class="funnel-filter-text" data-criterion-text>—</div>
+                <div class="funnel-filter-label">정책 합류</div>
+                <div class="funnel-filter-text">다운로드 미달이지만 <strong>국가중점데이터</strong>로 지정된 행을 합류</div>
               </div>
-              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 빠짐</div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↗</span>+<span class="drop-count" data-count="0">—</span>건 합류</div>
             </div>
 
             <div class="funnel-stage funnel-stage--accent" data-stage="2">
               <div class="funnel-stage-meta">
-                <div class="funnel-stage-label" data-stage-label>—</div>
-                <div class="funnel-stage-title" data-stage-title>—</div>
-                <div class="funnel-stage-note" data-criterion-note>—</div>
+                <div class="funnel-stage-label">03 · 우선 후보</div>
+                <div class="funnel-stage-title">큐 상단에 정렬되는 후보군</div>
+                <div class="funnel-stage-note" id="funnel-stage-priority-note">다운로드 통과 + 정책 합류 — 전체 검토 후보의 12.8%</div>
               </div>
               <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
               <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
@@ -1993,6 +2001,25 @@
             </div>
 
             <div class="funnel-stage funnel-stage--accent" data-stage="5">
+              <div class="funnel-stage-meta">
+                <div class="funnel-stage-label" data-stage-label>—</div>
+                <div class="funnel-stage-title" data-stage-title>—</div>
+                <div class="funnel-stage-note" data-criterion-note>—</div>
+              </div>
+              <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
+              <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
+            </div>
+
+            <div class="funnel-arrow" data-arrow="5">
+              <div class="funnel-arrow-rail"></div>
+              <div class="funnel-arrow-filter">
+                <div class="funnel-filter-label" data-criterion-label>—</div>
+                <div class="funnel-filter-text" data-criterion-text>—</div>
+              </div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 빠짐</div>
+            </div>
+
+            <div class="funnel-stage funnel-stage--accent" data-stage="6">
               <div class="funnel-stage-meta">
                 <div class="funnel-stage-label" data-stage-label>—</div>
                 <div class="funnel-stage-title" data-stage-title>—</div>

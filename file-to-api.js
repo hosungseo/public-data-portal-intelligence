@@ -635,31 +635,40 @@
     const overview = data.overview;
     const candidateCount = overview.candidate_count || 0;
     const priorityCount = overview.priority_count || 0;
-    const shortlistCount = data.shortlist.items.length || 0;
+    const split = overview.priority_split || {};
+    const dlPassCount = split.dl_pass_count || 0;
+    const coreAddedCount = split.core_added_count || 0;
     const criteria = overview.criteria_funnel || [];
 
-    // 8 단계: 88,166 → 11,238 → 수요 → 메타 → 국가중점 → 결합 → 호스팅 → shortlist 12
-    // 5 기준 stage 카운트는 criteria_funnel에서 읽음 (build에서 순차 AND 산출)
+    // 7 단계: 88,166 → 다운로드 통과(10,045) → +국가중점 합류(11,238)
+    //         → 호스팅 → 결합 → 메타 → 다운로드 신호 핵심 후보(1,480)
+    // 우선 게이트는 OR 조건이라 두 단계로 나눠 보여준다 — 두 번째 화살표는 빠짐이 아닌 합류(union).
     const targets = [
       candidateCount,
+      dlPassCount,
       priorityCount,
       ...criteria.map((c) => c.count || 0),
-      shortlistCount,
     ];
+    // drops[idx]는 arrows[idx]가 표시하는 변화량.
+    // arrow 0: 검토 후보 → 다운로드 통과 (빠짐)
+    // arrow 1: 다운로드 통과 → 우선 후보 (합류 +)
+    // arrow 2~5: 우선 후보 → 핵심 후보 (빠짐)
     const drops = [];
     for (let i = 0; i < targets.length - 1; i++) {
-      drops.push(Math.max(0, targets[i] - targets[i + 1]));
+      const delta = targets[i + 1] - targets[i];
+      drops.push(Math.abs(delta));
     }
+    const UNION_ARROW_IDX = 1;
 
     const stages = funnel.querySelectorAll(".funnel-stage");
     const arrows = funnel.querySelectorAll(".funnel-arrow");
 
     // 기준 stage와 그 앞 화살표에 라벨·제목·풀이·기술적 필터 문구 동적 주입.
-    // stage 번호는 02 우선 후보 다음부터(03부터) 매겨짐.
+    // stage 번호는 03 우선 후보 다음부터(04부터) 매겨짐.
     criteria.forEach((c, i) => {
-      const stage = stages[i + 2];
-      const arrow = arrows[i + 1];
-      const stageNum = String(i + 3).padStart(2, "0");
+      const stage = stages[i + 3];
+      const arrow = arrows[i + 2];
+      const stageNum = String(i + 4).padStart(2, "0");
       if (stage) {
         const labelEl = stage.querySelector("[data-stage-label]");
         const titleEl = stage.querySelector("[data-stage-title]");
@@ -692,17 +701,17 @@
       if (dropEl) dropEl.dataset.count = String(drops[idx]);
     });
 
-    const note2 = byId("funnel-stage-2-note");
-    if (note2) {
+    const priorityNote = byId("funnel-stage-priority-note");
+    if (priorityNote) {
       const sharePct = ((overview.priority_share || 0) * 100).toFixed(1);
-      note2.textContent = `전체 검토 후보의 ${sharePct}% — 다운로드가 반복되거나 국가중점`;
+      priorityNote.textContent = `다운로드 통과 ${number(dlPassCount)} + 정책 합류 ${number(coreAddedCount)} = ${number(priorityCount)} (전체 검토 후보의 ${sharePct}%)`;
     }
 
     const copy = byId("funnel-copy");
     const highlights = overview.priority_highlights || {};
     const poolCount = highlights.pool_count || 0;
     if (copy) {
-      copy.textContent = `우선 후보 ${number(priorityCount)}건에 호스팅·결합·메타·다운로드 4개 기준을 순차로 적용해 ${number(poolCount)}건의 핵심 후보군을 추립니다. 그 안에서도 특히 우선해야 할 데이터는 별도로 표기합니다.`;
+      copy.textContent = `검토 후보 ${number(candidateCount)}건을 다운로드 1차로 ${number(dlPassCount)}건까지 좁히고, 국가중점 ${number(coreAddedCount)}건을 합류해 우선 후보 ${number(priorityCount)}건을 만듭니다. 여기에 호스팅·결합·메타·다운로드 4개 기준을 순차로 적용해 ${number(poolCount)}건의 핵심 후보군으로 추립니다.`;
     }
 
     // 핵심 후보 풀 안의 highlights (API 신호·국가중점·둘 다)
