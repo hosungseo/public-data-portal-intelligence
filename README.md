@@ -119,15 +119,6 @@ Not included:
 
 ## Notes
 
-- 이 페이지는 **API 전환 검토 큐**이지, 모든 flagged 파일이 반드시 API가 되어야 한다는 뜻은 아닙니다.
+- 이 페이지는 **API 전환 검토 큐**이지, 큐에 오른 모든 파일이 반드시 API가 되어야 한다는 뜻은 아닙니다.
 - 실제 API 전환 여부는 스키마, 갱신 주기, 법적 제약, 운영 가능성 검토가 추가로 필요합니다.
 - 공개 페이지는 전체 원천 공개보다 **검토 우선순위의 가독성**에 최적화되어 있습니다.
-
-## Local preview
-
-```bash
-git clone https://github.com/hosungseo/public-data-portal-intelligence.git
-cd public-data-portal-intelligence
-python3 -m http.server 8000
-# open http://localhost:8000/file-to-api.html
-```
