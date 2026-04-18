@@ -633,22 +633,17 @@
     if (!funnel) return;
 
     const overview = data.overview;
-    const strongest = (data.strongest_candidates && data.strongest_candidates.items) || [];
     const candidateCount = overview.candidate_count || 0;
     const priorityCount = overview.priority_count || 0;
-    const strongCount = strongest.length || 0;
     const shortlistCount = data.shortlist.items.length || 0;
+    const criteria = overview.criteria_funnel || [];
 
-    // 9 단계: 88,166 → 11,238 → 5,000 → 2,000 → 500 → 200 → 100 → 48 → 12
+    // 8 단계: 88,166 → 11,238 → 수요 → 메타 → 국가중점 → 결합 → 호스팅 → shortlist 12
+    // 5 기준 stage 카운트는 criteria_funnel에서 읽음 (build에서 순차 AND 산출)
     const targets = [
       candidateCount,
       priorityCount,
-      Math.min(5000, priorityCount),
-      Math.min(2000, priorityCount),
-      Math.min(500, priorityCount),
-      Math.min(200, priorityCount),
-      Math.min(100, priorityCount),
-      strongCount,
+      ...criteria.map((c) => c.count || 0),
       shortlistCount,
     ];
     const drops = [];
@@ -658,6 +653,22 @@
 
     const stages = funnel.querySelectorAll(".funnel-stage");
     const arrows = funnel.querySelectorAll(".funnel-arrow");
+
+    // 기준 stage(2~6)와 그 앞 화살표(1~5)에 라벨·문구 주입
+    criteria.forEach((c, i) => {
+      const stage = stages[i + 2];
+      const arrow = arrows[i + 1];
+      if (stage) {
+        const noteEl = stage.querySelector("[data-criterion-note]");
+        if (noteEl) noteEl.textContent = c.threshold_text || "";
+      }
+      if (arrow) {
+        const labelEl = arrow.querySelector("[data-criterion-label]");
+        const textEl = arrow.querySelector("[data-criterion-text]");
+        if (labelEl) labelEl.textContent = `+ ${c.label}`;
+        if (textEl) textEl.textContent = c.threshold_text || "";
+      }
+    });
     targets.forEach((value, idx) => {
       const stage = stages[idx];
       if (!stage) return;
@@ -683,7 +694,7 @@
 
     const copy = byId("funnel-copy");
     if (copy) {
-      copy.textContent = `${number(candidateCount)}건이 ${number(shortlistCount)}건으로 좁혀지는 9단계 흐름입니다. 각 단계마다 어떤 기준이 적용되고 무엇이 다음 단계로 넘어가는지 보여줍니다.`;
+      copy.textContent = `우선 후보 ${number(priorityCount)}건에 수요·메타·국가중점·결합·호스팅 5개 기준을 순차로 적용해 무엇이 남는지 보여줍니다. 마지막 단계의 ${number(shortlistCount)}건 shortlist는 같은 5개 신호를 가중합 점수로 묶어 별도 산출됩니다.`;
     }
 
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

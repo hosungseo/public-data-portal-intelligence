@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-04-18T12:23:46+09:00",
+  "generated_at": "2026-04-18T12:50:04+09:00",
   "source_assets": {
     "master_path": "output/public_data_portal_catalog_master.json",
     "report_path": "output/build-report.json",
     "master_bytes": 319193981,
     "summary_json_path": "output/file_to_api_summary.json",
     "summary_js_path": "output/file_to_api_summary.js",
-    "summary_json_bytes": 103755,
-    "summary_js_bytes": 80292,
+    "summary_json_bytes": 104557,
+    "summary_js_bytes": 80813,
     "index_json_path": "output/file_to_api_index.json",
     "index_js_path": "output/file_to_api_index.js",
     "index_json_bytes": 8341737,
@@ -24,6 +24,38 @@
     "priority_count": 11238,
     "priority_share": 0.1275,
     "core_data_count": 1572,
+    "criteria_funnel": [
+      {
+        "key": "demand",
+        "label": "수요",
+        "threshold_text": "종합 이용 신호 ≥ 10,000",
+        "count": 679
+      },
+      {
+        "key": "meta",
+        "label": "메타",
+        "threshold_text": "응답 필드 노출",
+        "count": 279
+      },
+      {
+        "key": "core",
+        "label": "국가중점",
+        "threshold_text": "국가중점데이터(Y)",
+        "count": 21
+      },
+      {
+        "key": "join",
+        "label": "결합",
+        "threshold_text": "지원센터목록 + 메타 + 이용이력 3종 결합 (UMY)",
+        "count": 17
+      },
+      {
+        "key": "host",
+        "label": "호스팅",
+        "threshold_text": "포털 호스팅 + 자유 라이선스",
+        "count": 17
+      }
+    ],
     "signal_total": 95224711,
     "provider_count": 1147,
     "joined_count": 65327,

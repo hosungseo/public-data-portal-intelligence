@@ -1841,17 +1841,17 @@
             <div class="funnel-arrow" data-arrow="1">
               <div class="funnel-arrow-rail"></div>
               <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label">점수 정렬 → 상위 50%</div>
-                <div class="funnel-filter-text">shortlist 점수 (수요 + 메타 + 국가중점 + 결합 + 호스팅) 상위 5,000건</div>
+                <div class="funnel-filter-label" data-criterion-label>수요</div>
+                <div class="funnel-filter-text" data-criterion-text>—</div>
               </div>
-              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 후순위로</div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 빠짐</div>
             </div>
 
-            <div class="funnel-stage funnel-stage--accent" data-stage="2">
+            <div class="funnel-stage funnel-stage--accent" data-stage="2" data-criterion="demand">
               <div class="funnel-stage-meta">
-                <div class="funnel-stage-label">03 · 점수 상위 50%</div>
-                <div class="funnel-stage-title">점수 기준 첫 추림</div>
-                <div class="funnel-stage-note">우선 후보를 점수 정렬해 절반만 남김</div>
+                <div class="funnel-stage-label">03 · + 수요</div>
+                <div class="funnel-stage-title">수요 기준을 통과한 후보</div>
+                <div class="funnel-stage-note" data-criterion-note>—</div>
               </div>
               <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
               <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
@@ -1860,17 +1860,17 @@
             <div class="funnel-arrow" data-arrow="2">
               <div class="funnel-arrow-rail"></div>
               <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label">상위 20%</div>
-                <div class="funnel-filter-text">다시 점수 상위 2,000건만 남김</div>
+                <div class="funnel-filter-label" data-criterion-label>메타</div>
+                <div class="funnel-filter-text" data-criterion-text>—</div>
               </div>
-              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 후순위로</div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 빠짐</div>
             </div>
 
-            <div class="funnel-stage funnel-stage--accent" data-stage="3">
+            <div class="funnel-stage funnel-stage--accent" data-stage="3" data-criterion="meta">
               <div class="funnel-stage-meta">
-                <div class="funnel-stage-label">04 · 점수 상위 20%</div>
-                <div class="funnel-stage-title">두 번째 추림</div>
-                <div class="funnel-stage-note">대다수 long-tail이 빠지고 점수 상위만 남음</div>
+                <div class="funnel-stage-label">04 · + 메타</div>
+                <div class="funnel-stage-title">메타 기준까지 통과한 후보</div>
+                <div class="funnel-stage-note" data-criterion-note>—</div>
               </div>
               <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
               <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
@@ -1879,17 +1879,17 @@
             <div class="funnel-arrow" data-arrow="3">
               <div class="funnel-arrow-rail"></div>
               <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label">상위 5%</div>
-                <div class="funnel-filter-text">다시 점수 상위 500건만 남김</div>
+                <div class="funnel-filter-label" data-criterion-label>국가중점</div>
+                <div class="funnel-filter-text" data-criterion-text>—</div>
               </div>
-              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 후순위로</div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 빠짐</div>
             </div>
 
-            <div class="funnel-stage funnel-stage--accent" data-stage="4">
+            <div class="funnel-stage funnel-stage--accent" data-stage="4" data-criterion="core">
               <div class="funnel-stage-meta">
-                <div class="funnel-stage-label">05 · 점수 상위 5%</div>
-                <div class="funnel-stage-title">세 번째 추림</div>
-                <div class="funnel-stage-note">전국 단위 의미 있는 후보만 잔류</div>
+                <div class="funnel-stage-label">05 · + 국가중점</div>
+                <div class="funnel-stage-title">국가중점 기준까지 통과한 후보</div>
+                <div class="funnel-stage-note" data-criterion-note>—</div>
               </div>
               <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
               <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
@@ -1898,17 +1898,17 @@
             <div class="funnel-arrow" data-arrow="4">
               <div class="funnel-arrow-rail"></div>
               <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label">상위 2%</div>
-                <div class="funnel-filter-text">다시 점수 상위 200건만 남김</div>
+                <div class="funnel-filter-label" data-criterion-label>결합</div>
+                <div class="funnel-filter-text" data-criterion-text>—</div>
               </div>
-              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 후순위로</div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 빠짐</div>
             </div>
 
-            <div class="funnel-stage funnel-stage--accent" data-stage="5">
+            <div class="funnel-stage funnel-stage--accent" data-stage="5" data-criterion="join">
               <div class="funnel-stage-meta">
-                <div class="funnel-stage-label">06 · 점수 상위 2%</div>
-                <div class="funnel-stage-title">네 번째 추림</div>
-                <div class="funnel-stage-note">레인 균형 시 자주 등장하는 후보군 형성</div>
+                <div class="funnel-stage-label">06 · + 결합</div>
+                <div class="funnel-stage-title">결합 기준까지 통과한 후보</div>
+                <div class="funnel-stage-note" data-criterion-note>—</div>
               </div>
               <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
               <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
@@ -1917,17 +1917,17 @@
             <div class="funnel-arrow" data-arrow="5">
               <div class="funnel-arrow-rail"></div>
               <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label">상위 1%</div>
-                <div class="funnel-filter-text">다시 점수 상위 100건만 남김</div>
+                <div class="funnel-filter-label" data-criterion-label>호스팅</div>
+                <div class="funnel-filter-text" data-criterion-text>—</div>
               </div>
-              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 후순위로</div>
+              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 빠짐</div>
             </div>
 
-            <div class="funnel-stage funnel-stage--accent" data-stage="6">
+            <div class="funnel-stage funnel-stage--accent" data-stage="6" data-criterion="host">
               <div class="funnel-stage-meta">
-                <div class="funnel-stage-label">07 · 점수 상위 1%</div>
-                <div class="funnel-stage-title">다섯 번째 추림</div>
-                <div class="funnel-stage-note">사실상 강한 후보 후보군</div>
+                <div class="funnel-stage-label">07 · + 호스팅</div>
+                <div class="funnel-stage-title">5개 조건을 모두 만족하는 후보</div>
+                <div class="funnel-stage-note" data-criterion-note>—</div>
               </div>
               <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
               <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
@@ -1936,34 +1936,15 @@
             <div class="funnel-arrow" data-arrow="6">
               <div class="funnel-arrow-rail"></div>
               <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label">신호 강도 정렬</div>
-                <div class="funnel-filter-text">종합 이용 신호(다운로드 + API 신청) 상위 48건만 강한 후보 풀로</div>
+                <div class="funnel-filter-label">5 신호 가중합 + 레인 균형</div>
+                <div class="funnel-filter-text">위 5개 신호를 점수로 묶고 4개 검토 레인 균형 (즉시 <strong>4</strong> + 수요 <strong>4</strong> + 교차 <strong>2</strong> + 재검증 <strong>2</strong>) + 같은 기관 최대 2자리. 위 17건과는 부분 겹침일 뿐, 별도 산출됩니다.</div>
               </div>
               <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 후순위로</div>
             </div>
 
-            <div class="funnel-stage funnel-stage--accent" data-stage="7">
+            <div class="funnel-stage funnel-stage--top" data-stage="7">
               <div class="funnel-stage-meta">
-                <div class="funnel-stage-label">08 · 강한 후보 풀</div>
-                <div class="funnel-stage-title">신호 강도 상위 48건</div>
-                <div class="funnel-stage-note">shortlist는 이 풀 내에서 점수·레인 균형으로 12건이 선정됨</div>
-              </div>
-              <div class="funnel-stage-value" data-count="0" data-target="0">—</div>
-              <div class="funnel-bar"><div class="funnel-bar-fill" data-fill="0"></div></div>
-            </div>
-
-            <div class="funnel-arrow" data-arrow="7">
-              <div class="funnel-arrow-rail"></div>
-              <div class="funnel-arrow-filter">
-                <div class="funnel-filter-label">레인 균형 + 기관 다양성</div>
-                <div class="funnel-filter-text">즉시 검토 <strong>4</strong> + 수요 우선 <strong>4</strong> + 교차수요 <strong>2</strong> + 재검증 <strong>2</strong> = <strong>12</strong>. 같은 기관은 최대 2자리.</div>
-              </div>
-              <div class="funnel-arrow-drop"><span class="drop-mark">↘</span><span class="drop-count" data-count="0">—</span>건 후순위로</div>
-            </div>
-
-            <div class="funnel-stage funnel-stage--top" data-stage="8">
-              <div class="funnel-stage-meta">
-                <div class="funnel-stage-label">09 · 우선 검토 shortlist</div>
+                <div class="funnel-stage-label">08 · 우선 검토 shortlist</div>
                 <div class="funnel-stage-title">사람이 가장 먼저 들여다볼 12건</div>
                 <div class="funnel-stage-note">4개 검토 레인이 균형 잡히고 같은 기관이 두 자리 이상 차지하지 않도록 배분된 최종 12건</div>
               </div>
