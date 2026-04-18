@@ -191,7 +191,7 @@
     if (universeEl) universeEl.textContent = number(universe);
 
     byId("hero-lede").textContent =
-      `공공데이터포털의 파일데이터 ${number(universe)}건을 모두 훑어, 다운로드가 반복되거나 국가중점데이터로 지정된 ${number(overview.candidate_count)}건을 검토 큐로 모았습니다. 모든 파일을 API로 바꾸자는 주장은 아니라, 무엇을 먼저 검토할지 드러내는 화면입니다.`;
+      `공공데이터포털의 파일데이터 ${number(universe)}건을 모두 훑어, 다운로드가 반복되거나 국가중점데이터로 지정된 ${number(overview.candidate_count)}건을 검토 큐로 모았습니다. 방향은 분명합니다 — 궁극적으로 모든 파일데이터는 API로 제공되어야 합니다. 이 큐는 그 전환을 어디서부터 시작할지를 보여주는 화면입니다.`;
 
     const criteriaCopy = byId("criteria-copy");
     if (criteriaCopy) {
