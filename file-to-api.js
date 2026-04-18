@@ -634,18 +634,30 @@
 
     const overview = data.overview;
     const strongest = (data.strongest_candidates && data.strongest_candidates.items) || [];
-    const stage1 = overview.candidate_count || 0;
-    const stage2 = overview.priority_count || 0;
-    const stage3 = strongest.length || 0;
-    const stage4 = data.shortlist.items.length || 0;
-    const drop1 = Math.max(0, stage1 - stage2);
-    const drop2 = Math.max(0, stage2 - stage3);
-    const drop3 = Math.max(0, stage3 - stage4);
+    const candidateCount = overview.candidate_count || 0;
+    const priorityCount = overview.priority_count || 0;
+    const strongCount = strongest.length || 0;
+    const shortlistCount = data.shortlist.items.length || 0;
+
+    // 9 단계: 88,166 → 11,238 → 5,000 → 2,000 → 500 → 200 → 100 → 48 → 12
+    const targets = [
+      candidateCount,
+      priorityCount,
+      Math.min(5000, priorityCount),
+      Math.min(2000, priorityCount),
+      Math.min(500, priorityCount),
+      Math.min(200, priorityCount),
+      Math.min(100, priorityCount),
+      strongCount,
+      shortlistCount,
+    ];
+    const drops = [];
+    for (let i = 0; i < targets.length - 1; i++) {
+      drops.push(Math.max(0, targets[i] - targets[i + 1]));
+    }
 
     const stages = funnel.querySelectorAll(".funnel-stage");
     const arrows = funnel.querySelectorAll(".funnel-arrow");
-    const targets = [stage1, stage2, stage3, stage4];
-    const drops = [drop1, drop2, drop3];
     targets.forEach((value, idx) => {
       const stage = stages[idx];
       if (!stage) return;
@@ -654,7 +666,7 @@
       const fillEl = stage.querySelector(".funnel-bar-fill");
       if (valueEl) valueEl.dataset.count = String(value);
       if (fillEl) {
-        const pct = stage1 > 0 ? Math.max(0.8, (value / stage1) * 100) : 0;
+        const pct = candidateCount > 0 ? Math.max(0.8, (value / candidateCount) * 100) : 0;
         fillEl.dataset.fill = String(pct);
       }
     });
@@ -671,7 +683,7 @@
 
     const copy = byId("funnel-copy");
     if (copy) {
-      copy.textContent = `${number(stage1)}건이 ${number(stage4)}건으로 좁혀지는 4단계 흐름입니다. 각 단계마다 어떤 기준이 적용되고 무엇이 다음 단계로 넘어가는지 보여줍니다.`;
+      copy.textContent = `${number(candidateCount)}건이 ${number(shortlistCount)}건으로 좁혀지는 9단계 흐름입니다. 각 단계마다 어떤 기준이 적용되고 무엇이 다음 단계로 넘어가는지 보여줍니다.`;
     }
 
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -737,15 +749,22 @@
         animateNumber(arrows[idx].querySelector(".drop-count"), drops[idx], dur);
       }
 
-      const sequence = [
-        { delay: 0,    action: () => showStage(0, 900) },
-        { delay: 1000, action: () => showArrow(0, 700) },
-        { delay: 1700, action: () => showStage(1, 900) },
-        { delay: 2700, action: () => showArrow(1, 700) },
-        { delay: 3400, action: () => showStage(2, 800) },
-        { delay: 4300, action: () => showArrow(2, 700) },
-        { delay: 5000, action: () => showStage(3, 700) },
-      ];
+      // 9 단계: stage 0(big) → arrow 0 → stage 1 → arrow 1 → ... → stage 8
+      // 첫 stage는 700ms 카운트, 그 후 stage 500ms, arrow 400ms, 간격 480ms
+      const sequence = [];
+      let t = 0;
+      const stageDur = 600;
+      const arrowDur = 400;
+      const stageGap = 480;
+      const arrowGap = 380;
+      sequence.push({ delay: t, action: () => showStage(0, 700) });
+      t += stageGap + 220;
+      for (let i = 0; i < arrows.length; i++) {
+        sequence.push({ delay: t, action: () => showArrow(i, arrowDur) });
+        t += arrowGap;
+        sequence.push({ delay: t, action: () => showStage(i + 1, stageDur) });
+        t += stageGap;
+      }
       sequence.forEach(({ delay, action }) => setTimeout(action, delay));
     }
 
