@@ -191,29 +191,30 @@
     if (universeEl) universeEl.textContent = number(universe);
 
     byId("hero-lede").textContent =
-      `공공데이터포털의 파일데이터 ${number(universe)}건을 모두 훑어, 다운로드가 반복되거나 국가중점데이터로 지정된 ${number(overview.candidate_count)}건을 검토 큐로 모았습니다. 방향은 분명합니다 — 궁극적으로 모든 파일데이터는 API로 제공되어야 합니다. 이 큐는 그 전환을 어디서부터 시작할지를 보여주는 화면입니다.`;
+      `공공데이터포털의 파일데이터 ${number(overview.candidate_count)}건이 모두 검토 후보입니다. 그중 다운로드가 반복되거나 국가중점데이터로 지정된 ${number(overview.priority_count)}건을 우선 후보로 분류했습니다. 방향은 분명합니다 — 궁극적으로 모든 파일데이터는 API로 제공되어야 합니다. 이 큐는 그 전환을 어디서부터 시작할지를 보여주는 화면입니다.`;
 
     const criteriaCopy = byId("criteria-copy");
     if (criteriaCopy) {
       criteriaCopy.textContent =
-        `공공데이터포털의 파일데이터 ${number(universe)}건 전체를 검토했습니다. 그중 세 단계 기준에 부합하는 ${number(overview.candidate_count)}건이 큐에 올라 있고, 그 안의 우선순위까지 결정합니다.`;
+        `공공데이터포털의 파일데이터 ${number(overview.candidate_count)}건이 모두 검토 후보입니다. 그중 ${number(overview.priority_count)}건은 우선 후보로 분류되고, 같은 큐 안에서 점수에 따라 우선순위가 매겨집니다.`;
     }
     const criteriaUniverseTag = byId("criteria-universe-tag");
     if (criteriaUniverseTag) {
-      criteriaUniverseTag.textContent = `(전체 ${number(universe)}건)`;
+      criteriaUniverseTag.textContent = `(전체 ${number(overview.candidate_count)}건)`;
     }
     const criteriaPass = byId("criteria-pass");
     if (criteriaPass) {
-      criteriaPass.textContent = `${number(overview.candidate_count)} / ${number(universe)} (${reviewedSharePct}%)`;
+      const priorityPct = ((overview.priority_share || 0) * 100).toFixed(1);
+      criteriaPass.textContent = `${number(overview.priority_count)} / ${number(overview.candidate_count)} (${priorityPct}%)`;
     }
 
     byId("asset-note").textContent =
       `현재 페이지는 ${data.source_assets.summary_js_path} (${number(data.source_assets.summary_js_bytes)} bytes) 기준으로 동작하며, 전체 마스터 자산 ${data.source_assets.master_path} (${number(data.source_assets.master_bytes)} bytes) 전체를 직접 노출하지 않습니다.`;
 
     byId("hero-metrics").innerHTML = [
-      { label: "검토 후보", value: number(overview.candidate_count), note: `병합 카탈로그의 ${percent(overview.share_of_merged)}`, accent: false },
-      { label: "우선 검토", value: number(data.shortlist.items.length), note: "즉시·수요·교차·재검증", accent: true },
-      { label: "즉시 검토 가능", value: number(overview.response_field_count), note: "응답 필드 노출", accent: false },
+      { label: "검토 후보", value: number(overview.candidate_count), note: "공공데이터포털의 모든 파일데이터", accent: false },
+      { label: "우선 후보", value: number(overview.priority_count), note: `다운로드 1,000건 이상 또는 국가중점 — 전체의 ${percent(overview.priority_share)}`, accent: true },
+      { label: "응답 필드 노출", value: number(overview.response_field_count), note: "출력 구조가 이미 보임", accent: false },
       { label: "교차수요 관찰", value: number(overview.api_applies_present_count), note: "API형 신청 이미 발생", accent: false },
     ]
       .map((item) => `

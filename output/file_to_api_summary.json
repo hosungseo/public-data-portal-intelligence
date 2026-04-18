@@ -1,334 +1,180 @@
 {
-  "generated_at": "2026-04-18T11:41:48+09:00",
+  "generated_at": "2026-04-18T12:23:46+09:00",
   "source_assets": {
     "master_path": "output/public_data_portal_catalog_master.json",
     "report_path": "output/build-report.json",
-    "master_bytes": 313377283,
+    "master_bytes": 319193981,
     "summary_json_path": "output/file_to_api_summary.json",
     "summary_js_path": "output/file_to_api_summary.js",
-    "summary_json_bytes": 103588,
-    "summary_js_bytes": 80241,
+    "summary_json_bytes": 103755,
+    "summary_js_bytes": 80292,
     "index_json_path": "output/file_to_api_index.json",
     "index_js_path": "output/file_to_api_index.js",
-    "index_json_bytes": 1072780,
-    "index_js_bytes": 1072809
+    "index_json_bytes": 8341737,
+    "index_js_bytes": 8341766
   },
   "overview": {
     "rule_label": "file_to_api_candidate",
     "rule_note": "File-like rows with signal downloads >= 1,000 and no API-like metadata pattern in list type, service type, or data format.",
-    "candidate_count": 11238,
+    "candidate_count": 88166,
     "merged_count": 164024,
-    "share_of_merged": 0.0685,
+    "share_of_merged": 0.5375,
     "reviewed_universe_count": 88166,
-    "reviewed_share": 0.1275,
-    "signal_total": 48073312,
-    "provider_count": 718,
-    "joined_count": 9573,
-    "joined_share": 0.8518,
-    "usage_attached_count": 9879,
-    "usage_attached_share": 0.8791,
-    "metadata_attached_count": 11212,
-    "metadata_attached_share": 0.9977,
-    "response_field_count": 7286,
-    "response_field_share": 0.6483,
-    "api_applies_present_count": 2839,
-    "api_applies_present_share": 0.2526,
+    "reviewed_share": 1.0,
+    "priority_count": 11238,
+    "priority_share": 0.1275,
+    "core_data_count": 1572,
+    "signal_total": 95224711,
+    "provider_count": 1147,
+    "joined_count": 65327,
+    "joined_share": 0.741,
+    "usage_attached_count": 68227,
+    "usage_attached_share": 0.7738,
+    "metadata_attached_count": 77989,
+    "metadata_attached_share": 0.8846,
+    "response_field_count": 48509,
+    "response_field_share": 0.5502,
+    "api_applies_present_count": 7346,
+    "api_applies_present_share": 0.0833,
     "top_signal": 394025,
     "top_downloads": 360588,
-    "expected_count_from_report": 11238
+    "expected_count_from_report": 88166
   },
   "slice_shape": {
     "source_combos": [
       {
         "code": "UMY",
         "label": "Universe + metadata + usage",
-        "count": 9573,
-        "share": 0.8518
+        "count": 65327,
+        "share": 0.741
       },
       {
         "code": "UM-",
         "label": "Universe + metadata",
-        "count": 1342,
-        "share": 0.1194
+        "count": 7331,
+        "share": 0.0831
       },
       {
         "code": "-MY",
         "label": "Metadata + usage",
-        "count": 297,
-        "share": 0.0264
+        "count": 2840,
+        "share": 0.0322
       },
       {
         "code": "U--",
         "label": "Universe only",
-        "count": 17,
-        "share": 0.0015
+        "count": 10117,
+        "share": 0.1147
       },
       {
         "code": "U-Y",
         "label": "Universe + usage",
-        "count": 9,
-        "share": 0.0008
+        "count": 60,
+        "share": 0.0007
+      },
+      {
+        "code": "-M-",
+        "label": "Metadata only",
+        "count": 2491,
+        "share": 0.0283
       }
     ],
     "data_formats": [
       {
         "label": "csv",
-        "count": 8842,
-        "share": 0.7868
-      },
-      {
-        "label": "xlsx",
-        "count": 612,
-        "share": 0.0545
-      },
-      {
-        "label": "jpg",
-        "count": 329,
-        "share": 0.0293
-      },
-      {
-        "label": "shp",
-        "count": 321,
-        "share": 0.0286
+        "count": 71049,
+        "share": 0.8059
       },
       {
         "label": "pdf",
-        "count": 250,
-        "share": 0.0222
+        "count": 3509,
+        "share": 0.0398
+      },
+      {
+        "label": "xlsx",
+        "count": 2584,
+        "share": 0.0293
+      },
+      {
+        "label": "jpg",
+        "count": 1778,
+        "share": 0.0202
+      },
+      {
+        "label": "hwp",
+        "count": 1465,
+        "share": 0.0166
+      },
+      {
+        "label": "shp",
+        "count": 1443,
+        "share": 0.0164
       },
       {
         "label": "hwpx",
-        "count": 161,
-        "share": 0.0143
-      },
-      {
-        "label": "png",
-        "count": 120,
-        "share": 0.0107
+        "count": 1379,
+        "share": 0.0156
       },
       {
         "label": "mp4",
-        "count": 89,
-        "share": 0.0079
+        "count": 1278,
+        "share": 0.0145
       }
     ],
     "update_cycles": [
       {
-        "label": "연간",
-        "count": 5974,
-        "share": 0.5316
+        "label": "수시",
+        "count": 46088,
+        "share": 0.5227
       },
       {
-        "label": "수시",
-        "count": 4439,
-        "share": 0.395
+        "label": "연간",
+        "count": 38580,
+        "share": 0.4376
       },
       {
         "label": "월간",
-        "count": 327,
-        "share": 0.0291
-      },
-      {
-        "label": "분기",
-        "count": 245,
-        "share": 0.0218
+        "count": 1047,
+        "share": 0.0119
       },
       {
         "label": "반기",
-        "count": 223,
-        "share": 0.0198
+        "count": 1036,
+        "share": 0.0118
       },
       {
         "label": "일간",
-        "count": 27,
-        "share": 0.0024
+        "count": 739,
+        "share": 0.0084
+      },
+      {
+        "label": "분기",
+        "count": 659,
+        "share": 0.0075
       },
       {
         "label": "주간",
-        "count": 3,
-        "share": 0.0003
+        "count": 16,
+        "share": 0.0002
+      },
+      {
+        "label": "매년",
+        "count": 1,
+        "share": 0.0
       }
     ]
   },
   "provider_rollup": {
-    "provider_count": 718,
-    "top_10_share": 0.1935,
+    "provider_count": 1147,
+    "top_10_share": 0.1419,
     "providers": [
       {
-        "provider_name": "국가철도공단",
-        "candidate_count": 485,
-        "share_of_candidates": 0.0432,
-        "signal_total": 817689,
-        "response_field_count": 451,
-        "joined_count": 477,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "국가철도공단_철도 여행기",
-            "usage_total_signal": 31101,
-            "signal_downloads": 31096
-          },
-          {
-            "title": "국가철도공단_해외 철도 뉴스",
-            "usage_total_signal": 26077,
-            "signal_downloads": 8459
-          }
-        ]
-      },
-      {
-        "provider_name": "행정안전부",
-        "candidate_count": 323,
-        "share_of_candidates": 0.0287,
-        "signal_total": 840410,
-        "response_field_count": 49,
-        "joined_count": 93,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "행정안전부_지역별 연령별 주민등록 인구현황",
-            "usage_total_signal": 30866,
-            "signal_downloads": 15433
-          },
-          {
-            "title": "행정안전부_행정표준코드_전체코드_다운로드(전체)",
-            "usage_total_signal": 18402,
-            "signal_downloads": 5913
-          }
-        ]
-      },
-      {
-        "provider_name": "인천광역시",
-        "candidate_count": 273,
-        "share_of_candidates": 0.0243,
-        "signal_total": 1269569,
-        "response_field_count": 255,
-        "joined_count": 265,
-        "shortlist_count": 1,
-        "top_examples": [
-          {
-            "title": "인천광역시_도로 내 IMU 센서",
-            "usage_total_signal": 201007,
-            "signal_downloads": 77005
-          },
-          {
-            "title": "인천광역시_도로 내 운행속도",
-            "usage_total_signal": 68000,
-            "signal_downloads": 26298
-          }
-        ]
-      },
-      {
-        "provider_name": "국토교통부",
-        "candidate_count": 203,
-        "share_of_candidates": 0.0181,
-        "signal_total": 1094113,
-        "response_field_count": 51,
-        "joined_count": 180,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "국토교통부_행정구역시군구_경계",
-            "usage_total_signal": 63943,
-            "signal_downloads": 13712
-          },
-          {
-            "title": "국토교통부_주택 공시가격 정보",
-            "usage_total_signal": 57262,
-            "signal_downloads": 20996
-          }
-        ]
-      },
-      {
-        "provider_name": "제주특별자치도",
-        "candidate_count": 194,
-        "share_of_candidates": 0.0173,
-        "signal_total": 791872,
-        "response_field_count": 131,
-        "joined_count": 192,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "제주특별자치도_성연령별_제주도민_지번(PNU)단위_유동인구현황",
-            "usage_total_signal": 30467,
-            "signal_downloads": 8357
-          },
-          {
-            "title": "제주특별자치도_시간대별_제주도민_지번(PNU)단위_유동인구현황",
-            "usage_total_signal": 28066,
-            "signal_downloads": 7232
-          }
-        ]
-      },
-      {
-        "provider_name": "대구광역시 북구",
-        "candidate_count": 163,
-        "share_of_candidates": 0.0145,
-        "signal_total": 1861949,
-        "response_field_count": 127,
-        "joined_count": 159,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "대구광역시 북구_월별인구현황",
-            "usage_total_signal": 65742,
-            "signal_downloads": 32086
-          },
-          {
-            "title": "대구광역시 북구_지방세 징수 현황",
-            "usage_total_signal": 52318,
-            "signal_downloads": 25846
-          }
-        ]
-      },
-      {
-        "provider_name": "경상북도",
-        "candidate_count": 138,
-        "share_of_candidates": 0.0123,
-        "signal_total": 395510,
-        "response_field_count": 73,
-        "joined_count": 136,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "경상북도_산업단지 입주기업 현황",
-            "usage_total_signal": 8780,
-            "signal_downloads": 3341
-          },
-          {
-            "title": "경상북도_경북도의회 회의록 안건정보",
-            "usage_total_signal": 8697,
-            "signal_downloads": 3379
-          }
-        ]
-      },
-      {
-        "provider_name": "동북아역사재단",
-        "candidate_count": 134,
-        "share_of_candidates": 0.0119,
-        "signal_total": 406773,
-        "response_field_count": 0,
-        "joined_count": 115,
-        "shortlist_count": 0,
-        "top_examples": [
-          {
-            "title": "동북아역사재단_타쉬가이트-동물들",
-            "usage_total_signal": 4536,
-            "signal_downloads": 2268
-          },
-          {
-            "title": "동북아역사재단_쉬쉬카-사람",
-            "usage_total_signal": 4446,
-            "signal_downloads": 2223
-          }
-        ]
-      },
-      {
         "provider_name": "서울특별시",
-        "candidate_count": 132,
-        "share_of_candidates": 0.0117,
-        "signal_total": 633318,
-        "response_field_count": 5,
-        "joined_count": 117,
+        "candidate_count": 3523,
+        "share_of_candidates": 0.04,
+        "signal_total": 1574902,
+        "response_field_count": 90,
+        "joined_count": 2380,
         "shortlist_count": 0,
         "top_examples": [
           {
@@ -344,65 +190,233 @@
         ]
       },
       {
-        "provider_name": "대구광역시",
-        "candidate_count": 129,
+        "provider_name": "제주특별자치도",
+        "candidate_count": 1320,
+        "share_of_candidates": 0.015,
+        "signal_total": 1496799,
+        "response_field_count": 776,
+        "joined_count": 1270,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "제주특별자치도_성연령별_제주도민_지번(PNU)단위_유동인구현황",
+            "usage_total_signal": 30467,
+            "signal_downloads": 8357
+          },
+          {
+            "title": "제주특별자치도_시간대별_제주도민_지번(PNU)단위_유동인구현황",
+            "usage_total_signal": 28066,
+            "signal_downloads": 7232
+          }
+        ]
+      },
+      {
+        "provider_name": "대전광역시",
+        "candidate_count": 1145,
+        "share_of_candidates": 0.013,
+        "signal_total": 1092153,
+        "response_field_count": 627,
+        "joined_count": 1098,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "대전광역시_주요공공요금정보",
+            "usage_total_signal": 6657,
+            "signal_downloads": 3032
+          },
+          {
+            "title": "대전광역시_플랫폼 택시 현황",
+            "usage_total_signal": 6458,
+            "signal_downloads": 3055
+          }
+        ]
+      },
+      {
+        "provider_name": "해양수산부",
+        "candidate_count": 1110,
+        "share_of_candidates": 0.0126,
+        "signal_total": 793462,
+        "response_field_count": 484,
+        "joined_count": 596,
+        "shortlist_count": 2,
+        "top_examples": [
+          {
+            "title": "해양수산부_위판장별위탁판매현황",
+            "usage_total_signal": 49836,
+            "signal_downloads": 21076
+          },
+          {
+            "title": "해양수산부_위판장별어종별위탁판매집계",
+            "usage_total_signal": 48908,
+            "signal_downloads": 20938
+          }
+        ]
+      },
+      {
+        "provider_name": "국토교통부",
+        "candidate_count": 1015,
         "share_of_candidates": 0.0115,
-        "signal_total": 475011,
-        "response_field_count": 45,
-        "joined_count": 125,
+        "signal_total": 1509612,
+        "response_field_count": 367,
+        "joined_count": 663,
         "shortlist_count": 0,
         "top_examples": [
           {
-            "title": "대구광역시_주민등록인구및세대현황",
-            "usage_total_signal": 17571,
-            "signal_downloads": 3011
+            "title": "국토교통부_행정구역시군구_경계",
+            "usage_total_signal": 63943,
+            "signal_downloads": 13712
           },
           {
-            "title": "대구광역시_버스 노선 공간정보",
-            "usage_total_signal": 12520,
-            "signal_downloads": 4784
+            "title": "국토교통부_주택 공시가격 정보",
+            "usage_total_signal": 57262,
+            "signal_downloads": 20996
           }
         ]
       },
       {
-        "provider_name": "부산광역시",
-        "candidate_count": 113,
-        "share_of_candidates": 0.0101,
-        "signal_total": 392998,
-        "response_field_count": 62,
-        "joined_count": 103,
+        "provider_name": "동북아역사재단",
+        "candidate_count": 969,
+        "share_of_candidates": 0.011,
+        "signal_total": 2555287,
+        "response_field_count": 4,
+        "joined_count": 943,
         "shortlist_count": 0,
         "top_examples": [
           {
-            "title": "부산광역시_도시열섬 분석용 기상청 관측 정보",
-            "usage_total_signal": 10746,
-            "signal_downloads": 5373
+            "title": "동북아역사재단_타쉬가이트-동물들",
+            "usage_total_signal": 4536,
+            "signal_downloads": 2268
           },
           {
-            "title": "부산광역시_제조업 공장등록 현황",
-            "usage_total_signal": 10102,
-            "signal_downloads": 10101
+            "title": "동북아역사재단_쉬쉬카-사람",
+            "usage_total_signal": 4446,
+            "signal_downloads": 2223
           }
         ]
       },
       {
-        "provider_name": "한국교통안전공단",
-        "candidate_count": 106,
-        "share_of_candidates": 0.0094,
-        "signal_total": 387285,
-        "response_field_count": 88,
-        "joined_count": 101,
+        "provider_name": "경기도",
+        "candidate_count": 908,
+        "share_of_candidates": 0.0103,
+        "signal_total": 197801,
+        "response_field_count": 0,
+        "joined_count": 691,
         "shortlist_count": 0,
         "top_examples": [
           {
-            "title": "한국교통안전공단_대전광역시 행정구역별 일반택시 승하차 통계",
-            "usage_total_signal": 18541,
-            "signal_downloads": 6796
+            "title": "경기도_시군별 유동인구 데이터",
+            "usage_total_signal": 16230,
+            "signal_downloads": 6907
           },
           {
-            "title": "한국교통안전공단_대전광역시 도로별 일반택시 평균 통행량 및 속도",
-            "usage_total_signal": 15225,
-            "signal_downloads": 5715
+            "title": "경기도_반려동물 등록 현황",
+            "usage_total_signal": 9124,
+            "signal_downloads": 3841
+          }
+        ]
+      },
+      {
+        "provider_name": "인천광역시",
+        "candidate_count": 877,
+        "share_of_candidates": 0.0099,
+        "signal_total": 1770048,
+        "response_field_count": 739,
+        "joined_count": 782,
+        "shortlist_count": 1,
+        "top_examples": [
+          {
+            "title": "인천광역시_도로 내 IMU 센서",
+            "usage_total_signal": 201007,
+            "signal_downloads": 77005
+          },
+          {
+            "title": "인천광역시_도로 내 운행속도",
+            "usage_total_signal": 68000,
+            "signal_downloads": 26298
+          }
+        ]
+      },
+      {
+        "provider_name": "신용보증기금",
+        "candidate_count": 867,
+        "share_of_candidates": 0.0098,
+        "signal_total": 401597,
+        "response_field_count": 390,
+        "joined_count": 846,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "신용보증기금_보증부 대출 금리",
+            "usage_total_signal": 4094,
+            "signal_downloads": 2047
+          },
+          {
+            "title": "신용보증기금_자금운용 수익률 현황",
+            "usage_total_signal": 3431,
+            "signal_downloads": 1298
+          }
+        ]
+      },
+      {
+        "provider_name": "경상남도",
+        "candidate_count": 775,
+        "share_of_candidates": 0.0088,
+        "signal_total": 788760,
+        "response_field_count": 565,
+        "joined_count": 695,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "경상남도_인공어초시설 DB",
+            "usage_total_signal": 7550,
+            "signal_downloads": 2519
+          },
+          {
+            "title": "경상남도_다문화가족 통계현황",
+            "usage_total_signal": 7314,
+            "signal_downloads": 2786
+          }
+        ]
+      },
+      {
+        "provider_name": "광주광역시",
+        "candidate_count": 753,
+        "share_of_candidates": 0.0085,
+        "signal_total": 1076040,
+        "response_field_count": 646,
+        "joined_count": 669,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "광주광역시_시내버스 노선별 승하차 인원",
+            "usage_total_signal": 83330,
+            "signal_downloads": 41665
+          },
+          {
+            "title": "광주광역시_서부농수산물도매시장 농수산물 거래실적",
+            "usage_total_signal": 18109,
+            "signal_downloads": 6156
+          }
+        ]
+      },
+      {
+        "provider_name": "국가철도공단",
+        "candidate_count": 726,
+        "share_of_candidates": 0.0082,
+        "signal_total": 996944,
+        "response_field_count": 594,
+        "joined_count": 681,
+        "shortlist_count": 0,
+        "top_examples": [
+          {
+            "title": "국가철도공단_철도 여행기",
+            "usage_total_signal": 31101,
+            "signal_downloads": 31096
+          },
+          {
+            "title": "국가철도공단_해외 철도 뉴스",
+            "usage_total_signal": 26077,
+            "signal_downloads": 8459
           }
         ]
       }
