@@ -654,19 +654,25 @@
     const stages = funnel.querySelectorAll(".funnel-stage");
     const arrows = funnel.querySelectorAll(".funnel-arrow");
 
-    // 기준 stage(2~6)와 그 앞 화살표(1~5)에 라벨·문구 주입
+    // 기준 stage와 그 앞 화살표에 라벨·제목·풀이·기술적 필터 문구 동적 주입.
+    // stage 번호는 02 우선 후보 다음부터(03부터) 매겨짐.
     criteria.forEach((c, i) => {
       const stage = stages[i + 2];
       const arrow = arrows[i + 1];
+      const stageNum = String(i + 3).padStart(2, "0");
       if (stage) {
-        const noteEl = stage.querySelector("[data-criterion-note]");
-        if (noteEl) noteEl.textContent = c.threshold_text || "";
+        const labelEl = stage.querySelector("[data-stage-label]");
+        const titleEl = stage.querySelector("[data-stage-title]");
+        const noteEl  = stage.querySelector("[data-criterion-note]");
+        if (labelEl) labelEl.textContent = `${stageNum} · + ${c.label}`;
+        if (titleEl) titleEl.textContent = c.stage_title || "";
+        if (noteEl)  noteEl.textContent  = c.explanation || c.threshold_text || "";
       }
       if (arrow) {
         const labelEl = arrow.querySelector("[data-criterion-label]");
-        const textEl = arrow.querySelector("[data-criterion-text]");
+        const textEl  = arrow.querySelector("[data-criterion-text]");
         if (labelEl) labelEl.textContent = `+ ${c.label}`;
-        if (textEl) textEl.textContent = c.threshold_text || "";
+        if (textEl)  textEl.textContent  = c.threshold_text || "";
       }
     });
     targets.forEach((value, idx) => {
@@ -694,7 +700,7 @@
 
     const copy = byId("funnel-copy");
     if (copy) {
-      copy.textContent = `우선 후보 ${number(priorityCount)}건에 수요·메타·국가중점·결합·호스팅 5개 기준을 순차로 적용해 무엇이 남는지 보여줍니다. 마지막 단계의 ${number(shortlistCount)}건 shortlist는 같은 5개 신호를 가중합 점수로 묶어 별도 산출됩니다.`;
+      copy.textContent = `우선 후보 ${number(priorityCount)}건에 다운로드·API신청·메타·국가중점·결합·호스팅 6개 기준을 순차로 적용해 무엇이 남는지 보여줍니다. 마지막 단계의 ${number(shortlistCount)}건 shortlist는 같은 신호를 가중합 점수로 묶어 별도 산출됩니다.`;
     }
 
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;

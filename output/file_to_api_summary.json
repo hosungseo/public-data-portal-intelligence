@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-04-18T12:50:04+09:00",
+  "generated_at": "2026-04-18T12:59:23+09:00",
   "source_assets": {
     "master_path": "output/public_data_portal_catalog_master.json",
     "report_path": "output/build-report.json",
     "master_bytes": 319193981,
     "summary_json_path": "output/file_to_api_summary.json",
     "summary_js_path": "output/file_to_api_summary.js",
-    "summary_json_bytes": 104557,
-    "summary_js_bytes": 80813,
+    "summary_json_bytes": 106485,
+    "summary_js_bytes": 82567,
     "index_json_path": "output/file_to_api_index.json",
     "index_js_path": "output/file_to_api_index.js",
     "index_json_bytes": 8341737,
@@ -26,34 +26,52 @@
     "core_data_count": 1572,
     "criteria_funnel": [
       {
-        "key": "demand",
-        "label": "수요",
-        "threshold_text": "종합 이용 신호 ≥ 10,000",
-        "count": 679
+        "key": "download",
+        "label": "다운로드 신호",
+        "stage_title": "사람들이 실제로 자주 받아간 데이터",
+        "threshold_text": "누적 다운로드 ≥ 2,000건",
+        "explanation": "한두 번 받은 게 아니라 여러 명이 반복해서 가져간 데이터. 다운로드 수요가 누적된 흔적이 분명한 행만 남깁니다.",
+        "count": 2571
+      },
+      {
+        "key": "api",
+        "label": "API 신호",
+        "stage_title": "API로도 받고 싶다는 요청이 누적된 데이터",
+        "threshold_text": "API 활용신청 ≥ 10건",
+        "explanation": "누군가 '파일 말고 API로 자동 호출하게 해달라'고 활용신청한 흔적이 누적된 데이터. 단순 다운로드를 넘어 더 유연한 사용을 원하는 신호입니다.",
+        "count": 222
       },
       {
         "key": "meta",
-        "label": "메타",
-        "threshold_text": "응답 필드 노출",
-        "count": 279
+        "label": "메타 노출",
+        "stage_title": "데이터 구조가 이미 알려진 데이터",
+        "threshold_text": "응답 필드(컬럼 구조) 노출됨",
+        "explanation": "어떤 항목(예: 시도명·연도·금액 등)이 들어있는지가 이미 메타정보에 기재되어 있는 데이터. API 설계할 때 추측 없이 바로 시작할 수 있습니다.",
+        "count": 187
       },
       {
         "key": "core",
         "label": "국가중점",
+        "stage_title": "정부가 '중요'라고 정식 지정한 데이터",
         "threshold_text": "국가중점데이터(Y)",
-        "count": 21
+        "explanation": "정부가 '국가중점데이터'로 공식 지정한 항목. 정책 차원에서 이미 우선순위가 부여돼 있어 전환 명분이 분명합니다.",
+        "count": 14
       },
       {
         "key": "join",
         "label": "결합",
+        "stage_title": "세 출처에 모두 기록이 일치하는 데이터",
         "threshold_text": "지원센터목록 + 메타 + 이용이력 3종 결합 (UMY)",
-        "count": 17
+        "explanation": "포털 목록·상세 메타·이용이력 세 출처 모두에 같은 데이터로 잡혀 있어 정합성이 가장 높습니다. 한 곳에서만 보이는 데이터는 신뢰도가 떨어질 수 있습니다.",
+        "count": 14
       },
       {
         "key": "host",
         "label": "호스팅",
+        "stage_title": "운영·법적 부담이 가장 적은 데이터",
         "threshold_text": "포털 호스팅 + 자유 라이선스",
-        "count": 17
+        "explanation": "공공데이터포털이 직접 파일을 호스팅하고 라이선스 제약(변경금지·상업금지·비영리)도 없는 데이터. API로 바꿔도 추가 협의·운영 부담이 거의 없습니다.",
+        "count": 14
       }
     ],
     "signal_total": 95224711,
