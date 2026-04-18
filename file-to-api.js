@@ -633,16 +633,19 @@
     if (!funnel) return;
 
     const overview = data.overview;
+    const strongest = (data.strongest_candidates && data.strongest_candidates.items) || [];
     const stage1 = overview.candidate_count || 0;
     const stage2 = overview.priority_count || 0;
-    const stage3 = data.shortlist.items.length || 0;
+    const stage3 = strongest.length || 0;
+    const stage4 = data.shortlist.items.length || 0;
     const drop1 = Math.max(0, stage1 - stage2);
     const drop2 = Math.max(0, stage2 - stage3);
+    const drop3 = Math.max(0, stage3 - stage4);
 
     const stages = funnel.querySelectorAll(".funnel-stage");
     const arrows = funnel.querySelectorAll(".funnel-arrow");
-    const targets = [stage1, stage2, stage3];
-    const drops = [drop1, drop2];
+    const targets = [stage1, stage2, stage3, stage4];
+    const drops = [drop1, drop2, drop3];
     targets.forEach((value, idx) => {
       const stage = stages[idx];
       if (!stage) return;
@@ -651,7 +654,7 @@
       const fillEl = stage.querySelector(".funnel-bar-fill");
       if (valueEl) valueEl.dataset.count = String(value);
       if (fillEl) {
-        const pct = stage1 > 0 ? Math.max(0.6, (value / stage1) * 100) : 0;
+        const pct = stage1 > 0 ? Math.max(0.8, (value / stage1) * 100) : 0;
         fillEl.dataset.fill = String(pct);
       }
     });
@@ -668,7 +671,7 @@
 
     const copy = byId("funnel-copy");
     if (copy) {
-      copy.textContent = `${number(stage1)}건이 ${number(stage3)}건으로 좁혀지는 단계별 흐름입니다. 각 단계마다 어떤 기준이 적용되고 무엇이 다음 단계로 넘어가는지 보여줍니다.`;
+      copy.textContent = `${number(stage1)}건이 ${number(stage4)}건으로 좁혀지는 4단계 흐름입니다. 각 단계마다 어떤 기준이 적용되고 무엇이 다음 단계로 넘어가는지 보여줍니다.`;
     }
 
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -721,39 +724,27 @@
         return;
       }
 
+      function showStage(idx, dur) {
+        stages[idx].classList.add("is-visible");
+        animateNumber(stages[idx].querySelector(".funnel-stage-value"), targets[idx], dur);
+        requestAnimationFrame(() => {
+          const fill = stages[idx].querySelector(".funnel-bar-fill");
+          if (fill) fill.style.width = `${fill.dataset.fill}%`;
+        });
+      }
+      function showArrow(idx, dur) {
+        arrows[idx].classList.add("is-visible");
+        animateNumber(arrows[idx].querySelector(".drop-count"), drops[idx], dur);
+      }
+
       const sequence = [
-        { delay: 0, action: () => {
-          stages[0].classList.add("is-visible");
-          animateNumber(stages[0].querySelector(".funnel-stage-value"), targets[0], 900);
-          requestAnimationFrame(() => {
-            const fill = stages[0].querySelector(".funnel-bar-fill");
-            if (fill) fill.style.width = `${fill.dataset.fill}%`;
-          });
-        }},
-        { delay: 1000, action: () => {
-          arrows[0].classList.add("is-visible");
-          animateNumber(arrows[0].querySelector(".drop-count"), drops[0], 700);
-        }},
-        { delay: 1700, action: () => {
-          stages[1].classList.add("is-visible");
-          animateNumber(stages[1].querySelector(".funnel-stage-value"), targets[1], 900);
-          requestAnimationFrame(() => {
-            const fill = stages[1].querySelector(".funnel-bar-fill");
-            if (fill) fill.style.width = `${fill.dataset.fill}%`;
-          });
-        }},
-        { delay: 2700, action: () => {
-          arrows[1].classList.add("is-visible");
-          animateNumber(arrows[1].querySelector(".drop-count"), drops[1], 700);
-        }},
-        { delay: 3400, action: () => {
-          stages[2].classList.add("is-visible");
-          animateNumber(stages[2].querySelector(".funnel-stage-value"), targets[2], 700);
-          requestAnimationFrame(() => {
-            const fill = stages[2].querySelector(".funnel-bar-fill");
-            if (fill) fill.style.width = `${Math.max(0.5, parseFloat(fill.dataset.fill))}%`;
-          });
-        }},
+        { delay: 0,    action: () => showStage(0, 900) },
+        { delay: 1000, action: () => showArrow(0, 700) },
+        { delay: 1700, action: () => showStage(1, 900) },
+        { delay: 2700, action: () => showArrow(1, 700) },
+        { delay: 3400, action: () => showStage(2, 800) },
+        { delay: 4300, action: () => showArrow(2, 700) },
+        { delay: 5000, action: () => showStage(3, 700) },
       ];
       sequence.forEach(({ delay, action }) => setTimeout(action, delay));
     }
