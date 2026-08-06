@@ -5,6 +5,7 @@
   const QUEUE_PAGE_SIZE = 25;
   const queueState = {
     search: "",
+    scope: "",
     provider: "",
     lane: "",
     format: "",
@@ -67,8 +68,28 @@
       .replaceAll("'", "&#39;");
   }
 
-  function portalSearchUrl(title) {
+  function portalSearchUrl(title, listKey) {
+    if (listKey) return `https://www.data.go.kr/data/${encodeURIComponent(listKey)}/fileData.do`;
     return `https://www.data.go.kr/tcs/dss/selectDataSetList.do?keyword=${encodeURIComponent(title || "")}`;
+  }
+
+  function dateText(value, withTime = false) {
+    if (!value) return "-";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return new Intl.DateTimeFormat("ko-KR", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      ...(withTime ? { hour: "2-digit", minute: "2-digit", hour12: false } : {}),
+    }).format(date);
+  }
+
+  function signedNumber(value) {
+    const n = Number(value) || 0;
+    if (n === 0) return "±0";
+    return `${n > 0 ? "+" : "−"}${number(Math.abs(n))}`;
   }
 
   function yearSpanText(row) {
@@ -127,7 +148,7 @@
     return [
       { label: "종합 신호", value: number(row.usage_total_signal) },
       { label: "다운로드", value: number(row.signal_downloads) },
-      { label: "API 신청", value: number(row.usage_openapi_apply_count_total) },
+      { label: "API 신청", value: number(row.signal_api_applies) },
       { label: "결합상태", value: sourceComboLabel(row.source_combo_label) },
       { label: "포맷", value: row.data_format || "-" },
       { label: "연도", value: String(yearText) },
@@ -160,13 +181,13 @@
           <div class="shortlist-card-provider">${escapeHtml(row.provider_name)} · ${escapeHtml(row.data_format || '-')} · ${escapeHtml(row.update_cycle || '-')}</div>
           <div class="shortlist-card-rationale">
             <div class="label">왜 먼저?</div>
-            <div class="copy">${escapeHtml(koRationaleBase(lane))} <span class="mono">${escapeHtml(koRationaleNumbers(evidence, lane))}</span></div>
+            <div class="copy">${escapeHtml(koRationaleBase(lane, evidence))} <span class="mono">${escapeHtml(koRationaleNumbers(evidence, lane))}</span></div>
           </div>
           <div class="shortlist-card-stats">
             <span><span class="k">↓</span> <span class="v accent">${escapeHtml(number(row.signal_downloads))}</span></span>
             <span><span class="k">신호</span> <span class="v">${escapeHtml(number(row.usage_total_signal))}</span></span>
             <span><span class="k">메타</span> <span class="v">${escapeHtml(row.metadata_richness_score)}/5</span></span>
-            ${row.usage_openapi_apply_count_total ? `<span><span class="k">API</span> <span class="v">${escapeHtml(number(row.usage_openapi_apply_count_total))}</span></span>` : ""}
+            ${row.signal_api_applies ? `<span><span class="k">API</span> <span class="v">${escapeHtml(number(row.signal_api_applies))}</span></span>` : ""}
           </div>
           <div class="shortlist-card-toggle">${openAttr ? '접기 −' : '펼쳐서 근거 보기 ▾'}</div>
         </summary>
@@ -176,6 +197,7 @@
           <ol class="reason-list">
             ${koReasons(evidence).map((item) => `<li><span>${escapeHtml(item)}</span></li>`).join("")}
           </ol>
+          <a class="portal-link" href="${escapeHtml(portalSearchUrl(row.title, row.list_key))}" target="_blank" rel="noreferrer noopener">↗ 공공데이터포털 원문 열기</a>
         </div>
       </details>
     `;
@@ -191,7 +213,7 @@
     if (universeEl) universeEl.textContent = number(universe);
 
     byId("hero-lede").textContent =
-      `공공데이터포털의 파일데이터 ${number(overview.candidate_count)}건이 모두 검토 후보입니다. 그중 다운로드가 반복되거나 국가중점데이터로 지정된 ${number(overview.priority_count)}건을 우선 후보로 분류했습니다. 방향은 분명합니다 — 궁극적으로 모든 파일데이터는 API로 제공되어야 합니다. 이 큐는 그 전환을 어디서부터 시작할지를 보여주는 화면입니다.`;
+      `공식 목록유형이 FILE인 ${number(overview.candidate_count)}건을 전수 검토 대상으로 잡았습니다. 그중 다운로드가 반복되거나 국가중점데이터로 지정된 ${number(overview.priority_count)}건을 우선 후보로 분류했습니다. 모든 파일을 일괄 전환하는 대신, 반복 조회·갱신·자동화 수요가 큰 데이터부터 API 적합성을 확인하는 큐입니다.`;
 
     const criteriaCopy = byId("criteria-copy");
     if (criteriaCopy) {
@@ -209,13 +231,13 @@
     }
 
     byId("asset-note").textContent =
-      `현재 페이지는 ${data.source_assets.summary_js_path} (${number(data.source_assets.summary_js_bytes)} bytes) 기준으로 동작하며, 전체 마스터 자산 ${data.source_assets.master_path} (${number(data.source_assets.master_bytes)} bytes) 전체를 직접 노출하지 않습니다.`;
+      `현재 페이지는 요약 ${data.source_assets.summary_js_path} (${number(data.source_assets.summary_js_bytes)} bytes)와 전체 큐 인덱스 ${data.source_assets.index_js_path} (${number(data.source_assets.index_js_bytes)} bytes)를 브라우저에서 읽습니다. 원천 CSV와 중간 결합 파일은 공개하지 않습니다.`;
 
     byId("hero-metrics").innerHTML = [
-      { label: "검토 후보", value: number(overview.candidate_count), note: "공공데이터포털의 모든 파일데이터", accent: false },
+      { label: "검토 후보", value: number(overview.candidate_count), note: "공식 목록유형 FILE 전체", accent: false },
       { label: "우선 후보", value: number(overview.priority_count), note: `다운로드 1,000건 이상 또는 국가중점 — 전체의 ${percent(overview.priority_share)}`, accent: true },
       { label: "응답 필드 노출", value: number(overview.response_field_count), note: "출력 구조가 이미 보임", accent: false },
-      { label: "교차수요 관찰", value: number(overview.api_applies_present_count), note: "API형 신청 이미 발생", accent: false },
+      { label: "교차수요 관찰", value: number(overview.api_applies_present_count), note: "연간 이력·현재 카운터 중 API 신호 존재", accent: false },
     ]
       .map((item) => `
         <div class="card">
@@ -236,7 +258,51 @@
 
   }
 
+  function renderFreshnessAndChanges() {
+    const sourceGrid = byId("source-freshness-grid");
+    if (sourceGrid) {
+      sourceGrid.innerHTML = (data.source_snapshots || []).map((source) => {
+        const isHistorical = source.code === "Y";
+        const freshnessLabel = isHistorical ? "연간 이력 · 2024년까지" : "현행 목록 스냅샷";
+        return `
+          <a class="source-card${isHistorical ? " source-card--historical" : ""}" href="${escapeHtml(source.page_url)}" target="_blank" rel="noreferrer noopener">
+            <div class="source-card-top"><span class="source-code">${escapeHtml(source.code)}</span><span class="source-status">${escapeHtml(freshnessLabel)}</span></div>
+            <div class="source-title">${escapeHtml(source.label)}</div>
+            <div class="source-date">${escapeHtml(source.snapshot_date || "-")}</div>
+            <div class="source-meta">${escapeHtml(source.provider)} · CSV ${escapeHtml(number(source.parsed_row_count))}행</div>
+            <span class="source-link">원천 페이지 ↗</span>
+          </a>
+        `;
+      }).join("");
+    }
+
+    const generated = byId("freshness-generated");
+    if (generated) generated.textContent = `재산출 ${dateText(data.generated_at, true)} KST`;
+
+    const changeGrid = byId("change-grid");
+    if (changeGrid) {
+      changeGrid.innerHTML = (data.change_log?.metrics || []).map((metric) => {
+        const delta = Number(metric.delta) || 0;
+        const deltaClass = delta > 0 ? "is-up" : delta < 0 ? "is-down" : "is-flat";
+        return `
+          <div class="change-card">
+            <div class="change-label">${escapeHtml(metric.label)}</div>
+            <div class="change-current">${escapeHtml(number(metric.current))}</div>
+            <div class="change-delta ${deltaClass}">${escapeHtml(signedNumber(delta))} <span>이전판 대비</span></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    const changeNote = byId("change-note");
+    if (changeNote) changeNote.textContent = data.change_log?.methodology_note || "";
+    const baseline = byId("change-baseline");
+    if (baseline) baseline.textContent = `비교 기준 ${dateText(data.change_log?.baseline_generated_at, true)} KST`;
+  }
+
   function renderShape() {
+    const copy = byId("shape-copy");
+    if (copy) copy.textContent = `전체 ${number(data.overview.candidate_count)}건의 결합 상태·포맷·갱신 주기와 제공기관 분포입니다.`;
     byId("source-combo-bars").innerHTML = data.slice_shape.source_combos
       .map((item, idx) => `
         <div class="bar-row">
@@ -293,6 +359,8 @@
       downloads: r.downloads[i],
       usage_signal: r.usage_signal[i],
       api_applies: r.api_applies[i],
+      current_downloads: r.current_downloads ? r.current_downloads[i] : 0,
+      usage_year_max: r.usage_year_max ? r.usage_year_max[i] : 0,
       metadata_score: r.metadata_score[i],
       flags: r.flags[i],
     };
@@ -301,15 +369,6 @@
   function flagBit(row, name) {
     const mask = index.flag_bits[name];
     return (row.flags & mask) !== 0;
-  }
-
-  function deriveLane(row) {
-    const hasUsage = flagBit(row, "source_usage");
-    const hasResponse = flagBit(row, "has_response_fields");
-    if (row.combo === "UM-" && !hasUsage) return "Usage gap check";
-    if (hasResponse && row.metadata_score >= 4) return "Metadata-ready";
-    if (row.api_applies > 0) return "Cross-channel demand";
-    return "Demand leader";
   }
 
   function queueEvidence(row) {
@@ -322,6 +381,10 @@
       comboLabelKo: sourceComboLabel(row.combo_label),
       apiApplies: row.api_applies,
       threshold: index.candidate_threshold,
+      isPriority: flagBit(row, "is_priority"),
+      isCore: flagBit(row, "is_core_data"),
+      usageYearMax: row.usage_year_max,
+      currentDownloads: row.current_downloads,
     };
   }
 
@@ -333,8 +396,12 @@
       metadataScore: Number(row.metadata_richness_score) || 0,
       comboKey: row.source_combo,
       comboLabelKo: sourceComboLabel(row.source_combo_label),
-      apiApplies: Number(row.usage_openapi_apply_count_total) || 0,
+      apiApplies: Number(row.signal_api_applies) || 0,
       threshold: 1000,
+      isPriority: !!row.is_priority,
+      isCore: !!row.is_core_data,
+      usageYearMax: Number(row.usage_year_max) || 0,
+      currentDownloads: Number(row.current_file_download_count) || 0,
     };
   }
 
@@ -350,17 +417,21 @@
   }
 
   function koReasonSummary(e) {
-    const base = `다운로드 신호 ${number(e.downloads)}건, API형 메타데이터는 아직 보이지 않으며`;
-    if (e.hasResponse) return `${base} 응답 필드는 이미 존재합니다.`;
-    if (e.metadataScore >= 4) return `${base} 메타정보는 이미 최소 결합 형태보다 풍부합니다.`;
-    return `${base} 현재는 메타정보보다 수요 신호가 더 강하게 작동합니다.`;
+    const base = `다운로드 신호 ${number(e.downloads)}건`;
+    if (e.hasResponse) return `${base}; 응답 필드가 이미 있어 출력 구조를 가늠할 수 있습니다.`;
+    if (e.metadataScore >= 4) return `${base}; 메타정보가 비교적 풍부합니다.`;
+    return `${base}; 현재는 구조 정보보다 수요·정책 신호를 먼저 확인해야 합니다.`;
   }
 
   function koReasons(e) {
-    const reasons = [
-      `파일형 행이며 다운로드 신호 ${number(e.downloads)}건으로 ${number(e.threshold)}건 기준을 넘습니다.`,
-      "목록 유형, 서비스 유형, 데이터 형식 기준으로 API형 메타데이터 패턴이 감지되지 않았습니다.",
-    ];
+    const reasons = ["공식 목록유형이 FILE인 행으로, 이미 API로 분류된 목록은 모집단에서 제외했습니다."];
+    if (e.downloads >= e.threshold) {
+      reasons.push(`다운로드 신호 ${number(e.downloads)}건으로 우선 기준 ${number(e.threshold)}건을 넘습니다.`);
+    } else if (e.isCore) {
+      reasons.push(`다운로드 신호는 ${number(e.downloads)}건이지만 국가중점데이터 지정으로 우선 후보에 합류합니다.`);
+    } else {
+      reasons.push(`다운로드 신호 ${number(e.downloads)}건으로 우선 기준 전의 일반 검토 후보입니다.`);
+    }
     if (e.hasResponse) {
       reasons.push("메타데이터에 응답 필드가 이미 있어 출력 구조를 일부 가늠할 수 있습니다.");
     } else if (e.hasRequest) {
@@ -383,7 +454,8 @@
     return reasons;
   }
 
-  function koRationaleBase(lane) {
+  function koRationaleBase(lane, e) {
+    if (e && !e.isPriority) return "우선 게이트 전의 일반 후보입니다. 반복 조회 필요·갱신 빈도·파일 크기를 확인한 뒤 전환 순서를 올릴 수 있습니다.";
     if (lane === "Metadata-ready") return "수요가 이미 확인됐고 응답 필드도 보여서 API 설계 검토를 먼저 붙이기 쉽습니다.";
     if (lane === "Cross-channel demand") return "파일 수요가 높고 API형 신청도 이미 보여, 이용자들이 API형 제공방식을 기대하고 있을 가능성이 큽니다.";
     if (lane === "Usage gap check") return "현재 수요는 충분히 크지만 이용 이력이 붙지 않았습니다. 전환 계획 전에 결합 상태를 먼저 재확인해야 합니다.";
@@ -398,7 +470,7 @@
   }
 
   function koRationale(e, lane) {
-    return `${koRationaleBase(lane)} ${koRationaleNumbers(e, lane)}`;
+    return `${koRationaleBase(lane, e)} ${koRationaleNumbers(e, lane)}`;
   }
 
   function populateQueueSelects() {
@@ -420,6 +492,7 @@
   function applyQueueFilter() {
     const q = queueState.search.trim().toLowerCase();
     const providerFilter = queueState.provider;
+    const scopeFilter = queueState.scope;
     const laneFilter = queueState.lane;
     const formatFilter = queueState.format;
     const r = index.rows;
@@ -427,6 +500,11 @@
     const filtered = [];
 
     for (let i = 0; i < total; i++) {
+      if (scopeFilter) {
+        const flags = r.flags[i];
+        if (scopeFilter === "priority" && (flags & index.flag_bits.is_priority) === 0) continue;
+        if (scopeFilter === "core" && (flags & index.flag_bits.is_core_data) === 0) continue;
+      }
       if (providerFilter && index.providers[r.provider_idx[i]] !== providerFilter) continue;
       if (formatFilter && index.formats[r.format_idx[i]] !== formatFilter) continue;
       if (q) {
@@ -475,6 +553,7 @@
             </div>
           </div>
           <div class="queue-row-tail">
+            ${flagBit(row, "is_priority") ? '<span class="queue-scope-badge">우선 후보</span>' : '<span class="queue-scope-badge queue-scope-badge--muted">일반 후보</span>'}
             <span class="${laneClass(lane)}">${escapeHtml(laneLabel(lane))}</span>
             <span class="queue-row-toggle">펼치기 +</span>
           </div>
@@ -486,10 +565,11 @@
             ${koReasons(evidence).map((item) => `<li><span>${escapeHtml(item)}</span></li>`).join("")}
           </ol>
           <div class="rationale">
-            <div class="label">왜 먼저 검토?</div>
-            <div class="copy">${escapeHtml(koRationaleBase(lane))} <span class="mono">${escapeHtml(koRationaleNumbers(evidence, lane))}</span></div>
+            <div class="label">검토 포인트</div>
+            <div class="copy">${escapeHtml(koRationaleBase(lane, evidence))} <span class="mono">${escapeHtml(koRationaleNumbers(evidence, lane))}</span></div>
           </div>
-          <a class="portal-link" href="${escapeHtml(portalSearchUrl(row.title))}" target="_blank" rel="noreferrer noopener">↗ 공공데이터포털에서 검색</a>
+          <div class="queue-vintage">수요 기준: ${row.usage_year_max ? `연간 이력 ${escapeHtml(String(row.usage_year_max))}년까지` : `현재 카운터 ${escapeHtml(number(row.current_downloads))}건`} · 목록키 ${escapeHtml(row.list_key || "-")}</div>
+          <a class="portal-link" href="${escapeHtml(portalSearchUrl(row.title, row.list_key))}" target="_blank" rel="noreferrer noopener">↗ 공공데이터포털 원문 열기</a>
         </div>
       </details>
     `;
@@ -526,7 +606,7 @@
 
   function renderQueueCopy() {
     byId("queue-copy").textContent =
-      `후보 ${number(index.count)}건 전체를 여기서 검색·필터할 수 있습니다. 각 행을 펼치면 어떤 근거로 후보가 되었는지 확인할 수 있습니다.`;
+      `FILE 목록 ${number(index.count)}건 전체가 큐에 있습니다. 범위를 ‘우선 후보’로 좁히면 다운로드 1,000건 이상 또는 국가중점인 ${number(index.priority_count)}건만 볼 수 있고, 각 행에서 원문·근거·수요 기준시점을 확인할 수 있습니다.`;
   }
 
   function wireQueueEvents() {
@@ -543,6 +623,11 @@
 
     byId("queue-provider").addEventListener("change", (event) => {
       queueState.provider = event.target.value;
+      applyQueueFilter();
+      renderQueue();
+    });
+    byId("queue-scope").addEventListener("change", (event) => {
+      queueState.scope = event.target.value;
       applyQueueFilter();
       renderQueue();
     });
@@ -564,11 +649,13 @@
 
     byId("queue-reset").addEventListener("click", () => {
       queueState.search = "";
+      queueState.scope = "";
       queueState.provider = "";
       queueState.lane = "";
       queueState.format = "";
       queueState.sort = "usage_signal";
       byId("queue-search").value = "";
+      byId("queue-scope").value = "";
       byId("queue-provider").value = "";
       byId("queue-lane").value = "";
       byId("queue-format").value = "";
@@ -640,8 +727,8 @@
     const coreAddedCount = split.core_added_count || 0;
     const criteria = overview.criteria_funnel || [];
 
-    // 7 단계: 88,166 → 다운로드 통과(10,045) → +국가중점 합류(11,238)
-    //         → 호스팅 → 결합 → 메타 → 다운로드 신호 핵심 후보(1,480)
+    // 7 단계: 검토 모집단 → 다운로드 통과 → +국가중점 합류
+    //         → 호스팅 → 결합 → 메타 → 다운로드 신호 핵심 후보
     // 우선 게이트는 OR 조건이라 두 단계로 나눠 보여준다 — 두 번째 화살표는 빠짐이 아닌 합류(union).
     const targets = [
       candidateCount,
@@ -844,7 +931,7 @@
     const sublabel = byId("why-counter-sublabel");
     if (sublabel) {
       sublabel.textContent =
-        `이 검토 큐의 ${number(data.overview.candidate_count)}건이 누적해서 받은 다운로드·API 신청 횟수입니다. 매번 같은 구조를 다시 파악해야 했습니다.`;
+        `이 검토 큐의 ${number(data.overview.candidate_count)}건에서 관찰된 다운로드·API 신청 신호입니다. 절감량의 확정치가 아니라 반복 수요의 규모를 보는 지표입니다.`;
     }
 
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -931,6 +1018,7 @@
     }
 
     renderOverview();
+    renderFreshnessAndChanges();
     renderShape();
     renderProviders();
     renderShortlist();

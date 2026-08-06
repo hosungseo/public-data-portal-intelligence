@@ -7,12 +7,14 @@
 핵심은 “무엇이 인기 있나”가 아니라,
 **그래서 지금 무엇을 먼저 API로 바꿔볼 가치가 있나**입니다.
 
-현재 공개 버전은 `file_to_api` 슬라이스만 다룹니다.
+2026년 8월 최신 재산출 기준입니다.
 
-- 10,045 candidates
-- 8,762 rows already joined across universe + metadata + usage
-- 6,763 rows already expose response fields
-- 2,621 rows already show some API-side demand
+- 공식 목록유형 `FILE` 전체 후보 83,695건
+- 다운로드 1,000건 이상 또는 국가중점인 우선 후보 11,442건
+- 응답 필드가 노출된 후보 51,535건
+- 파일과 API 수요가 함께 관찰된 후보 7,312건
+
+목록·메타는 2026년 현행본, 연간 이용이력은 공식 최신본인 2024년 말 기준입니다. 파일 다운로드 수를 API 신청 수로 중복 집계하던 이전 오류도 바로잡았습니다.
 
 페이지:
 https://hosungseo.github.io/public-data-portal-intelligence/
@@ -28,7 +30,7 @@ https://github.com/hosungseo/public-data-portal-intelligence
 
 **많이 쓰이는 파일데이터 중 무엇을 먼저 API 전환 검토할 것인가?**
 
-이 프로젝트는 그 질문을 가볍게 읽을 수 있는 정적 리더입니다. 현재는 `file_to_api` 슬라이스만 공개되어 있고, 브라우저에는 무거운 원본 대신 경량 summary asset만 올립니다.
+이 프로젝트는 그 질문을 가볍게 읽을 수 있는 정적 리더입니다. 브라우저에는 무거운 원본 대신 경량 summary/index asset만 올립니다.
 
 이 페이지는 자동 의사결정 도구가 아니라 **우선 검토 큐**를 만드는 도구입니다. 즉 “모든 파일은 API가 되어야 한다”가 아니라, **어떤 항목이 먼저 사람 검토를 받을 만한가**를 보여줍니다.
 
@@ -46,7 +48,7 @@ A lightweight static reader for one practical public-data question:
 
 **Which high-demand file datasets look like strong API-conversion candidates?**
 
-The current public cut focuses on the `file_to_api` slice only. It is designed as a prioritization surface, not an automatic decision system. The browser reads only lightweight summary assets, not the full internal master dataset.
+It is designed as a prioritization surface, not an automatic decision system. The current build reviews 83,695 official `FILE` catalog entries, flags 11,442 priority candidates, and exposes source-vintage differences rather than hiding them. The browser reads lightweight summary/index assets, not the raw source files.
 
 Page:
 https://hosungseo.github.io/public-data-portal-intelligence/
@@ -64,7 +66,7 @@ https://github.com/hosungseo/public-data-portal-intelligence
 
 **공공데이터포털에서 수요가 높은 파일데이터 중, 무엇을 먼저 API 전환 후보로 검토할 것인가?**
 
-현재 공개 버전은 `file_to_api` 슬라이스만 다룹니다. 브라우저에는 무거운 원본 데이터를 직접 올리지 않고, 경량 summary asset만 사용합니다. 그래서 페이지는 가볍고, 보는 사람은 바로 shortlist부터 읽을 수 있습니다.
+브라우저에는 무거운 원본 데이터를 직접 올리지 않고 경량 summary/index asset만 사용합니다. 그래서 페이지는 가볍고, 보는 사람은 shortlist와 전체 큐를 바로 오갈 수 있습니다.
 
 이 페이지가 하는 일은 자동 추천이 아닙니다. 오히려 그 반대에 가깝습니다. 데이터 구조, 업데이트 주기, 법적 제약, 운영 여건을 검토하기 전에, **먼저 사람이 볼 만한 큐를 정리하는 것**이 목적입니다.
 
